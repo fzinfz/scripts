@@ -11,7 +11,7 @@ if [ "$1" = "yum" ];then
 fi
 
 $1  install -y \
-    software-properties-common python-software-properties \
+    software-properties-common \
     net-tools bridge-utils dnsutils tcpdump  mtr nmap nethogs traceroute bmon iputils-ping nload iftop \
     trickle wondershaper \
     cifs-utils nfs-common \
