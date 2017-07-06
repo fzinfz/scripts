@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if command -v apt >/dev/null 2>/dev/null; then
-	$c=apt
+	c=apt
 elif command -v yum >/dev/null 2>/dev/null; then
-	$c=yum
+	c=yum
 else
 	echo "only apt & yum supported"
 	exit
