@@ -14,6 +14,7 @@ $1  install -y \
     software-properties-common python-software-properties \
     net-tools bridge-utils dnsutils tcpdump  mtr nmap nethogs traceroute bmon iputils-ping nload iftop \
     trickle wondershaper \
+    cifs-utils nfs-common \
     locate ncdu vim aria2 curl wget htop git pciutils unzip \
     iperf3 sysbench
 
