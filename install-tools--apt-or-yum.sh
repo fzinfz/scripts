@@ -1,7 +1,13 @@
+#!/bin/bash
+
 $1 update 
 
-if [ "$1" == "apt" ];then
+if [ "$1" = "apt" ];then
 	apt install -y apt-utils
+fi
+
+if [ "$1" = "yum" ];then
+	yum install -y epel-release
 fi
 
 $1  install -y \
