@@ -9,11 +9,11 @@ else
 	exit
 fi
 
-$c update 
-
 if [ "$c" = "apt" ];then
+	apt update
 	apt install -y apt-utils
 elif [ "$c" = "yum" ];then
+	yum update -y
 	yum install -y epel-release
 fi
 
@@ -24,4 +24,3 @@ $c  install -y \
     cifs-utils nfs-common \
     locate ncdu vim aria2 curl wget htop git pciutils unzip \
     iperf3 sysbench
-
