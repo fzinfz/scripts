@@ -19,8 +19,11 @@ fi
 
 $c  install -y \
     software-properties-common \
-    net-tools bridge-utils dnsutils tcpdump  mtr nmap nethogs traceroute bmon iputils-ping nload iftop \
+    inxi htop pciutils \
+    iperf3 sysbench \
+    unzip \
+    net-tools bridge-utils bmon iputils-ping nload iftop \
+    dnsutils tcpdump mtr nmap nethogs traceroute \
     trickle wondershaper \
     cifs-utils nfs-common \
-    locate ncdu vim aria2 curl wget htop git pciutils unzip \
-    iperf3 sysbench
+    locate ncdu vim aria2 curl wget git
