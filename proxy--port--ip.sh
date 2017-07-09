@@ -1,3 +1,5 @@
+echo "run with 'source' command "
+
 if [ -z ${2+x} ]; then
   ip="127.0.0.1"
  else
