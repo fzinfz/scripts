@@ -1,9 +1,9 @@
 apt update || yum update
 apt install -y openssh-server || yum install -y openssh-server
 mkdir /var/run/sshd
-echo 'root:RootPasswd' | chpasswd
 sed -r -i 's/^[#]? *PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
+echo "root:$2" | chpasswd
 /usr/sbin/sshd
 
 # https://docs.docker.com/engine/examples/running_ssh_service/#run-a-test_sshd-container
