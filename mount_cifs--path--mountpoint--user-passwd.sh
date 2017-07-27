@@ -1,6 +1,9 @@
 #!/bin/bash
 
-path=$1 #example: \\\\ip\\folder
+# make sure single quoted network path, eg: '\\server\folder'
+
+path=$1
+
 mount_point=$2
 
 if [ -z $3 ]; then
@@ -11,4 +14,9 @@ fi
 
 passwd=$4
 
-mount -t cifs $path $mount_point -o username=$user,password=$passwd
+#mount -t cifs $path $mount_point -o username=$user,password=$passwd
+
+echo $path $mount_point cifs username=$user,password=$passwd 0 0 >>  /etc/fstab
+mount -a
+
+
