@@ -13,6 +13,7 @@ lscpu | egrep 'Byte Order'
 $nl
 
 file /bin/ps
+ldd /bin/ps
 $nl
 
 inxi -Fxz
