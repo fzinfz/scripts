@@ -10,3 +10,10 @@ CURRENT_DIR=$(dirname "$(readlink -f "$BASH_SOURCE")")
 if [[ ! $PATH = *"$CURRENT_DIR"* ]];then
     export PATH=$PATH:$CURRENT_DIR
 fi
+
+alias git_before_commit-remove--file="git reset HEAD"
+alias git_commit-reuse_previous_message="git commit -c ORIG_HEAD"
+alias git_uncommit="git reset --soft HEAD~1"
+alias git_upstream-merge="git fetch upstream; git checkout master; git merge upstream/master"
+alias git_upstream-add--url="git remote add upstream"
+alias git_gitignore_download-py="wget https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore; mv *.gitignore .gitignore"
