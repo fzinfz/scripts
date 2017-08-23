@@ -19,5 +19,5 @@ alias git_commit_amend="git commit --amend -c ORIG_HEAD"
 alias git_uncommit="git reset --soft HEAD~1"
 alias git_upstream-merge="git fetch upstream; git checkout master; git merge upstream/master"
 alias git_upstream-add--url="git remote add upstream"
-alias git_gitignore_download-py="wget https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore; mv *.gitignore .gitignore"
+alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
 
