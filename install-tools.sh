@@ -19,11 +19,11 @@ fi
 
 $c  install -y \
     software-properties-common \
-    inxi htop pciutils \
+    inxi htop pciutils lsof \
     iperf3 sysbench \
     unzip \
     net-tools bridge-utils bmon iputils-ping nload iftop \
     dnsutils tcpdump mtr nmap nethogs traceroute \
     trickle wondershaper \
     cifs-utils nfs-common \
-    locate ncdu vim aria2 curl wget git
+    locate ncdu vim aria2 curl wget git gettext
