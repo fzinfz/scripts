@@ -25,11 +25,38 @@ alias ls="ls --color=auto"
 alias dd_bandwidth="dd if=/dev/zero of=/root/testfile bs=200M count=1 oflag=direct"
 alias dd_iops="dd if=/dev/zero of=/root/testfile bs=512 count=10000 oflag=direct"
 
+nl="printf \n"
+
 add_current_path_to_PATH() {
     CURRENT_DIR=$(dirname "$(readlink -f "$BASH_SOURCE")")
     if [[ ! $PATH = *"$CURRENT_DIR"* ]];then
         export PATH=$PATH:$CURRENT_DIR
     fi
+}
+
+sys_info() {
+    echo LONG_BIG: $(getconf LONG_BIT)
+    $nl
+
+    lscpu | egrep 'Byte Order'
+    $nl
+
+    file /bin/ps
+    ldd /bin/ps
+    $nl
+
+    inxi -Fxz
+}
+
+top_custom(){
+    #dmidecode -t processor | grep Speed
+    #watch -n 1  cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
+    watch --color -n 1 \
+        "inxi -C && printf '\n' && \
+         top -b -o %CPU | head -n12 && printf '\n' && \
+         top -b -o %MEM | head -n12 | tail -n6 && printf '\n' && \
+         ps -eo %cpu,pid,command --sort -%cpu | head -n5 && printf '\n' && \
+         ps -eo %mem,pid,command --sort -%mem | head -n5"
 }
 
 netstat_lntup() {
@@ -143,12 +170,6 @@ grub_list_entries() {
 
 }
 
-bbr_check() {
-    tc qdisc show
-    sysctl net.core.default_qdisc
-    sysctl net.ipv4 | grep control
-}
-
 kvm_install() {
     apt install -y virt-manager qemu-kvm qemu-utils
 }
@@ -213,4 +234,36 @@ hw_dell--ip--action() {
 
 powerup_dell--ip() {
     hw_dell--ip--action $1 powerup
+}
+
+check_video() {
+    dmesg | grep drm
+
+    lsmod | grep video
+    lsmod | grep drm
+
+    # https://askubuntu.com/questions/28033/how-to-check-the-information-of-current-installed-video-drivers
+    lspci | grep VGA
+    find /dev -group video
+    glxinfo | grep direct
+    egrep -i " connected|card detect|primary dev|Setting driver" /var/log/Xorg.*.log
+    egrep "EE" /var/log/Xorg.*.log
+}
+
+bbr_check() {
+    tc qdisc show
+    sysctl net.core.default_qdisc
+    sysctl net.ipv4 | grep control
+}
+alias check_bbr=bbr_check
+
+
+history--tail_count() {
+    if [ -z ${1+x} ] ;then
+        cat /root/.bash_history
+    else
+        cat /root/.bash_history | tail -n$1
+    fi
+
+    echo "if history items missing, run init_bashrc.sh first."
 }
