@@ -1,3 +1,5 @@
+# list all with `set && alias`
+
 shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
@@ -266,4 +268,40 @@ history--tail_count() {
     fi
 
     echo "if history items missing, run init_bashrc.sh first."
+}
+
+export_proxy---port---ip(){
+    if [ -z ${2+x} ]; then
+      ip="127.0.0.1"
+     else
+      ip=$2
+    fi
+
+    if [ -z ${1+x} ]; then
+      port=1080
+     else
+      port=$1
+    fi
+
+    http_proxy=http://$ip:$port
+
+    export http_proxy=$http_proxy
+    export https_proxy=$http_proxy
+    export no_proxy="localhost,127.0.0.1,192.168.*.*,10.*.*.*,172.16.*.*,172.17.*.*"
+    export ftp_proxy=$http_proxy
+    export rsync_proxy=$http_proxy
+}
+
+test_shell_parameter() {
+    if [ -z $1 ];then
+        echo "zero length"
+    fi
+
+    if [ -z ${1+x} ]; then
+        echo "null"
+    fi
+}
+
+test() {
+
 }
