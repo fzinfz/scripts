@@ -303,5 +303,5 @@ test_shell_parameter() {
 }
 
 test() {
-
+    echo "test"
 }
