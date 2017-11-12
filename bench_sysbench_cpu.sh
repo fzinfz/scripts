@@ -1,1 +1,0 @@
-sysbench --test=cpu run
