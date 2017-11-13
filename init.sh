@@ -292,16 +292,15 @@ export_proxy---port---ip(){
     export rsync_proxy=$http_proxy
 }
 
-test_shell_parameter() {
-    if [ -z $1 ];then
-        echo "zero length"
-    fi
+start_ssh_agent--id_rsa_path() {
+    echo 'ps grep excluding grep pid'
+    RESULT_ssh_agent =`ps -aux | sed -n /[s]sh-agent/p`
 
-    if [ -z ${1+x} ]; then
-        echo "null"
+    if [ "${RESULT_ssh_agent:-null}" = null ]; then
+        chmod 600 $1
+        eval $(ssh-agent -s)
+        ssh-add $1
+    else
+        echo "ssh-agent running,skip adding"
     fi
-}
-
-test() {
-    echo "test"
 }
