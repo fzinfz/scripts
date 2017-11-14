@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # list all with `set && alias`
 
 shopt -s histappend
@@ -292,14 +294,15 @@ export_proxy---port---ip(){
     export rsync_proxy=$http_proxy
 }
 
-start_ssh_agent--id_rsa_path() {
+ssh_agent---id_rsa_suffix() {
     echo 'ps grep excluding grep pid'
-    RESULT_ssh_agent =`ps -aux | sed -n /[s]sh-agent/p`
+    RESULT_ssh_agent=`ps -aux | sed -n /[s]sh-agent/p`
+    id_rsa_path="~/.ssh/id_rsa$1"
 
     if [ "${RESULT_ssh_agent:-null}" = null ]; then
-        chmod 600 $1
+        chmod 600 $id_rsa_path
         eval $(ssh-agent -s)
-        ssh-add $1
+        ssh-add $id_rsa_path
     else
         echo "ssh-agent running,skip adding"
     fi
