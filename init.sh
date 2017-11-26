@@ -113,6 +113,10 @@ find--path--name() {
     find $1 -iname $2
 }
 
+curl_then_source--url() {
+    source /dev/stdin <<< "$(curl -sSL $1)"
+}
+
 install-docker() {
     curl -fsSL get.docker.com | bash
 }
