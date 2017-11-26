@@ -29,6 +29,15 @@ alias ls="ls --color=auto"
 alias dd_bandwidth="dd if=/dev/zero of=/root/testfile bs=200M count=1 oflag=direct"
 alias dd_iops="dd if=/dev/zero of=/root/testfile bs=512 count=10000 oflag=direct"
 
+ssh_add_key() {
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval `ssh-agent -s` 
+  ssh-add 
+else
+  echo "key exists: $SSH_AUTH_SOCK"
+fi
+}
+
 nl="printf \n"
 
 add_current_path_to_PATH() {
@@ -72,6 +81,10 @@ netstat_an--egrep() {
     awk '{ print $4 ":" $5 ":" $6}' | \
     awk -F':' '{ print $1 ":" $2 " ---> " $3 " - " $5 }' | \
     sort -u
+}
+
+apt_search--startwith() {
+    apt search $1 | grep ^$1
 }
 
 apt_installed() {
