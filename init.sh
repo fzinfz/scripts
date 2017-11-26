@@ -29,12 +29,19 @@ alias ls="ls --color=auto"
 alias dd_bandwidth="dd if=/dev/zero of=/root/testfile bs=200M count=1 oflag=direct"
 alias dd_iops="dd if=/dev/zero of=/root/testfile bs=512 count=10000 oflag=direct"
 
-ssh_add_key() {
+ssh_key_add() {
 if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent -s` 
   ssh-add 
 else
   echo "key exists: $SSH_AUTH_SOCK"
+fi
+}
+
+ssh_key_add_silent() {
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval `ssh-agent -s` > /dev/null
+  ssh-add > /dev/null
 fi
 }
 
