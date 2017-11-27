@@ -29,6 +29,22 @@ alias ls="ls --color=auto"
 alias dd_bandwidth="dd if=/dev/zero of=/root/testfile bs=200M count=1 oflag=direct"
 alias dd_iops="dd if=/dev/zero of=/root/testfile bs=512 count=10000 oflag=direct"
 
+ssh_key_add() {
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval `ssh-agent -s` 
+  ssh-add 
+else
+  echo "key exists: $SSH_AUTH_SOCK"
+fi
+}
+
+ssh_key_add_silent() {
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+  eval `ssh-agent -s` > /dev/null
+  ssh-add > /dev/null
+fi
+}
+
 nl="printf \n"
 
 add_current_path_to_PATH() {
@@ -74,6 +90,10 @@ netstat_an--egrep() {
     sort -u
 }
 
+apt_search--startwith() {
+    apt search $1 | grep ^$1
+}
+
 apt_installed() {
     apt list --installed
 }
@@ -98,6 +118,10 @@ kvm_intel_nested() {
 
 find--path--name() {
     find $1 -iname $2
+}
+
+curl_then_source--url() {
+    source /dev/stdin <<< "$(curl -sSL $1)"
 }
 
 install-docker() {
@@ -294,16 +318,3 @@ export_proxy---port---ip(){
     export rsync_proxy=$http_proxy
 }
 
-ssh_agent---id_rsa_suffix() {
-    echo 'ps grep excluding grep pid'
-    RESULT_ssh_agent=`ps -aux | sed -n /[s]sh-agent/p`
-    id_rsa_path="~/.ssh/id_rsa$1"
-
-    if [ "${RESULT_ssh_agent:-null}" = null ]; then
-        chmod 600 $id_rsa_path
-        eval $(ssh-agent -s)
-        ssh-add $id_rsa_path
-    else
-        echo "ssh-agent running,skip adding"
-    fi
-}
