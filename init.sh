@@ -2,12 +2,15 @@
 
 # list all with `set && alias`
 
+# set -x # debug
+
 shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
 alias git_before_commit-remove--file="git reset HEAD"
 alias git_commit-reuse_previous_message="git commit -c ORIG_HEAD"
 alias git_commit_amend="git commit --amend -c ORIG_HEAD"
+alias git_discard_changes="git checkout -- ."
 alias git_uncommit="git reset --soft HEAD~1"
 alias git_upstream-merge="git fetch upstream; git checkout master; git merge upstream/master"
 alias git_upstream-add--url="git remote add upstream"
