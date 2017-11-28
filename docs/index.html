@@ -22,17 +22,16 @@
 
 <body>
     <div class="masthead">
-        <h3 class="text-muted">Project name</h3>
+        <h3 class="text-muted"><a href="https://github.com/fzinfz/scripts/blob/master/docs/index.html">Source Code</a></h3>
     </div>
     <div class="jumbotron">
         <div class="container">
             <h1>Bootstrap</h1>
             <p>
                 <div>
-                    <button type="button" class="btn btn-secondary" href="https://v4-alpha.getbootstrap.com/utilities/colors/">Colors</button>
-                    <button type="button" class="btn btn-secondary" href="https://v4-alpha.getbootstrap.com/layout/grid/#offsetting-columns">offsetting-columns</button>
-                    <button type="button" class="btn btn-secondary" href="https://getbootstrap.com/docs/4.0/components/progress/#backgrounds">progress</button>
-                    <button type="button" class="btn btn-secondary" href="https://getbootstrap.com/docs/3.3/getting-started/#examples-framework">templates</button>
+                    <a class="btn btn-secondary" href="https://v4-alpha.getbootstrap.com/utilities/colors/">Colors</a>
+                    <a class="btn btn-secondary" href="https://v4-alpha.getbootstrap.com/layout/grid/#offsetting-columns">offsetting-columns</a>                    
+                    <a class="btn btn-secondary" href="https://getbootstrap.com/docs/3.3/getting-started/#examples-framework">templates</a>
                 </div>
             </p>
             <p>
@@ -40,6 +39,7 @@
             </p>
         </div>
         <div class="container">
+                <a class="btn btn-secondary" href="https://getbootstrap.com/docs/4.0/components/progress/#backgrounds">progress</a>
             <div class="progress">
                 <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
@@ -58,6 +58,17 @@
             crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
             crossorigin="anonymous"></script>
+
+        <script>
+            $('a').attr('target', '_blank');
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("p").click(function () {
+                    $(this).hide();
+                });
+            });
+        </script>
 </body>
 
 </html>
