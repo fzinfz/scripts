@@ -32,6 +32,10 @@ alias ls="ls --color=auto"
 alias dd_bandwidth="dd if=/dev/zero of=/root/testfile bs=200M count=1 oflag=direct"
 alias dd_iops="dd if=/dev/zero of=/root/testfile bs=512 count=10000 oflag=direct"
 
+source_url() {
+    source /dev/stdin <<< "$(curl -sS $1)"
+}
+
 ssh_key_add() {
 if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent -s` 
@@ -187,10 +191,6 @@ nmap--ip--port() {
     nmap -sV -p$2 $1
 }
 
-bench_dd-bandwidth() {
-    dd if=/dev/zero of=/tmp/test_bw bs=200M count=1 oflag=direct
-}
-
 conda_env_create() {
     conda create -y --name $1
     source activate $1
@@ -207,6 +207,10 @@ kvm_install() {
 
 bench_dd-iops() {
     dd if=/dev/zero of=/tmp/test_iops bs=512 count=10000 oflag=direct
+}
+
+bench_dd-bandwidth() {
+    dd if=/dev/zero of=/tmp/test_bw bs=200M count=1 oflag=direct
 }
 
 install-browser-debian8() {
