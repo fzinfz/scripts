@@ -36,6 +36,11 @@ source_url() {
     source /dev/stdin <<< "$(curl -sS $1)"
 }
 
+cat_highlight--keyword--file(){
+    # https://unix.stackexchange.com/questions/106565
+    grep -E --color=auto "$1|$" $2
+}
+
 ssh_key_add() {
 if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent -s` 
@@ -73,6 +78,16 @@ sys_info() {
     $nl
 
     inxi -Fxz
+}
+
+check_memory(){
+    # https://wiki.debian.org/Hugepages#Enabling_HugeTlbPage
+    hugeadm --pool-list
+    grep Huge /proc/meminfo 
+    grep -R "" /sys/kernel/mm/hugepages/ /proc/sys/vm/*huge*
+
+    free -m
+    numactl -H
 }
 
 top_custom(){
@@ -336,4 +351,3 @@ export_proxy---port---ip(){
     export ftp_proxy=$http_proxy
     export rsync_proxy=$http_proxy
 }
-
