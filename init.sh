@@ -9,6 +9,8 @@ alias git_discard_changes="git checkout -- ."
 alias git_uncommit="git reset --soft HEAD~1"
 alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
 
+alias my_functions='cat init.sh | grep -P "\(\) *{" | sed -E "s/\(\) *\{//p" | sort'
+
 git_add_commit_push---comment() {
     if [ -z $1 ];then
         c='update'

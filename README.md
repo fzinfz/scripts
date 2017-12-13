@@ -1,6 +1,6 @@
 # Usage for shell functions and alias
-    source ./init.sh  # set
-    set && alias      # check
+    source ./init.sh  		# set
+    my_functions && alias	# check
 
 ## Naming rules
 - `--`: followed by required parameter
