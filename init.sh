@@ -95,6 +95,16 @@ sys_info() {
     inxi -Fxz
 }
 
+get_cpu_vendor(){
+    s=$(lscpu | grep 'Model name')
+    if [[ "$s" =~ "Intel" ]]; then
+        arch=intel
+    else
+        arch=amd
+    fi
+    echo $arch
+}
+
 check_memory(){
     # https://wiki.debian.org/Hugepages#Enabling_HugeTlbPage
     hugeadm --pool-list
