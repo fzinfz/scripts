@@ -1,19 +1,12 @@
 #!/bin/bash
 
-# list all with `set && alias`
-
-# set -x # debug
-
 shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
-alias git_before_commit-remove--file="git reset HEAD"
-alias git_commit-reuse_previous_message="git commit -c ORIG_HEAD"
-alias git_commit_amend="git commit --amend -c ORIG_HEAD"
+alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
+alias git_commit_amend="git commit --amend -C ORIG_HEAD"
 alias git_discard_changes="git checkout -- ."
 alias git_uncommit="git reset --soft HEAD~1"
-alias git_upstream-merge="git fetch upstream; git checkout master; git merge upstream/master"
-alias git_upstream-add--url="git remote add upstream"
 alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
 
 git_add_commit_push---comment() {
@@ -28,9 +21,29 @@ git_add_commit_push---comment() {
     git push
 }
 
+git_config_init_N_show(){
+    git config --global push.default simple
+    git config --list --show-origin
+}
+
+git_config_gmail--prefix(){
+    git config user.name "$1"
+    git config user.email "$1@gmail.com"
+}
+
+git_config_proxy_http--ip--port(){
+    git config --global http.proxy http://$1:$2
+}
+
 alias ls="ls --color=auto"
-alias dd_bandwidth="dd if=/dev/zero of=/root/testfile bs=200M count=1 oflag=direct"
-alias dd_iops="dd if=/dev/zero of=/root/testfile bs=512 count=10000 oflag=direct"
+
+dd_bandwidth--M() {
+    dd if=/dev/zero of=/tmp/testfile bs=$1M count=1 oflag=direct
+}
+
+dd_iops_512--count() {
+    dd if=/dev/zero of=/tmp/testfile bs=512 count=$1 oflag=direct
+}
 
 source_url() {
     source /dev/stdin <<< "$(curl -sS $1)"
@@ -312,6 +325,15 @@ check_video--card_index(){
     cat /sys/kernel/debug/dri/$1/radeon_{fence_info,gem_info,pm_info,sa_info,vram_mm}
 }
 
+check_cpu_core_mapping(){
+    # https://www.ibm.com/support/knowledgecenter/en/SSQPD3_2.6.0/com.ibm.wllm.doc/mappingcpustocore.html
+    # same physical/core ID  =》 simultaneous multi threads (SMTs) / HT
+    cat /proc/cpuinfo  | grep -P 'processor|physical id|core id|^$'
+
+    # pip install walnut    # pretty print
+    # for c in sorted([ ( int(c['processor']), int(c['physical id']), int(c['core id']) ) for c in cpu.dict().values()]): print c
+}
+
 bbr_check() {
     tc qdisc show
     sysctl net.core.default_qdisc
@@ -350,4 +372,44 @@ export_proxy---port---ip(){
     export no_proxy="localhost,127.0.0.1,192.168.*.*,10.*.*.*,172.16.*.*,172.17.*.*"
     export ftp_proxy=$http_proxy
     export rsync_proxy=$http_proxy
+}
+
+py_install---requirements.txt() {
+
+# http://stackoverflow.com/questions/35802939/install-only-available-packages-using-conda-install-yes-file-requirements-t
+# one fails, all fail:
+# conda install --yes --file requirements.txt
+
+# fix
+
+    if [ -z ${1+x} ]; then
+      file=requirements.txt
+     else
+      file=$1
+    fi
+
+    while read requirement; do conda install --yes $requirement; done < $file
+    while read requirement; do pip install $requirement; done < $file
+
+}
+
+mount_cifs_N_fstab--path--mountpoint---user--passwd(){
+
+    # make sure single quoted network path, eg: '\\server\folder'
+
+    path=$1
+
+    mount_point=$2
+
+    if [ -z $3 ]; then
+        user=administrator
+    else	
+        user=$3
+    fi
+
+    passwd=$4
+
+    #mount -t cifs $path $mount_point -o username=$user,password=$passwd
+
+    echo $path $mount_point cifs username=$user,password=$passwd 0 0 >>  /etc/fstab
 }

@@ -1,9 +1,12 @@
-# Naming rules
-`--`: followed by required parameter  
-`---`: followed by optional parameter
+# Usage for shell functions and alias
+    source ./init.sh  # set
+    set && alias      # check
 
-`source init.sh` for shell alias and functions.
+## Naming rules
+- `--`: followed by required parameter
+- `---`: followed by optional parameter
 
-Folder `docs`: Bootstrap code snippets ([Preview](https://ferro.pro/scripts/))  
-Folder `jupyter`: Notes written with jupyter ([nbviewer](http://nbviewer.jupyter.org/github/fzinfz/scripts/tree/master/jupyter/))  
-Folder `verdor`: 3rd party code  
+# Folders
+`docs`: Bootstrap code snippets ([Preview](https://html.ferro.pro/))  
+`jupyter`: Notes written with jupyter ([nbviewer](http://nbviewer.jupyter.org/github/fzinfz/scripts/tree/master/jupyter/))  
+`verdor`: 3rd party code  
