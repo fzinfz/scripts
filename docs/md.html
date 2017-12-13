@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Markdown helper</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="masthead">
+        <h5 class="text-right">
+            <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html">Source Code</a>
+        </h5>
+    </div>
+    <div class="d-flex justify-content-center">
+        <h3 class="text-muted" class="text-center">Raw Text To Markdown Table</h3>
+    </div>
+    <form>
+        <div class="form-group">
+            <label>Raw text:</label>
+            <textarea class="form-control" id="raw" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+            <button id="raw2table" onclick="javascript:return false;">To Markdown Table</button>
+            <label id="raw2table_hint"></label>
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" id='raw2table_result' rows="12"></textarea>
+        </div>
+
+    </form>
+
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $('#raw').val("Col1\tCol2\nVal1\tVal2").select();
+
+        $("#raw2table").click(function () {
+            var raw = $('#raw').val();
+            var raw2 = raw.replace(/\b/g, "|").replace(/\|\t\|/g, "|\t");
+            var head_line = raw2.match(/.*/)[0].replace(/[^\|]+/g, "---");
+            result = raw2.replace(/\n/, ["\n", head_line, "\n"].join(""));
+            $('#raw2table_result').text(result).select();
+            $('textarea').css('height', '100%');  // not working
+            //document.execCommand("copy");
+            $('#raw2table_hint').text("Edit & Copy manually");
+        });
+    </script>
+</body>
+
+</html>
