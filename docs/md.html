@@ -30,42 +30,80 @@
     <div class="d-flex justify-content-center">
         <h3 class="text-muted" class="text-center">Raw Text To Markdown Table</h3>
     </div>
-    <form>
-        <div class="form-group">
-            <label>Raw text:</label>
-            <textarea class="form-control" id="raw" rows="5"></textarea>
+    <div class="container">
+        <form>
+            <div class="form-group">
+                <label>Raw text:</label>
+                <textarea class="form-control" id="raw" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id='raw2table_result' rows="8"></textarea>
+                <button id="copy" class="btn btn-info" onclick="javascript:return false;">Copy</button>
+                <label id="hint"></label>
+                <div id="preview"></div>
+            </div>
+        </form>
+    </div>
+    <div>
+        <div class="d-flex justify-content-center">
+            <h3 class="text-muted" class="text-center">HTML Table To Markdown Table tools</h3>
         </div>
-        <div class="form-group">
-            <button id="raw2table" onclick="javascript:return false;">To Markdown Table</button>
-            <label id="raw2table_hint"></label>
+        <div class="container">
+            <p>This tool can only convert simple tables, try html table converters if it doesn't work well.
+                <br />E.g.:</p>
+            <p>
+                <a href="http://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">HTML Table to Markdown Extra Table</a>
+            </p>
+            <p>
+                <a href="https://cdn.rawgit.com/johnbeech/html-table-to-markdown-converter/master/table-converter.html">HTML Table to Markdown Converter</a>
+            </p>
         </div>
-        <div class="form-group">
-            <textarea class="form-control" id='raw2table_result' rows="12"></textarea>
-        </div>
-
-    </form>
-
+    </div>
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
-        crossorigin="anonymous"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/showdownjs/showdown/1.8.5/dist/showdown.min.js"></script>
 
     <script>
-        $('#raw').val("Col1\tCol2\nVal1\tVal2").select();
+        $('a').attr('target', '_blank');
 
-        $("#raw2table").click(function () {
-            var raw = $('#raw').val();
-            var raw2 = raw.replace(/\b/g, "|").replace(/\|\t\|/g, "|\t");
-            var head_line = raw2.match(/.*/)[0].replace(/[^\|]+/g, "---");
-            result = raw2.replace(/\n/, ["\n", head_line, "\n"].join(""));
-            $('#raw2table_result').text(result).select();
-            $('textarea').css('height', '100%');  // not working
-            //document.execCommand("copy");
-            $('#raw2table_hint').text("Edit & Copy manually");
+        var converter = new showdown.Converter();
+        converter.setOption('tables', 'true');
+        function md_preview() {
+            setTimeout(() => {
+                document.getElementById('preview').innerHTML
+                    = converter.makeHtml($('#raw2table_result').val());
+                $('table').attr('class', 'table');
+            }, 100);
+        }
+
+        function md_raw2html() {
+            var raw = $('#raw').val()
+                .replace(/(^|$|\t)/g, "|")
+                .replace(/\|\t\|/g, "|\t")
+                .replace(/\n/g, "|\n|")
+                ;
+            var head_line = raw.match(/.*/)[0].replace(/[^\|]+/g, "---");
+            var result = raw.replace(/\n/, ["\n", head_line, "\n"].join(""));
+            $('#raw2table_result').val(result);
+            md_preview();
+        }
+
+        $("#raw").on("select paste input", md_raw2html);
+        $('#raw2table_result').on("select paste input", md_preview);
+        $('#copy').on("click", function () {
+            $('#raw2table_result').select();
+            document.execCommand("copy");
+            $('#hint').text("Copied");
         });
+
+        //first load demo
+        $('#raw').val("Col-1\tCol_2\nVal.1\tVal#2\nVal+3\tVal=4");
+        $('#raw').select();
+        md_preview();
     </script>
 </body>
 

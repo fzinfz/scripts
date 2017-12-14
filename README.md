@@ -11,3 +11,6 @@
 `jupyter`: Notes written with jupyter ([nbviewer](http://nbviewer.jupyter.org/github/fzinfz/scripts/tree/master/jupyter/))  
 `verdor`: 3rd party code  
 Others: programming language related
+
+# Tools in `doc` folder
+Raw Text To Markdown Table convertere: https://html.ferro.pro/md.html
