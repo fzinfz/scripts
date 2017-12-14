@@ -5,10 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Markdown helper</title>
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
         crossorigin="anonymous">
 
@@ -21,27 +19,19 @@
 </head>
 
 <body>
-
-    <div class="masthead">
-        <h5 class="text-right">
-            <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html">Source Code</a>
-        </h5>
-    </div>
-    <div class="d-flex justify-content-center">
-        <h3 class="text-muted" class="text-center">Raw Text To Markdown Table</h3>
+    <div class="d-flex justify-content-between">
+        <h3></h3>
+        <h3 class="text-muted">Raw Text To Markdown Table Live</h3>
+        <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html">Source Code</a>
     </div>
     <div class="container">
         <form>
-            <div class="form-group">
-                <label>Raw text:</label>
-                <textarea class="form-control" id="raw" rows="5"></textarea>
-            </div>
-            <div class="form-group">
-                <textarea class="form-control" id='raw2table_result' rows="8"></textarea>
-                <button id="copy" class="btn btn-info" onclick="javascript:return false;">Copy</button>
-                <label id="hint"></label>
-                <div id="preview"></div>
-            </div>
+            <textarea class="form-control m-1" id="raw" rows="5"></textarea>
+            <textarea class="form-control m-1" id='raw2table_result' rows="8"></textarea>
+            <button id="btn_copy" class="btn btn-info m-1" onclick="javascript:return false;">Copy</button>
+            <button id="btn_del" class="btn btn-secondary m-1" onclick="javascript:return false;">Delete</button>
+            <label id="hint"></label>
+            <div id="preview"></div>
         </form>
     </div>
     <div>
@@ -59,7 +49,7 @@
             </p>
         </div>
     </div>
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
@@ -93,17 +83,21 @@
         }
 
         $("#raw").on("select paste input", md_raw2html);
-        $('#raw2table_result').on("select paste input", md_preview);
-        $('#copy').on("click", function () {
+        $('#raw2table_result').on("paste input", md_preview);
+
+        $('#btn_copy').on("click", function () {
             $('#raw2table_result').select();
             document.execCommand("copy");
             $('#hint').text("Copied");
         });
 
-        //first load demo
+        $('#btn_del').on("click", function () {
+            $('#raw2table_result').val("").focus();
+        });
+
+        //demo on load
         $('#raw').val("Col-1\tCol_2\nVal.1\tVal#2\nVal+3\tVal=4");
         $('#raw').select();
-        md_preview();
     </script>
 </body>
 
