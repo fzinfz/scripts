@@ -21,30 +21,28 @@
 <body>
     <div class="d-flex justify-content-between">
         <h4 />
-        <h4 class="text-muted">Raw Text To Markdown Table Live</h4>
+        <h4 class="text-muted raw2mdtable">Plain Text To Markdown Table Live</h4>
         <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html">Source Code</a>
     </div>
     <div class="container">
         <form>
-            <textarea class="form-control m-1" id="raw" rows="5"></textarea>
+            <textarea class="form-control m-1 raw2mdtable" id="raw" rows="5"></textarea>
             <textarea class="form-control m-1" id='raw2table_result' rows="8"></textarea>
             <button id="btn_copy" class="btn btn-info m-1" onclick="javascript:return false;">Copy</button>
-            <button id="btn_del" class="btn btn-secondary m-1" onclick="javascript:return false;">Delete</button>
             <label id="hint"></label>
+            <button id="btn_del" class="btn btn-success m-1" onclick="javascript:return false;">Pure Edit Mode</button>
+            <label class="form-check-label">
+                <input class="form-check-input mx-2" type="checkbox" id="is_center" value="">Centered
+            </label>
             <div id="preview"></div>
         </form>
     </div>
-    <div>
-        <div class="d-flex justify-content-center">
-            <h3 class="text-muted" class="text-center">HTML Table To Markdown Table tools</h3>
-        </div>
+    <div class="raw2mdtable">
         <div class="container">
-            <p>This tool can only convert simple tables, try html table converters if it doesn't work well.
-                <br />E.g.:</p>
             <p>
+                Other HTML Table To Markdown tools:
                 <a href="http://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">HTML Table to Markdown Extra Table</a>
-            </p>
-            <p>
+                |
                 <a href="https://cdn.rawgit.com/johnbeech/html-table-to-markdown-converter/master/table-converter.html">HTML Table to Markdown Converter</a>
             </p>
         </div>
@@ -55,7 +53,7 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/showdownjs/showdown/1.8.5/dist/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.5/showdown.min.js"></script>
 
     <script>
         $('a').attr('target', '_blank');
@@ -66,7 +64,7 @@
             setTimeout(() => {
                 document.getElementById('preview').innerHTML
                     = converter.makeHtml($('#raw2table_result').val());
-                $('table').attr('class', 'table');
+                $('table').attr('class', 'table table-bordered');
             }, 100);
         }
 
@@ -76,27 +74,44 @@
                 .replace(/\|\t\|/g, "|\t")
                 .replace(/\n/g, "|\n|")
                 ;
+
             var head_line = raw.match(/.*/)[0].replace(/[^\|]+/g, "---");
             var result = raw.replace(/\n/, ["\n", head_line, "\n"].join(""));
             $('#raw2table_result').val(result);
             md_preview();
         }
 
-        $("#raw").on("select paste input", md_raw2html);
-        $('#raw2table_result').on("paste input", md_preview);
+        function center() {
+            var is_center = document.getElementById("is_center").checked;
+            var old_value = $('#raw2table_result').val();
+            var new_value = is_center
+                ? old_value.replace(/-{3,}/g, ":---:")
+                : old_value.replace(/:-{3,}:/g, "---");
+            setTimeout(() => {
+                $('#raw2table_result').val(new_value);
+            }, 100);
+            md_preview();
+        }
 
+        $("#raw").on("select paste input", md_raw2html);
+        $('#raw2table_result').on("select paste input", md_preview);
+        $('#is_center').on("change", center);
         $('#btn_copy').on("click", function () {
             $('#raw2table_result').select();
             document.execCommand("copy");
             $('#hint').text("Copied");
         });
-
         $('#btn_del').on("click", function () {
-            $('#raw2table_result').val("").focus();
+            $('.raw2mdtable').hide();
+            $('#raw2table_result').val("").select();
         });
 
         //demo on load
-        $('#raw').val("Col-1\tCol_2\nVal.1\tVal#2\nVal+3\tVal=4");
+        $('#raw').val(
+            `Paste\tText\tHere
+Tab\tSeparated\tTables
+Support:\tWikimedia\tExcel
+Support\tLive\tPreview`);
         $('#raw').select();
     </script>
 </body>
