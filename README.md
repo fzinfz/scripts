@@ -13,4 +13,4 @@
 Others: programming language related
 
 # Tools in `doc` folder
-Raw Text To Markdown Table converter: https://html.ferro.pro/md.html
+Plain Text Table To Markdown converter: https://html.ferro.pro/md.html

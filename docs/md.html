@@ -5,7 +5,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Markdown helper</title>
+    <title>Markdown Helper</title>
+    <meta name="description" content="A live editor to convert Plain Text Table to Markdown format.">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
         crossorigin="anonymous">
@@ -21,12 +22,12 @@
 <body>
     <div class="d-flex justify-content-between">
         <h4 />
-        <h4 class="text-muted raw2mdtable">Plain Text To Markdown Table Live</h4>
-        <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html">Source Code</a>
+        <h4 class="text-muted hide-in-pure-mode">Plain Table to Markdown Live Converter</h4>
+        <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html" class="hide-in-pure-mode">Source Code</a>
     </div>
     <div class="container">
         <form>
-            <textarea class="form-control m-1 raw2mdtable" id="raw" rows="5"></textarea>
+            <textarea class="form-control m-1 hide-in-pure-mode" id="raw" rows="5"></textarea>
             <textarea class="form-control m-1" id='raw2table_result' rows="8"></textarea>
             <button id="btn_copy" class="btn btn-info m-1" onclick="javascript:return false;">Copy</button>
             <label id="hint"></label>
@@ -37,13 +38,16 @@
             <div id="preview"></div>
         </form>
     </div>
-    <div class="raw2mdtable">
+    <div class="hide-in-pure-mode">
         <div class="container">
             <p>
-                Other HTML Table To Markdown tools:
-                <a href="http://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">HTML Table to Markdown Extra Table</a>
+                Other tools recommended: 
+                【Chrome Plugin】
+                <a href="https://chrome.google.com/webstore/detail/copytables/ekdpkppgmlalfkphpibadldikjimijon">Copytables</a>
+                【HTML Table to Markdown Web Converter】
+                <a href="http://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">1</a>
                 |
-                <a href="https://cdn.rawgit.com/johnbeech/html-table-to-markdown-converter/master/table-converter.html">HTML Table to Markdown Converter</a>
+                <a href="https://cdn.rawgit.com/johnbeech/html-table-to-markdown-converter/master/table-converter.html">2</a>
             </p>
         </div>
     </div>
@@ -102,7 +106,7 @@
             $('#hint').text("Copied");
         });
         $('#btn_del').on("click", function () {
-            $('.raw2mdtable').hide();
+            $('.hide-in-pure-mode').hide();
             $('#raw2table_result').val("").select();
         });
 
