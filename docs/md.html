@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Markdown Helper</title>
-    <meta name="description" content="A live editor to convert Plain Text Table to Markdown format.">
+    <meta name="description" content="A live editor to convert Plain Text or HTML Table to Markdown format.">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
         crossorigin="anonymous">
@@ -22,7 +22,7 @@
 <body>
     <div class="d-flex justify-content-between">
         <h4 />
-        <h4 class="text-muted hide-in-pure-mode">Plain Table to Markdown Live Converter</h4>
+        <h4 class="text-muted hide-in-pure-mode">Plain/HTML Table to Markdown Live Converter</h4>
         <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html" class="hide-in-pure-mode">Source Code</a>
     </div>
     <div class="container">
@@ -35,23 +35,25 @@
             <label class="form-check-label">
                 <input class="form-check-input mx-2" type="checkbox" id="is_center" value="">Centered
             </label>
-            <div id="preview"></div>
+            <div id="preview" class="py-2"></div>
         </form>
     </div>
+
     <div class="hide-in-pure-mode">
-        <div class="container">
+        <hr />
+        <div class="container d-flex justify-content-between">
             <p>
-                Other tools recommended: 
-                【Chrome Plugin】
+                Chrome extension recommended:
                 <a href="https://chrome.google.com/webstore/detail/copytables/ekdpkppgmlalfkphpibadldikjimijon">Copytables</a>
-                【HTML Table to Markdown Web Converter】
-                <a href="http://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">1</a>
-                |
-                <a href="https://cdn.rawgit.com/johnbeech/html-table-to-markdown-converter/master/table-converter.html">2</a>
+            </p>
+            <p> Credits:
+                <a href="https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1">HtmlTable2MD</a>
+                (
+                <a href="https://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">Notes</a>) |
+                <a href="https://github.com/showdownjs/showdown">MD2HTML</a>
             </p>
         </div>
     </div>
-
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
@@ -62,17 +64,17 @@
     <script>
         $('a').attr('target', '_blank');
 
-        var converter = new showdown.Converter();
-        converter.setOption('tables', 'true');
+        var md2html = new showdown.Converter();
+        md2html.setOption('tables', 'true');
         function md_preview() {
             setTimeout(() => {
                 document.getElementById('preview').innerHTML
-                    = converter.makeHtml($('#raw2table_result').val());
+                    = md2html.makeHtml($('#raw2table_result').val());
                 $('table').attr('class', 'table table-bordered');
             }, 100);
         }
 
-        function md_raw2html() {
+        function plain2md() {
             var raw = $('#raw').val()
                 .replace(/(^|$|\t)/g, "|")
                 .replace(/\|\t\|/g, "|\t")
@@ -83,6 +85,65 @@
             var result = raw.replace(/\n/, ["\n", head_line, "\n"].join(""));
             $('#raw2table_result').val(result);
             md_preview();
+        }
+
+        // http://stackoverflow.com/a/5450113
+        function repeat(pattern, count) {
+            if (count < 1) return '';
+            var result = '';
+            while (count > 1) {
+                if (count & 1) result += pattern;
+                count >>= 1, pattern += pattern;
+            }
+            return result + pattern;
+        }
+        function html2md() {
+            var t = $('#raw').val();
+            if (t.length) {
+                // @Author: https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1
+                // now perform all the changes on our t string via the r() function above
+                t = t.replace(/\t/g, ' '); // convert tabs to a single space
+                t = t.replace(/\s*[\r\n]\s*/g, ''); // remove lines
+                t = t.replace(/<\!--[\s\S]*?-->/g, ''); // remove html comments
+                t = t.replace(/ *<a[^>]* href="(.*?)"[^>]*> *(.*?)<\/a>/ig, '[$2]($1)'); // convert anchor tags
+                t = t.replace(/<\/?strong.*?>/g, '**'); // convert strong to **
+                t = t.replace(/<\/?em.*?>/g, '_'); // convert em to _
+                t = t.replace(/<\/?code.*?>/g, '`'); // convert code to `
+                t = t.replace(/<img[^>]* src="(.*?)"[^>]* alt="(.*?)"[^>]*>/ig, '![$2]($1)'); // convert images with src, alt
+                t = t.replace(/<img[^>]* alt="(.*?)"[^>]* src="(.*?)"[^>]*>/ig, '![$1]($2)'); // convert images with alt, src
+                t = t.replace(/ *<tr[^>]*>/ig, '\n|'); // build <tr> as "\n|"
+                t = t.replace(/\s*<t[dh].*?>/ig, ' '); // convert <td> and <th> to a space
+                t = t.replace(/\s*<\/t[dh]>/ig, ' |'); // build </td> and </th> as " |"
+                t = t.replace(/&nbsp;/ig, ''); // drop non-breaking spaces
+                t = t.replace(/&amp;/ig, '&'); // de-entize ampersands
+                t = t.replace(/<br[^>]*>/ig, '\t'); // temporarily convert BR tags to tabs
+                t = t.replace(/<\/?[^>]+>/ig, ''); // drop all other tags
+                t = t.replace(/\t *\|/g, ' |'); // drop cell-ending BRs
+                t = t.replace(/\s*\t\s*/g, '<br />'); // convert tabs back to BR tags
+                t = t.replace(/\| {2,}/g, '| '); // tighten spacing after the pipe symbols
+                t = t.replace(/ {2,}\|/g, ' |'); // tighten spacing before the pipe symbols
+                t = t.replace(/^ +\|/gm, '|'); // trim line-leading whitespace
+                t = t.replace(/ {4,}/g, '   '); // convert 4+ spaces to three spaces
+                t = t.replace(/^\s+|\s+$/g, ''); // trim whitespace
+                // generate the header row separators
+                var lines = t.split("\n");
+                if (lines && lines.length) {
+                    var segments = lines[0].split('|'),
+                        headers = '|';
+                    for (var j = 1; j < segments.length - 1; j++) {
+                        headers += repeat('-', segments[j].length) + '|';
+                    }
+                    // console.log(headers);
+                    t = lines[0] + "\n" + headers + "\n" + lines.slice(1).join("\n");
+                }
+            }
+            $('#raw2table_result').val(t);
+            md_preview();
+        }
+
+        function to_md() {
+            var is_html = $('#raw').val().match(/\<td\>/i);
+            if (is_html) { html2md() } else { plain2md() };
         }
 
         function center() {
@@ -97,7 +158,7 @@
             md_preview();
         }
 
-        $("#raw").on("select paste input", md_raw2html);
+        $("#raw").on("select paste input", to_md);
         $('#raw2table_result').on("select paste input", md_preview);
         $('#is_center').on("change", center);
         $('#btn_copy').on("click", function () {
@@ -112,8 +173,9 @@
 
         //demo on load
         $('#raw').val(
-            `Paste\tText\tHere
-Tab\tSeparated\tTables
+            `Paste\tText or HTML\tHere
+Plain text\tsupports\tTAB-separated columns\t
+HTML\tsupports\ta/br/strong/em/code tags
 Support:\tWikimedia\tExcel
 Support\tLive\tPreview`);
         $('#raw').select();
