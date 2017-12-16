@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s expand_aliases
+
 shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 
@@ -10,6 +12,7 @@ alias git_uncommit="git reset --soft HEAD~1"
 alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
 
 alias my_functions='sed -nE "s/\(\) *\{//p" init.sh | sort' # `-n`+`p`: only modified lines
+alias my_functions_unset='unset -f $(my_functions)'
 
 git_add_commit_push---comment() {
     if [ -z $1 ];then
@@ -424,4 +427,8 @@ mount_cifs_N_fstab--path--mountpoint---user--passwd(){
     #mount -t cifs $path $mount_point -o username=$user,password=$passwd
 
     echo $path $mount_point cifs username=$user,password=$passwd 0 0 >>  /etc/fstab
+}
+
+tmux_show_screen_keys(){
+    cat /usr/share/doc/tmux/examples/screen-keys.conf | grep '\bbind \w'
 }
