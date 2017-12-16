@@ -36,7 +36,7 @@
 
     <div class="container">
         <form>
-            <textarea class="form-control m-1 hide-in-pure-mode" id="raw" rows="5"></textarea>
+            <textarea class="form-control m-1 hide-in-pure-mode" id="raw" rows="6"></textarea>
             <textarea class="form-control m-1" id='raw2table_result' rows="8"></textarea>
             <button id="btn_copy" class="btn btn-info m-1" onclick="javascript:return false;">Copy</button>
             <label id="hint"></label>
@@ -183,8 +183,8 @@
         //demo on load
         $('#raw').val(
             `Paste\tText or HTML\tHere
-Plain text\tsupports\tTAB-separated columns\t
-HTML\tsupports\ta/br/strong/em/code tags
+Plain text table\tsupports\tTAB-separated columns
+HTML table\tsupports\ta/br/strong/em/code tags inside
 Support:\tWikimedia\tExcel
 Support\tLive\tPreview`);
         $('#raw').select();
