@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Markdown Helper</title>
+    <title>Markdown Table Live</title>
     <meta name="description" content="A live editor to convert Plain Text or HTML Table to Markdown format.">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
@@ -20,18 +20,28 @@
 </head>
 
 <body>
-    <div class="d-flex justify-content-between">
-        <h4 />
-        <h4 class="text-muted hide-in-pure-mode">Plain/HTML Table to Markdown Live Converter</h4>
-        <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html" class="hide-in-pure-mode">Source Code</a>
+    <div class="container hide-in-pure-mode">
+        <div class="d-flex justify-content-between">
+            <div></div>
+            <div>
+                <h4 class="text-muted">Plain/HTML Table to Markdown</h4>
+            </div>
+            <div class="d-flex justify-content-end">
+                <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html" class="mr-1">Source Code</a>
+                |
+                <a href="https://github.com/fzinfz/scripts/issues/new?title=Markdown%20Converter%20Bug:"  class="ml-1">Bug Report</a>
+            </div>
+        </div>
     </div>
+
     <div class="container">
         <form>
             <textarea class="form-control m-1 hide-in-pure-mode" id="raw" rows="5"></textarea>
             <textarea class="form-control m-1" id='raw2table_result' rows="8"></textarea>
             <button id="btn_copy" class="btn btn-info m-1" onclick="javascript:return false;">Copy</button>
             <label id="hint"></label>
-            <button id="btn_del" class="btn btn-success m-1" onclick="javascript:return false;">Pure Edit Mode</button>
+            <button id="btn_del" class="btn btn-success m-1" onclick="javascript:return false;" data-toggle="tooltip" data-placement="top"
+                title="Live Markdown Editor">Pure Edit Mode</button>
             <label class="form-check-label">
                 <input class="form-check-input mx-2" type="checkbox" id="is_center" value="">Centered
             </label>
@@ -99,9 +109,8 @@
         }
         function html2md() {
             var t = $('#raw').val();
-            if (t.length) {
+            if (true) {
                 // @Author: https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1
-                // now perform all the changes on our t string via the r() function above
                 t = t.replace(/\t/g, ' '); // convert tabs to a single space
                 t = t.replace(/\s*[\r\n]\s*/g, ''); // remove lines
                 t = t.replace(/<\!--[\s\S]*?-->/g, ''); // remove html comments
