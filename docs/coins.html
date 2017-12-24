@@ -5,12 +5,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Markdown Table Live</title>
+    <title>Coins Explorer</title>
     <meta name="description" content="">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
         crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" rel="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.3.2/css/tabulator.min.css" rel="stylesheet">
+
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -21,11 +22,11 @@
 </head>
 
 <body>
-    <div class="container hide-in-pure-mode">
+    <div class="container">
         <div class="d-flex justify-content-between">
             <div></div>
             <div>
-                <h4 class="text-muted">Coins Explorer</h4>
+                <h4 class="text-muted">Snapshot - 20171224</h4>
             </div>
             <div class="d-flex justify-content-end">
                 <a href="https://github.com/fzinfz/scripts/blob/master/docs/coins.html" class="mr-1">Source</a>
@@ -33,53 +34,56 @@
         </div>
     </div>
 
-    <div class="container">
-        <form class="form-inline">
-            <div class="form-group">
-                <input type="password" class="form-control mx-1" id="inputPassword2" placeholder="Password">
-                <input type="password" class="form-control mx-1" id="inputPassword2" placeholder="Password">
-                <input type="password" class="form-control mx-1" id="inputPassword2" placeholder="Password">
-            </div>
-            <button type="submit" class="btn btn-primary mx-2">Calculate</button>
-        </form>
+    <div class="container m-2">
+        <div id="example-table"></div>
+        <pre id="hint"></pre>
     </div>
 
-    <div class="container">
-        <label id="hint"></label>
-        <table id="example" class="table table-bordered" cellspacing="0" width="100%">
-        </table>
-    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+        crossorigin="anonymous"></script>
 
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
         crossorigin="anonymous"></script>
 
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.3.2/js/tabulator.min.js"></script>
 
     <script>
         $('a').attr('target', '_blank');
 
-        var dataSet = [
-            ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
-            ["Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750"],
-            ["Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000"],
-            ["Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "6224", "2012/03/29", "$433,060"],
-            ["Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675"]
-        ];
+        url = "./coins.json";
 
-        var ds = $.get("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=BTC,USD,EUR",
-            function (ds) {
-                $('#example').DataTable({
-                    data: dataSet,
-                    columns: [
-                        { title: "Name" },
-                        { title: "Position" }
-                    ]
-                });
-            }, "json");
+        $.get(url, function (j) {
+
+            ds = j["coins"];
+            var arr_rows = Object.keys(ds).map(p => Object.assign({ Name: p }, ds[p]));
+
+            const arr_title = Object.keys(arr_rows[0])
+                .filter(s => !['id', 'lagging', 'timestamp'].includes(s));
+            // $("#hint").text(JSON.stringify(arr_title, null, 4));
+            var columns_data = arr_title.map(p => Object.assign({ title: p, field: p }));
+
+            $("#example-table").tabulator({
+                height: 550,
+                // layout: "fitColumns",
+                tooltips: true,
+                history: true,
+                movableColumns: true,
+                initialSort: [
+                    { column: arr_title[0], dir: "asc" },
+                ],
+                columns: columns_data,
+                rowClick: function (e, row) {
+                    //  window.open("http://..." + row.getData().id);
+                },
+            });
+
+            $("#example-table").tabulator("setData", arr_rows);
+        }, "json");
+
     </script>
 </body>
 
