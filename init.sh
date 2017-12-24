@@ -116,6 +116,8 @@ check_memory(){
 
     free -m
     numactl -H
+
+    lshw -C memory
 }
 
 top_custom(){

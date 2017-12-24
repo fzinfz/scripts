@@ -20,7 +20,7 @@ fi
 $c  install -y \
     software-properties-common \
     inxi htop pciutils lsof numactl \
-    iperf3 sysbench \
+    iperf3 sysbench sysstat \
     net-tools bridge-utils bmon iputils-ping nload iftop \
     dnsutils tcpdump mtr nmap nethogs traceroute \
     trickle wondershaper \
