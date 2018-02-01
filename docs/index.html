@@ -44,8 +44,9 @@
                 <a class="btn btn-secondary" href="https://getbootstrap.com/docs/3.3/getting-started/#examples-framework">templates</a>
                 <a class="btn btn-secondary" href="https://getbootstrap.com/docs/4.0/components/progress/#backgrounds">progress</a>
                 <a class="btn btn-primary" href="https://getbootstrap.com/docs/4.0/getting-started/introduction/">Quick Start »</a>
-            </div>
 
+                <label id="time"></label>
+            </div>
         </p>
     </div>
     <div class="container">
@@ -102,6 +103,20 @@
             $('textarea').css('property', 'value');  // note the ',' not ':'
         `
 
+        // time
+        function pad2(number) {
+            return (number < 10 ? '0' : '') + number
+        }
+
+        var dt = new Date();
+        var current_time = pad2(dt.getHours())
+            + ':' + pad2(dt.getMinutes())
+            + ':' + pad2(dt.getSeconds())
+        ;
+
+        $('#time').text(current_time);
+
+        // pdf
         var pdf = `
             <object disabled data="https://tuftsdev.github.io/WebProgramming/notes/html5-cheat-sheet.pdf" type="application/pdf" width="100%"
                 height="1600">

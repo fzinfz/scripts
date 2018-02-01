@@ -54,6 +54,15 @@ source_url() {
     source /dev/stdin <<< "$(curl -sS $1)"
 }
 
+kernel_list() {
+    dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+'
+}
+
+kernel_delete--versions() {
+    apt purge $*
+    dpkg --purge $*
+}
+
 cat_highlight--keyword--file(){
     # https://unix.stackexchange.com/questions/106565
     grep -E --color=auto "$1|$" $2
@@ -334,6 +343,14 @@ check_video() {
     for p in /sys/class/drm/*/status; \
         do con=${p%/status}; echo -n "${con#*/card?-}: "; cat $p;
     done
+}
+
+check_video_amd(){
+    dpkg -l amdgpu-pro
+}
+
+check_video_glxgears() {
+    GALLIUM_HUD=help glxgears
 }
 
 check_video--card_index(){
