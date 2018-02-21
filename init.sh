@@ -93,7 +93,7 @@ add_current_path_to_PATH() {
     fi
 }
 
-sys_info() {
+check_sys() {
     echo LONG_BIG: $(getconf LONG_BIT)
     $nl
 
@@ -107,7 +107,7 @@ sys_info() {
     inxi -Fxz
 }
 
-get_cpu_vendor(){
+check_cpu_vendor(){
     s=$(lscpu | grep 'Model name')
     if [[ "$s" =~ "Intel" ]]; then
         arch=intel
@@ -127,6 +127,11 @@ check_memory(){
     numactl -H
 
     lshw -C memory
+}
+
+check_disk(){
+    lshw -class disk -class storage
+    lshw -short -C disk
 }
 
 top_custom(){
