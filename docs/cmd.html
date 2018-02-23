@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CMD generator</title>
+    <title>Command Line Generator</title>
     <meta name="description" content="command line generator">
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -41,28 +41,33 @@
                 <a href="https://docs.docker.com/engine/reference/run/">docker run</a>
             </h3>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" checked value="-d --restart unless-stopped">
+                <input class="form-check-input checkbox-group-1" type="checkbox" checked value="-d --restart unless-stopped">
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" checked value="--net host">
+                <input class="form-check-input checkbox-group-1" type="checkbox" value="--rm -it">
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="--privileged">
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" checked value="-v /:/host">
-            </div>
-            <div class="form-inline">
-                <input class="form-check-input" type="checkbox" value="--user=root --cap-add=ALL --pid=host --ipc=host">
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" checked value="--net host">
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" value="--privileged">
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" value="-v /:/host">
+                </div>
             </div>
             <div class="form-inline">
                 <input class="form-check-input" type="checkbox" value="-v /dev:/dev -v /lib/modules:/lib/modules">
             </div>
             <div class="form-inline">
+                <input class="form-check-input" type="checkbox" value="--user=root --cap-add=ALL --pid=host --ipc=host">
+            </div>
+            <div class="form-inline">
                 <input class="form-check-input" type="checkbox" value='--env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw"'>
             </div>
             <div class="form-inline">
-                <input class="form-control mgn" id='txt' placeholder="image name">
+                <input class="form-control mgn txt" placeholder="IMAGE">
                 <input class="form-check-input" type="checkbox" checked value="/bin/bash">
             </div>
         </form>
@@ -71,8 +76,8 @@
                 <a href="https://docs.docker.com/engine/reference/commandline/exec/">docker exec</a>
             </h3>
             <div class="form-inline">
-                <input class="form-check-input" type="checkbox" checked value="--rm -it">
-                <input class="form-control mgn" id='txt' placeholder="image name">
+                <input class="form-check-input" type="checkbox" checked value="-it">
+                <input class="form-control mgn txt" placeholder="CONTAINER">
                 <input class="form-check-input" type="checkbox" checked value="/bin/bash">
             </div>
 
@@ -98,26 +103,36 @@
             setTimeout(() => {
 
                 var result = $(this).closest('form').find('a').text() + ' '; //prefix
-                var txt = $(this).closest('form').find('#txt').val() + ' '; //input text
+                var txt = $(this).closest('form').find('.txt').val() + ' '; //input text
 
                 if (result.includes('docker run'))
                     result += '--name ' + txt.replace(/.*\//, "").replace(/:/, "-") + ' ';   // --name
 
-                $(this).closest('form').find('input')
-                    .each(function (index, item) {
-                        if ($(item).is(':checkbox') && $(item).is(':checked')) {
-                            result += $(item).val() + ' ';
-                        }
-                        if (!$(item).is(':checkbox')) {
-                            result += $(item).val() + ' ';
-                        }
-                    });
+                $(this).closest('form').find('input').each(function (index, item) {
+                    if ($(item).prop('checked') || (!$(item).is(':checkbox'))) {
+                        result += $(item).val() + ' ';
+                    }
+                });
+
                 $('#result').val(result);
             }, 100);
         }
 
-        $('input').on('click input focus', cmd_generate)
-        $('#txt').focus();
+        $('input').not('.checkbox-group-1').on('click input focus', cmd_generate)
+        $('.txt').focus();
+
+        function handle_checkbox() {
+            var v = $(this).val();
+            var checked = $(this).prop('checked');
+
+            $('.checkbox-group-1').each(function (index, item) {
+                if ($(item).val() == v) return true;
+                $(item).prop('checked', !checked)
+            });
+            $(this).closest('form').find('.txt').focus();
+        }
+
+        $('.checkbox-group-1').on('click', handle_checkbox)
 
         $('#btn_copy').on("click", function () {
             $('#result').select();
