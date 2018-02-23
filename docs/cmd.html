@@ -68,7 +68,8 @@
             </div>
             <div class="form-inline">
                 <input class="form-control mgn txt" placeholder="IMAGE">
-                <input class="form-check-input checkbox-group-2" type="checkbox" checked value="/bin/bash">
+                <input class="form-check-input checkbox-group-2" type="checkbox" checked value="">
+                <input class="form-check-input checkbox-group-2" type="checkbox" value="/bin/bash">
                 <input class="form-check-input checkbox-group-2" type="checkbox" value="/bin/sh" style="margin-left:0.5rem;">
             </div>
         </form>
@@ -79,7 +80,8 @@
             <div class="form-inline">
                 <input class="form-check-input" type="checkbox" checked value="-it">
                 <input class="form-control mgn txt" placeholder="CONTAINER">
-                <input class="form-check-input checkbox-group-3" type="checkbox" checked value="/bin/bash">
+                <input class="form-check-input checkbox-group-3" type="checkbox" checked value="">
+                <input class="form-check-input checkbox-group-3" type="checkbox" value="/bin/bash">
                 <input class="form-check-input checkbox-group-3" type="checkbox" value="/bin/sh" style="margin-left:0.5rem;">
             </div>
         </form>
@@ -120,7 +122,7 @@
         }
 
         $('input').not('.checkbox-group-1').on('click input focus', cmd_generate)
-        $('.txt').focus();
+        $('.txt').first().focus();
 
         function handle_checkbox(event) {
             var v = $(this).val();
