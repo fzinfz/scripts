@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter
+  labels:
+    run: jupyter
+spec:
+  type: NodePort
+  ports:
+  - port: 8888
+    protocol: TCP
+    name: tcp
+  selector:
+    run: jupyter
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: jupyter
+spec:
+  selector:
+    matchLabels:
+      run: jupyter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: jupyter
+    spec:
+      containers:
+      - name: jupyter
+        image: fzinfz/jupyter:i3wm
+        command: ["jupyter"]
+        args: ["notebook","--ip=*","--allow-root","--port=8888"]
+        ports:
+        - containerPort: 8888
+          protocol: TCP

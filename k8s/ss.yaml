@@ -9,8 +9,10 @@ spec:
   ports:
   - port: 8388
     protocol: TCP
+    name: tcp
   - port: 8388
     protocol: UDP
+    name: udp
   selector:
     run: ss
 ---
@@ -36,7 +38,6 @@ spec:
         ports:
         - containerPort: 8388
           protocol: TCP
-          name: tcp
         - containerPort: 8388
           protocol: TCP
-          name: udp
+
