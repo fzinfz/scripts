@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ss
+  labels:
+    run: ss
+spec:
+  type: NodePort
+  ports:
+  - port: 8388
+    protocol: TCP
+  - port: 8388
+    protocol: UDP
+  selector:
+    run: ss
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ss
+spec:
+  selector:
+    matchLabels:
+      run: ss
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: ss
+    spec:
+      containers:
+      - name: ss
+        image: shadowsocks/shadowsocks-libev
+        command: ["ss-server"]
+        args: ["-k","testtest","-p","8388","-m","aes-256-cfb"]
+        ports:
+        - containerPort: 8388
+          protocol: TCP
+          name: tcp
+        - containerPort: 8388
+          protocol: TCP
+          name: udp
