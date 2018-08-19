@@ -1,9 +1,225 @@
 #!/bin/bash
 
+# https://www.gnu.org/software/bash/manual/bashref.html
+
 shopt -s expand_aliases
+
+# Basic
+
+alias ls="ls --color=auto"
+
+curl_download--url(){
+    curl -sSLO $1
+    # -S, --show-error    Show error. With -s, make curl show errors when they occur
+    # -s, --silent        Silent mode (don't output anything)
+    # -o, --output FILE   Write to FILE instead of stdout
+    # -O, --remote-name   Write output to a file named as the remote file
+    # -L, --location      Follow redirects (H)
+}
+
+curl_then_source--url() {
+    source /dev/stdin <<< "$(curl -sSL $1)"
+}
+alias source_url=curl_then_source--url
+
+cat_highlight--keyword--file(){
+    # https://unix.stackexchange.com/questions/106565
+    grep --color=auto -E "$1|$" $2
+    #   -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
+}
+
+search_in_files--regex--path() {
+    grep --color=auto -rn -P "$1" $2
+    # -r, --recursive           like --directories=recurse
+    # -n, --line-number         print line number with output lines
+    # -P, --perl-regexp         PATTERN is a Perl regular expression
+}
+
+find--path--name() {
+    find $1 -iname $2
+    # find . ! -readable / -writable / -executabl
+    # find . ! -perm -g=w
+}
+
+chmod+x() {
+    find -regextype posix-extended -regex ".*[.](py|sh)" -exec chmod +x {} \;
+}
+
+tar_help(){
+    cat << EOL
+tar -cf archive.tar foo bar  # Create archive.tar from files foo and bar.
+tar -tvf archive.tar         # List all files in archive.tar verbosely.
+tar -xf archive.tar          # Extract all files from archive.tar.
+    -t, --list                 list the contents of an archive
+    -c, --create               create a new archive
+    -x, --extract, --get       extract files from an archive
+    -f, --file=ARCHIVE         use archive file or device ARCHIVE
+    -j, --bzip2                filter the archive through bzip2
+    -z, --gzip, --gunzip, --ungzip   filter the archive through gzip
+    -v, --verbose              verbosely list files processed
+EOL
+}
+
+
+tar_help(){
+    cat << EOL
+zip [options] zipfile files_list
+    -r   recurse into directories
+    -x   exclude the following names
+    -v   verbose operation/print version info
+
+    -m   move into zipfile (delete OS files) !!
+    -d   delete entries in zipfile !!!
+    -u   update: only changed or new files
+EOL
+}
+
+rsync--local--remote---port() {
+    rsync -aP -e "ssh -p $3" $1 root@$2
+}
+
+# network
+
+nmap--ip--port() {
+    nmap -sV -p$2 $1
+}
+
+ip_addr--interface() {
+    ifconfig $1 | grep -P -o '(?<=inet )[0-9.]+'
+}
+
+ip_addr() {
+    ip route get 1 | awk '{print $NF;exit}'
+}
+
+netstat_lntup() {
+    netstat -lntup
+}
+
+netstat_an--egrep() {
+    netstat -an | egrep $1 | \
+    awk '{ print $4 ":" $5 ":" $6}' | \
+    awk -F':' '{ print $1 ":" $2 " ---> " $3 " - " $5 }' | \
+    sort -u
+}
+
+# tmux
+
+tmux_show_screen_keys(){
+    cat /usr/share/doc/tmux/examples/screen-keys.conf | grep '\bbind \w'
+}
+
+# env
+
+grub_list_entries() {
+    awk -F\' '/menuentry / {print $2}' /boot/grub/grub.cfg
+}
+
+timezone_shanghai() {
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+    echo "Asia/Shanghai" > /etc/timezone
+    export TZ='Asia/Shanghai'
+}
+
+if_exist--cmd() {
+    if command -v $1 >/dev/null 2>/dev/null; then
+        echo yes
+    else
+        echo no
+    fi
+}
+
+nl="printf \n"
+
+add_current_path_to_PATH() {
+    CURRENT_DIR=$(dirname "$(readlink -f "$BASH_SOURCE")")
+    if [[ ! $PATH = *"$CURRENT_DIR"* ]];then
+        export PATH=$PATH:$CURRENT_DIR
+    fi
+}
 
 shopt -s histappend
 PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+
+history--tail_count() {
+    if [ -z ${1+x} ] ;then
+        cat /root/.bash_history
+    else
+        cat /root/.bash_history | tail -n$1
+    fi
+
+    echo "if history items missing, run init_bashrc.sh first."
+}
+
+export_proxy---port---ip(){
+    if [ -z ${2+x} ]; then
+      ip="127.0.0.1"
+     else
+      ip=$2
+    fi
+
+    if [ -z ${1+x} ]; then
+      port=1080
+     else
+      port=$1
+    fi
+
+    http_proxy=http://$ip:$port
+
+    export http_proxy=$http_proxy
+    export https_proxy=$http_proxy
+    export no_proxy="localhost,127.0.0.1,192.168.*.*,10.*.*.*,172.16.*.*,172.17.*.*"
+    export ftp_proxy=$http_proxy
+    export rsync_proxy=$http_proxy
+}
+
+# mount
+
+mount_iso--flename--mountpoint() {
+    mount -o loop,ro $1 $2
+}
+
+mount_nfs--server_ip--path--local_path() {
+    mount.nfs $1:$2 $3
+    #mount -tnfs4 -ominorversion=1 server_nfs_4.1:/dir
+}
+
+mount_cifs_N_fstab--path--mountpoint---user--passwd(){
+
+    # make sure single quoted network path, eg: '\\server\folder'
+
+    path=$1
+
+    mount_point=$2
+
+    if [ -z $3 ]; then
+        user=administrator
+    else	
+        user=$3
+    fi
+
+    passwd=$4
+
+    #mount -t cifs $path $mount_point -o username=$user,password=$passwd
+
+    echo $path $mount_point cifs username=$user,password=$passwd 0 0 >>  /etc/fstab
+}
+
+# apt
+
+apt_search--startwith() {
+    apt search $1 | grep ^$1
+}
+
+apt_installed() {
+    apt list --installed
+}
+
+apt_installed--grep-i() {
+    apt list --installed | grep -i $1
+}
+
+# git
 
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
 alias git_commit_amend="git commit --amend -C ORIG_HEAD"
@@ -40,7 +256,7 @@ git_config_proxy_http--ip--port(){
     git config --global http.proxy http://$1:$2
 }
 
-alias ls="ls --color=auto"
+# performance
 
 dd_bandwidth--M() {
     dd if=/dev/zero of=/tmp/testfile bs=$1M count=1 oflag=direct
@@ -50,23 +266,53 @@ dd_iops_512--count() {
     dd if=/dev/zero of=/tmp/testfile bs=512 count=$1 oflag=direct
 }
 
-source_url() {
-    source /dev/stdin <<< "$(curl -sS $1)"
+bench_dd-iops() {
+    dd if=/dev/zero of=/tmp/test_iops bs=512 count=10000 oflag=direct
 }
 
-kernel_list() {
-    dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+'
+bench_dd-bandwidth() {
+    dd if=/dev/zero of=/tmp/test_bw bs=200M count=1 oflag=direct
 }
 
-kernel_delete--versions() {
-    apt purge $*
-    dpkg --purge $*
+
+# iptables
+
+iptables_delete_INPUT--line() {
+    iptables -D INPUT $1
+    iptables-save
+    iptables -L
 }
 
-cat_highlight--keyword--file(){
-    # https://unix.stackexchange.com/questions/106565
-    grep -E --color=auto "$1|$" $2
+
+iptables_delete_NAT-POSTROUTING--line() {
+    iptables -t nat -D POSTROUTING $1
 }
+
+iptables_list() {
+    iptables -L -n -v --line-numbers
+}
+
+iptables_log_INPUT_DROP() {
+    iptables -N LOGGING
+    iptables -A INPUT -j LOGGING
+    iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
+    iptables -A LOGGING -j DROP
+}
+
+
+iptables_list_NAT() {
+    iptables -t nat -v -L -n --line-number
+}
+
+
+bbr_check() {
+    tc qdisc show
+    sysctl net.core.default_qdisc
+    sysctl net.ipv4 | grep control
+}
+alias check_bbr=bbr_check
+
+# ssh
 
 ssh_key_add() {
 if [ -z "$SSH_AUTH_SOCK" ] ; then
@@ -84,14 +330,36 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
 fi
 }
 
-nl="printf \n"
-
-add_current_path_to_PATH() {
-    CURRENT_DIR=$(dirname "$(readlink -f "$BASH_SOURCE")")
-    if [[ ! $PATH = *"$CURRENT_DIR"* ]];then
-        export PATH=$PATH:$CURRENT_DIR
-    fi
+sshd-change--port() {
+    sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
+    service sshd restart
 }
+
+# kernel
+
+kernel_list() {
+    dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+'
+}
+
+kernel_delete--versions() {
+    apt purge $*
+    dpkg --purge $*
+}
+
+
+top_custom(){
+    #dmidecode -t processor | grep Speed
+    #watch -n 1  cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
+    watch --color -n 1 \
+        "inxi -C && printf '\n' && \
+         top -b -o %CPU | head -n12 && printf '\n' && \
+         top -b -o %MEM | head -n12 | tail -n6 && printf '\n' && \
+         ps -eo %cpu,pid,command --sort -%cpu | head -n5 && printf '\n' && \
+         ps -eo %mem,pid,command --sort -%mem | head -n5"
+}
+
+
+# hardware
 
 check_sys() {
     echo LONG_BIG: $(getconf LONG_BIT)
@@ -117,6 +385,20 @@ check_cpu_vendor(){
     echo $arch
 }
 
+
+check_cpu_core_mapping(){
+    # https://www.ibm.com/support/knowledgecenter/en/SSQPD3_2.6.0/com.ibm.wllm.doc/mappingcpustocore.html
+    # same physical/core ID  =》 simultaneous multi threads (SMTs) / HT
+    cat /proc/cpuinfo  | grep -P 'processor|physical id|core id|^$'
+
+    # pip install walnut    # pretty print
+    # for c in sorted([ ( int(c['processor']), int(c['physical id']), int(c['core id']) ) for c in cpu.dict().values()]): print c
+}
+
+bench_sysbench_cpu() {
+    sysbench --test=cpu run
+}
+
 check_memory(){
     # https://wiki.debian.org/Hugepages#Enabling_HugeTlbPage
     hugeadm --pool-list
@@ -129,43 +411,28 @@ check_memory(){
     lshw -C memory
 }
 
+lspci--egrep() {
+    lspci -nn | egrep -i $1 | egrep -o '[0-9a-z]{4}:[0-9a-z]{4}' | xargs -n1 -I% sh -c "lspci -nnk -d %;printf '\n';"
+}
+
+
 check_disk(){
     lshw -class disk -class storage
     lshw -short -C disk
 }
 
-top_custom(){
-    #dmidecode -t processor | grep Speed
-    #watch -n 1  cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
-    watch --color -n 1 \
-        "inxi -C && printf '\n' && \
-         top -b -o %CPU | head -n12 && printf '\n' && \
-         top -b -o %MEM | head -n12 | tail -n6 && printf '\n' && \
-         ps -eo %cpu,pid,command --sort -%cpu | head -n5 && printf '\n' && \
-         ps -eo %mem,pid,command --sort -%mem | head -n5"
+
+# kvm
+
+kvm_install() {
+    apt install -y virt-manager qemu-kvm qemu-utils
 }
 
-netstat_lntup() {
-    netstat -lntup
-}
 
-netstat_an--egrep() {
-    netstat -an | egrep $1 | \
-    awk '{ print $4 ":" $5 ":" $6}' | \
-    awk -F':' '{ print $1 ":" $2 " ---> " $3 " - " $5 }' | \
-    sort -u
-}
-
-apt_search--startwith() {
-    apt search $1 | grep ^$1
-}
-
-apt_installed() {
-    apt list --installed
-}
-
-apt_installed--grep-i() {
-    apt list --installed | grep -i $1
+kvm_check() {
+    egrep --color=auto 'vmx|svm|0xc0f' /proc/cpuinfo
+    lsmod | grep kvm
+    lsmod | grep virtio
 }
 
 kvm_intel_reload() {
@@ -182,153 +449,6 @@ kvm_intel_nested() {
     echo qemu-system-x86_64 -enable-kvm -cpu host
 }
 
-find--path--name() {
-    find $1 -iname $2
-}
-
-curl_then_source--url() {
-    source /dev/stdin <<< "$(curl -sSL $1)"
-}
-
-install-docker() {
-    curl -fsSL get.docker.com | bash
-}
-
-iptables_delete_INPUT--line() {
-    iptables -D INPUT $1
-    iptables-save
-    iptables -L
-}
-
-py_pip_install--packages--proxy--port() {
-    pip install $1 --proxy http://$2:$3
-}
-
-sshd-change--port() {
-    sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
-    service sshd restart
-}
-
-mount_iso--flename--mountpoint() {
-    mount -o loop,ro $1 $2
-}
-
-search_in_files--path--regex() {
-    grep -rn "$1" -e "$2"
-    #TODO: add color
-}
-
-iptables_delete_NAT-POSTROUTING--line() {
-    iptables -t nat -D POSTROUTING $1
-}
-
-iptables_list() {
-    iptables -L -n -v --line-numbers
-}
-
-iptables_log_INPUT_DROP() {
-    iptables -N LOGGING
-    iptables -A INPUT -j LOGGING
-    iptables -A LOGGING -m limit --limit 2/min -j LOG --log-prefix "IPTables-Dropped: " --log-level 4
-    iptables -A LOGGING -j DROP
-}
-
-rsync--local--remote---port() {
-    rsync -aP -e "ssh -p $3" $1 root@$2
-}
-
-iptables_list_NAT() {
-    iptables -t nat -v -L -n --line-number
-}
-
-chmod+x() {
- find -regextype posix-extended -regex ".*[.](py|sh)" -exec chmod +x {} \;
-
-}
-
-nmap--ip--port() {
-    nmap -sV -p$2 $1
-}
-
-conda_env_create() {
-    conda create -y --name $1
-    source activate $1
-}
-
-grub_list_entries() {
- awk -F\' '/menuentry / {print $2}' /boot/grub/grub.cfg
-
-}
-
-kvm_install() {
-    apt install -y virt-manager qemu-kvm qemu-utils
-}
-
-bench_dd-iops() {
-    dd if=/dev/zero of=/tmp/test_iops bs=512 count=10000 oflag=direct
-}
-
-bench_dd-bandwidth() {
-    dd if=/dev/zero of=/tmp/test_bw bs=200M count=1 oflag=direct
-}
-
-install-browser-debian8() {
-    apt install -y firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw \
-    chromium chromium-l10n
-}
-
-mount_nfs--server_ip--path--local_path() {
-    mount.nfs $1:$2 $3
-    #mount -tnfs4 -ominorversion=1 server_nfs_4.1:/dir
-}
-
-kvm_check() {
-    egrep --color=auto 'vmx|svm|0xc0f' /proc/cpuinfo
-    lsmod | grep kvm
-    lsmod | grep virtio
-}
-
-ip_addr--interface() {
-    ifconfig $1 | grep -P -o '(?<=inet )[0-9.]+'
-}
-
-lspci--egrep() {
- lspci -nn | egrep -i $1 | egrep -o '[0-9a-z]{4}:[0-9a-z]{4}' | xargs -n1 -I% sh -c "lspci -nnk -d %;printf '\n';"
-
-}
-
-bench_sysbench_cpu() {
-    sysbench --test=cpu run
-}
-
-pypi_upload_test() {
-    echo doc: https://packaging.python.org/tutorials/distributing-packages/
-    twine upload --repository testpypi dist/*
-}
-
-timezone_shanghai() {
-    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-    echo "Asia/Shanghai" > /etc/timezone
-    export TZ='Asia/Shanghai'
-}
-
-if_exist--cmd() {
-    if command -v $1 >/dev/null 2>/dev/null; then
-        echo yes
-    else
-        echo no
-    fi
-}
-
-hw_dell--ip--action() {
-    echo actions: powerdown powerup powerstatus graceshutdown hardreset powercycle
-    echo Doc: http://www.dell.com/support/manuals/us/en/04/integrated-dell-remote-access-cntrllr-8-with-lifecycle-controller-v2.00.00.00/racadm_idrac_pub-v1/serveraction?guid=guid-69ea52c5-153d-4369-b7c4-6694a3b9e0d4&lang=en-us
-    ssh root@$1 "racadm serveraction  $2"
-}
-
-powerup_dell--ip() {
-    hw_dell--ip--action $1 powerup
-}
 
 check_video() {
     dmesg | grep drm
@@ -364,54 +484,23 @@ check_video--card_index(){
     cat /sys/kernel/debug/dri/$1/radeon_{fence_info,gem_info,pm_info,sa_info,vram_mm}
 }
 
-check_cpu_core_mapping(){
-    # https://www.ibm.com/support/knowledgecenter/en/SSQPD3_2.6.0/com.ibm.wllm.doc/mappingcpustocore.html
-    # same physical/core ID  =》 simultaneous multi threads (SMTs) / HT
-    cat /proc/cpuinfo  | grep -P 'processor|physical id|core id|^$'
 
-    # pip install walnut    # pretty print
-    # for c in sorted([ ( int(c['processor']), int(c['physical id']), int(c['core id']) ) for c in cpu.dict().values()]): print c
+# python
+
+py_pip_install--packages--proxy--port() {
+    pip install $1 --proxy http://$2:$3
 }
 
-bbr_check() {
-    tc qdisc show
-    sysctl net.core.default_qdisc
-    sysctl net.ipv4 | grep control
-}
-alias check_bbr=bbr_check
-
-
-history--tail_count() {
-    if [ -z ${1+x} ] ;then
-        cat /root/.bash_history
-    else
-        cat /root/.bash_history | tail -n$1
-    fi
-
-    echo "if history items missing, run init_bashrc.sh first."
+conda_env_create() {
+    conda create -y --name $1
+    source activate $1
 }
 
-export_proxy---port---ip(){
-    if [ -z ${2+x} ]; then
-      ip="127.0.0.1"
-     else
-      ip=$2
-    fi
-
-    if [ -z ${1+x} ]; then
-      port=1080
-     else
-      port=$1
-    fi
-
-    http_proxy=http://$ip:$port
-
-    export http_proxy=$http_proxy
-    export https_proxy=$http_proxy
-    export no_proxy="localhost,127.0.0.1,192.168.*.*,10.*.*.*,172.16.*.*,172.17.*.*"
-    export ftp_proxy=$http_proxy
-    export rsync_proxy=$http_proxy
+pypi_upload_test() {
+    echo doc: https://packaging.python.org/tutorials/distributing-packages/
+    twine upload --repository testpypi dist/*
 }
+
 
 py_install---requirements.txt() {
 
@@ -432,27 +521,28 @@ py_install---requirements.txt() {
 
 }
 
-mount_cifs_N_fstab--path--mountpoint---user--passwd(){
+# 3rd party hw
 
-    # make sure single quoted network path, eg: '\\server\folder'
-
-    path=$1
-
-    mount_point=$2
-
-    if [ -z $3 ]; then
-        user=administrator
-    else	
-        user=$3
-    fi
-
-    passwd=$4
-
-    #mount -t cifs $path $mount_point -o username=$user,password=$passwd
-
-    echo $path $mount_point cifs username=$user,password=$passwd 0 0 >>  /etc/fstab
+hw_dell--ip--action() {
+    echo actions: powerdown powerup powerstatus graceshutdown hardreset powercycle
+    echo Doc: http://www.dell.com/support/manuals/us/en/04/integrated-dell-remote-access-cntrllr-8-with-lifecycle-controller-v2.00.00.00/racadm_idrac_pub-v1/serveraction?guid=guid-69ea52c5-153d-4369-b7c4-6694a3b9e0d4&lang=en-us
+    ssh root@$1 "racadm serveraction  $2"
 }
 
-tmux_show_screen_keys(){
-    cat /usr/share/doc/tmux/examples/screen-keys.conf | grep '\bbind \w'
+powerup_dell--ip() {
+    hw_dell--ip--action $1 powerup
 }
+
+# X
+
+install-browser-debian8() {
+    apt install -y firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw \
+    chromium chromium-l10n
+}
+
+# docker
+
+install-docker() {
+    curl -fsSL get.docker.com | bash
+}
+
