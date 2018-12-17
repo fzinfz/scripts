@@ -173,7 +173,19 @@ export_proxy---port---ip(){
     export rsync_proxy=$http_proxy
 }
 
-# mount
+# fs
+
+check_fs(){
+    lsblk -o+FSTYPE,UUID
+    pvs -o+vg_uuid,UUID
+    lvs -o+UUID
+}
+
+check_fs--volume(){
+    file --dereference -s $1
+    blkid $1
+    cat /proc/mounts | grep $1
+}
 
 mount_iso--flename--mountpoint() {
     mount -o loop,ro $1 $2
@@ -348,16 +360,19 @@ kernel_delete--versions() {
 
 
 top_custom(){
-    #dmidecode -t processor | grep Speed
-    #watch -n 1  cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
-    watch --color -n 1 \
-        "inxi -C && printf '\n' && \
-         top -b -o %CPU | head -n12 && printf '\n' && \
-         top -b -o %MEM | head -n12 | tail -n6 && printf '\n' && \
-         ps -eo %cpu,pid,command --sort -%cpu | head -n5 && printf '\n' && \
-         ps -eo %mem,pid,command --sort -%mem | head -n5"
+    dmidecode -t processor | grep Speed ; echo;
+    top -b -n1 -o %MEM | head -n12 ; echo ;
+    top -b -n1 -o %CPU | perl -ne  'print if 7 .. 12' ; echo ;
+    ps -eo %cpu,pid,command --sort -%cpu | head -n6 ; echo ;
+    ps -eo %mem,pid,command --sort -%mem | head -n6 ; echo ;
+
+         #inxi -C ; echo ;
 }
 
+top_custom_watch(){
+#watch -n 1  cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
+
+}
 
 # hardware
 
