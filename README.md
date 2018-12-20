@@ -6,11 +6,12 @@
 `--`: followed by required parameter  
 `---`: followed by optional parameter
 
+# nbviewer
+http://nbviewer.jupyter.org/github/fzinfz/scripts/tree/master/python/
+
 # Folders
-`docs`: Bootstrap code snippets ([Preview](https://html.ferro.pro/))  
-`jupyter`: Notes written with jupyter ([nbviewer](http://nbviewer.jupyter.org/github/fzinfz/scripts/tree/master/jupyter/))  
-`verdor`: 3rd party code  
-Others: programming language related
+`docs`: Web code snippets ([Preview](https://html.ferro.pro/))  
+`fork`: 3rd party code  
 
 # Tools in `doc` folder
 Plain Text or HTML Table To Markdown converter: https://html.ferro.pro/md.html
