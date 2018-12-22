@@ -25,4 +25,4 @@ $c  install -y \
     dnsutils tcpdump mtr nmap nethogs traceroute \
     trickle wondershaper \
     cifs-utils nfs-common \
-    unzip locate ncdu vim aria2 curl wget git gettext
+    unzip locate ncdu vim aria2 curl wget git gettext jq tmux

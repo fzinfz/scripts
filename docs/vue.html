@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Command Line Generator</title>
+    <meta name="description" content="command line generator">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <style>
+        .mgn {
+            margin: 1rem;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <form>
+            <div class="input-group mb-3 mgn">
+                <div class="input-group-prepend">
+                    <button id="btn_copy" class="btn btn-success" onclick="javascript:return false;">Copy</button>
+                </div>
+                <textarea type="text" class="form-control" rows="3" placeholder="Result will shown here" id='result'> </textarea>
+            </div>
+        </form>
+    </div>
+  
+      <div id="app">
+    {{ message }}
+  </div>
+<div id="components-demo">
+  <button-counter></button-counter>
+  <button-counter></button-counter>
+  <button-counter></button-counter>
+</div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!'
+      }
+    })
+    
+    Vue.component('button-counter', {
+  data: function () {
+    return {
+      count: 0
+    }
+  },
+  template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+})
+  </script>
+    
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4845608-5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments) };
+        gtag('js', new Date());
+        gtag('config', 'UA-4845608-5');
+    </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?2d7d9d6bb9fdf9d1d65d3d9c0624a6f9";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</body>
+
+</html>
