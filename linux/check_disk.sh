@@ -4,6 +4,7 @@ echo_info(){ echo -e "\033[92m$1\033[m"; }
 
 echo_info "lshw"
 lshw -class disk -short
+#lshw -class disk -class storage
 
 echo_info "lsblk -S"
 lsblk -S | sort
@@ -21,8 +22,10 @@ lvs
 grep_disk(){ grep -P "/(mapper|\wd\w\d?\b)"; }
 
 echo_info "df"
-df -Ph | head -n 1
-df -Ph | grep_disk
+df -TPh | head -n 1
+df -TPh | grep_disk
 
 echo_info "/proc/mounts"
 cat /proc/mounts | grep_disk
+
+

@@ -230,7 +230,7 @@ alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/t
 alias my_functions='sed -nE "s/\(\) *\{//p" init.sh | sort' # `-n`+`p`: only modified lines
 alias my_functions_unset='unset -f $(my_functions)'
 
-xargs_cd_N_git_pull(){  xargs -I% sh -c "cd %; echo; pwd; git pull; cd ..; " ; }
+xargs_cd_N_git_pull(){  xargs -I% sh -c "cd %; echo; pwd; git pull; git status; cd ..; " ; }
 
 git_add_commit_push---comment() {
     if [ -z $1 ];then
@@ -417,11 +417,6 @@ lspci--egrep() {
     lspci -nn | egrep -i $1 | egrep -o '[0-9a-z]{4}:[0-9a-z]{4}' | xargs -n1 -I% sh -c "lspci -nnk -d %;printf '\n';"
 }
 
-
-check_disk(){
-    lshw -class disk -class storage
-    lshw -short -C disk
-}
 
 
 # kvm
