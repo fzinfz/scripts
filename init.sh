@@ -7,12 +7,9 @@ shopt -s expand_aliases
 # Basic
 
 alias ls="ls --color=auto"
-alias pstree_long--pid="pstree -lap -s "
 
-pstree--grep(){
-	pids=$(ps aux | grep $1 | grep -v grep | awk  '{print $2}')
-	for pid in $pids; do pstree_long--pid $pid ; echo ; done
-
+pstree--pgrep(){
+	ps aux | grep -P $1 | grep -v grep | awk  '{print $2}' | xargs pstree -lap -s
 }
 
 curl_download--url(){
