@@ -8,6 +8,10 @@ shopt -s expand_aliases
 
 alias ls="ls --color=auto"
 
+pstree--pgrep(){
+	ps aux | grep -P $1 | grep -v grep | awk  '{print $2}' | xargs pstree -lap -s
+}
+
 curl_download--url(){
     curl -sSLO $1
     # -S, --show-error    Show error. With -s, make curl show errors when they occur
