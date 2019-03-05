@@ -8,6 +8,10 @@ shopt -s expand_aliases
 
 alias ls="ls --color=auto"
 
+pstree--pgrep(){
+	ps aux | grep -P $1 | grep -v grep | awk  '{print $2}' | xargs pstree -lap -s
+}
+
 curl_download--url(){
     curl -sSLO $1
     # -S, --show-error    Show error. With -s, make curl show errors when they occur
@@ -230,6 +234,8 @@ alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/t
 alias my_functions='sed -nE "s/\(\) *\{//p" init.sh | sort' # `-n`+`p`: only modified lines
 alias my_functions_unset='unset -f $(my_functions)'
 
+xargs_cd_N_git_pull(){  xargs -I% sh -c "cd %; echo; pwd; git pull; git status; cd ..; " ; }
+
 git_add_commit_push---comment() {
     if [ -z $1 ];then
         c='update'
@@ -415,11 +421,6 @@ lspci--egrep() {
     lspci -nn | egrep -i $1 | egrep -o '[0-9a-z]{4}:[0-9a-z]{4}' | xargs -n1 -I% sh -c "lspci -nnk -d %;printf '\n';"
 }
 
-
-check_disk(){
-    lshw -class disk -class storage
-    lshw -short -C disk
-}
 
 
 # kvm
