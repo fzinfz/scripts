@@ -42,7 +42,8 @@
             </div>
             <p>{{ result }}</p>
             <div class="input-group mb-3">
-                <textarea type="text" class="form-control" rows="5" v-model='input_filtered' id='input_filtered'></textarea>
+                <textarea type="text" class="form-control" rows="5" v-model='input_filtered'
+                    id='input_filtered'></textarea>
             </div>
         </form>
     </div>
@@ -51,7 +52,7 @@
 
     <script>
 
-        var watchExampleVM = new Vue({
+        var vm = new Vue({
             el: '#textbox-helper',
             data: {
                 input_raw: '',
@@ -64,9 +65,10 @@
                 input_filtered: '',
             },
             watch: {
-                input_raw: function (n, o) { this.seen = true; this.input_filtering() },
-                Column: function (n, o) { this.input_filtering() },
-                regex: function (n, o) { this.input_filtering() },
+                input_raw: function (n, o) { 
+                    this.seen = true
+                    this.input_filtering() 
+                },
             },
             methods: {
                 input_filtering: function () {
@@ -75,7 +77,9 @@
 
                     output = []
                     for (var i in lines) {
-                        cell = lines[i].split(/\s/)[col]
+                        if (col > 0) cell = lines[i].split(/\s/)[col]
+                        else cell = cell = lines[i]
+
                         re = new RegExp(this.regex);
                         var rs = re.exec(cell)
                         //console.log("==>", lines, cell, col, re, rs)
@@ -84,13 +88,22 @@
                     this.result = lines.length + " lines / " + output.length + " results"
                     this.input_filtered = output.join('\n')
                 },
-                copy: function(){
+                copy: function () {
                     document.getElementById("input_filtered").select()
                     document.execCommand("copy");
                     this.result = 'Copied @' + (new Date()).toLocaleTimeString()
                 }
             }
         })
+
+        vm.$watch(
+            function () {
+                return [this.Column, this.regex, this.postfix]
+            },
+            function (newVal, oldVal) {
+                this.input_filtering()
+            }
+        )        
     </script>
 
     </script>
