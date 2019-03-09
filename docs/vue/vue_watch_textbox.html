@@ -8,48 +8,47 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-    <style>
-        .mgn {
-            margin: 1rem;
-        }
-    </style>
-
 </head>
 
 <body>
-
     <div class="container" id="textbox-helper">
-        <form>
+        <form class="mt-2">
             <div class="form-group">
                 <textarea type="text" class="form-control mb-2" rows="3" placeholder="User Input" id='input_raw'
                     v-model="input_raw"></textarea>
-                <div class="form-row">
-                    <div class="col-auto">
-                        <span>Column:</span>
-                    </div>
-                    <div class="col-auto">
-                        <input type="number" class="form-control" v-model="Column" style="width:80px">
-                    </div>
-                    <div class="col-auto">
-                            <span>regex:</span>
-                        </div>
-                        <div class="col-auto">
-                            <input class="form-control" v-model="regex">
-                        </div>                    
-                </div>
-                <p> {{ result }} </p>
             </div>
         </form>
-        <form>
-            <div class="input-group mb-3 mgn">
-                <textarea type="text" class="form-control" rows="5" 
-                    id='input_filtered'>{{ input_filtered }}</textarea>
+        <form v-if="seen">
+            <div class="form-row">
+                <div class="col-auto">
+                    <span>Column:</span>
+                </div>
+                <div class="col-auto">
+                    <input type="number" class="form-control" v-model="Column" style="width:80px">
+                </div>
+                <div class="col-auto">
+                    <span>regex:</span>
+                </div>
+                <div class="col-auto">
+                    <input class="form-control" v-model="regex">
+                </div>
+                <div class="col-auto">
+                    <span>postfix:</span>
+                </div>
+                <div class="col-auto">
+                    <input class="form-control" v-model="postfix" style="width:80px">
+                </div>
+                <button type="button" class="btn btn-info m-1" v-on:click="copy">Copy</button>
+            </div>
+            <p>{{ result }}</p>
+            <div class="input-group mb-3">
+                <textarea type="text" class="form-control" rows="5" v-model='input_filtered' id='input_filtered'></textarea>
             </div>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
     <script>
 
         var watchExampleVM = new Vue({
@@ -57,18 +56,20 @@
             data: {
                 input_raw: '',
                 Column: 1,
-                regex: String.raw `\S+`,
+                regex: String.raw`\S+`,
+                postfix: "*",
 
+                seen: false,
                 result: '',
                 input_filtered: '',
             },
             watch: {
-                input_raw: function (n, o) { this.input_filtering()  }, 
-                Column: function (n, o) { this.input_filtering()  }, 
-                regex: function (n, o) { this.input_filtering()  }, 
+                input_raw: function (n, o) { this.seen = true; this.input_filtering() },
+                Column: function (n, o) { this.input_filtering() },
+                regex: function (n, o) { this.input_filtering() },
             },
             methods: {
-                input_filtering:  function () {
+                input_filtering: function () {
                     lines = this.input_raw.split("\n")
                     col = parseInt(this.Column) - 1
 
@@ -76,12 +77,17 @@
                     for (var i in lines) {
                         cell = lines[i].split(/\s/)[col]
                         re = new RegExp(this.regex);
-                        rs = re.exec(cell)
+                        var rs = re.exec(cell)
                         //console.log("==>", lines, cell, col, re, rs)
-                        if (rs) output.push(rs)
+                        if (rs && rs != undefined) output.push(rs + this.postfix)
                     }
                     this.result = lines.length + " lines / " + output.length + " results"
                     this.input_filtered = output.join('\n')
+                },
+                copy: function(){
+                    document.getElementById("input_filtered").select()
+                    document.execCommand("copy");
+                    this.result = 'Copied @' + (new Date()).toLocaleTimeString()
                 }
             }
         })
