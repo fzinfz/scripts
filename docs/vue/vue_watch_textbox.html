@@ -56,14 +56,19 @@
             el: '#textbox-helper',
             data: {
                 input_raw: '',
-                input_filtered: '',
                 Column: 1,
-                ColSep: String.raw `\t`,
                 regex: String.raw `\S+`,
-                result: ''
+
+                result: '',
+                input_filtered: '',
             },
             watch: {
-                input_raw: function (newQuestion, oldQuestion) {
+                input_raw: function (n, o) { this.input_filtering()  }, 
+                Column: function (n, o) { this.input_filtering()  }, 
+                regex: function (n, o) { this.input_filtering()  }, 
+            },
+            methods: {
+                input_filtering:  function () {
                     lines = this.input_raw.split("\n")
                     col = parseInt(this.Column) - 1
 
@@ -77,11 +82,7 @@
                     }
                     this.result = lines.length + " lines / " + output.length + " results"
                     this.input_filtered = output.join('\n')
-                    //                    /\d+/.exec(this.input_raw)
-
-                    //this.debouncedGetAnswer()
-                },
-                
+                }
             }
         })
     </script>
