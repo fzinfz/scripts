@@ -1,0 +1,93 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>bootstrap + vue textbox</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        .mgn {
+            margin: 1rem;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container" id="textbox-helper">
+        <form>
+            <div class="form-group">
+                <textarea type="text" class="form-control mb-2" rows="3" placeholder="User Input" id='input_raw'
+                    v-model="input_raw"></textarea>
+                <div class="form-row">
+                    <div class="col-auto">
+                        <span>Column:</span>
+                    </div>
+                    <div class="col-auto">
+                        <input type="number" class="form-control" v-model="Column" style="width:80px">
+                    </div>
+                    <div class="col-auto">
+                            <span>regex:</span>
+                        </div>
+                        <div class="col-auto">
+                            <input class="form-control" v-model="regex">
+                        </div>                    
+                </div>
+                <p> {{ result }} </p>
+            </div>
+        </form>
+        <form>
+            <div class="input-group mb-3 mgn">
+                <textarea type="text" class="form-control" rows="5" 
+                    id='input_filtered'>{{ input_filtered }}</textarea>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script>
+
+        var watchExampleVM = new Vue({
+            el: '#textbox-helper',
+            data: {
+                input_raw: '',
+                input_filtered: '',
+                Column: 1,
+                ColSep: String.raw `\t`,
+                regex: String.raw `\S+`,
+                result: ''
+            },
+            watch: {
+                input_raw: function (newQuestion, oldQuestion) {
+                    lines = this.input_raw.split("\n")
+                    col = parseInt(this.Column) - 1
+
+                    output = []
+                    for (var i in lines) {
+                        cell = lines[i].split(/\s/)[col]
+                        re = new RegExp(this.regex);
+                        rs = re.exec(cell)
+                        //console.log("==>", lines, cell, col, re, rs)
+                        if (rs) output.push(rs)
+                    }
+                    this.result = lines.length + " lines / " + output.length + " results"
+                    this.input_filtered = output.join('\n')
+                    //                    /\d+/.exec(this.input_raw)
+
+                    //this.debouncedGetAnswer()
+                },
+                
+            }
+        })
+    </script>
+
+    </script>
+
+</body>
+
+</html>
