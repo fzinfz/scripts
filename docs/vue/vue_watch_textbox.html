@@ -42,7 +42,7 @@
                 <button type="submit" class="btn btn-success m-1" v-on:click="do2">Do2</button>
 
             </div>
-            <p>{{ result }}</p>
+            <p>{{ result }} [{{ time }}]</p>
             <div class="input-group mb-3">
                 <textarea type="text" class="form-control" rows="15" v-model='input_filtered'
                     id='input_filtered'></textarea>
@@ -51,6 +51,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>    
 
     <script>
 
@@ -66,6 +67,7 @@
 
                 seen: false,
                 result: '',
+                time: '',
                 input_filtered: '',
                 action: window.location.href.split("/").pop(),
             },
@@ -76,6 +78,7 @@
                         this.$data[key] = localStorage.getItem(key)
                     }
                 }
+                this.timer()
             },
             watch: {
                 input_raw: function (newVal, oldVal) {
@@ -84,6 +87,11 @@
                 },
             },
             methods: {
+                timer: function() {
+                    var self = this
+                    this.time = moment().format("h:mm:ss a")
+                    setTimeout(self.timer, 1000) // recursive!
+                },
                 input_filtering: function () {
                     lines = this.input_raw.split("\n")
                     col = parseInt(this.Column) - 1
