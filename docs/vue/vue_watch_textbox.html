@@ -20,27 +20,27 @@
         </form>
         <form v-if="seen" v-bind:action="action" method="post">
             <div class="form-row">
-                <div class="col-auto">
-                    <span>Column:</span>
-                </div>
+
+                <div class="col-auto"><span>Column:</span></div>
                 <div class="col-auto">
                     <input type="number" class="form-control" v-model="Column" style="width:80px">
                 </div>
-                <div class="col-auto">
-                    <span>regex:</span>
-                </div>
+
+                <div class="col-auto"><span>regex:</span></div>
                 <div class="col-auto">
                     <input class="form-control" v-model="regex">
                 </div>
-                <div class="col-auto">
-                    <span>postfix:</span>
-                </div>
+
+                <div class="col-auto"><span>postfix:</span></div>
                 <div class="col-auto">
                     <input class="form-control" v-model="postfix" style="width:80px">
                 </div>
+
                 <button type="button" class="btn btn-info m-1" v-on:click="copy">Copy</button>
-                <button type="submit" class="btn btn-info m-1">Submit</button>
-                <button type="submit" class="btn btn-info m-1" v-on:click="do2">Do2</button>
+                <button type="button" class="btn btn-danger m-1" v-on:click="clear">Clear</button>
+                <button type="submit" class="btn btn-primary m-1">Submit</button>
+                <button type="submit" class="btn btn-success m-1" v-on:click="do2">Do2</button>
+
             </div>
             <p>{{ result }}</p>
             <div class="input-group mb-3">
@@ -67,10 +67,16 @@
                 input_filtered: '',
                 action: window.location.href.split("/").pop(),
             },
+            mounted() {
+                if (localStorage.input_raw) {
+                    this.input_raw = localStorage.input_raw;
+                }
+            },
             watch: {
-                input_raw: function (n, o) { 
+                input_raw: function (newVal, oldVal) {
                     this.seen = true
-                    this.input_filtering() 
+                    this.input_filtering()
+                    localStorage.input_raw = newVal
                 },
             },
             methods: {
@@ -96,9 +102,13 @@
                     document.execCommand("copy");
                     this.result = 'Copied @' + (new Date()).toLocaleTimeString()
                 },
+                clear: function () {
+                    this.input_raw = ''
+                    document.getElementById("input_raw").select()
+                },                
                 do2: function () {
                     this.action = "do2"
-                }                
+                }
             }
         })
 
