@@ -69,9 +69,9 @@
                 input_filtered: '',
                 action: window.location.href.split("/").pop(),
             },
-            mounted() {      
+            mounted() {
                 for (i in this.cache) {
-                    key = this.cache[i]  
+                    key = this.cache[i]
                     if (localStorage.getItem(key)) {
                         this.$data[key] = localStorage.getItem(key)
                     }
@@ -122,7 +122,7 @@
                 data = this.$data
                 this.cache.forEach(function (key, i) {
                     rs.push(data[key])
-                });           
+                });
                 return rs
             },
             function (newVal, oldVal) {
@@ -133,8 +133,6 @@
                 this.input_filtering()
             }
         )        
-    </script>
-
     </script>
 
 </body>
