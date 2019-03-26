@@ -1,9 +1,12 @@
+# sh/source working; bash not working
+
+# write in one line: not working
 if [ "$0" = "source_OR_bash.sh" ]; then
 	echo "called by $"
-	alias quit=exit; 
+	alias q=exit; 
 else 
 	echo "called by source"
-	alias quit=return; 
+	alias q=return; 
 fi
 
 echo '$0:'$0
@@ -14,5 +17,5 @@ ps -p $$ -o comm=
 echo 'ps tree of $$:'
 ps -efHww | grep $$ --color
 
-type quit
-quit
+type q
+q
