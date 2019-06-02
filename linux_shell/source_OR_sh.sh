@@ -1,6 +1,11 @@
 shopt -s expand_aliases
 
-echo "\$0: [$0]"
+[ "$(tty | grep pts | wc -l)" -gt 0 ] && tty
+
+echo '$SHELL:' $SHELL
+echo '$0:' $0
+echo '$BASH_VERSION:' $BASH_VERSION
+echo
 
 # write in one line: not working
 if [ "$0" = "source_OR_sh.sh" ]; then
@@ -10,6 +15,7 @@ else
 	echo "called by source"
 	alias q=return
 fi
+type q
 
 echo
 echo 'ps of $$:'
@@ -19,6 +25,4 @@ echo
 echo 'ps tree of $$:'
 ps -efHww | grep $$ --color
 
-echo
-type q
 q 11
