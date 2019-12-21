@@ -18,10 +18,13 @@ elif [ "$c" = "yum" ];then
 fi
 
 $c  install -y \
-    unzip locate ncdu vim aria2 curl wget git gettext jq tmux mc \
+    unzip locate ncdu aria2 curl wget git gettext jq tmux mc \
     software-properties-common \
-    inxi htop pciutils lsof numactl \
-    iperf3 sysbench sysstat fio \
+    inxi nmon htop pciutils lsof numactl \
     net-tools bridge-utils bmon iputils-ping nload iftop cifs-utils nfs-common \
-    dnsutils tcpdump mtr nmap nethogs traceroute \
-    trickle wondershaper 
+    dnsutils tcpdump mtr nmap nethogs traceroute 
+
+    # iperf3 sysbench sysstat \
+#    trickle wondershaper 
+
+# fio vim

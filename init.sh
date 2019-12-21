@@ -228,6 +228,7 @@ apt_installed--grep-i() {
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
 alias git_commit_amend="git commit --amend -C ORIG_HEAD"
 alias git_discard_changes="git checkout -- ."
+alias git_unstage="git reset HEAD "
 alias git_uncommit="git reset --soft HEAD~1"
 alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
 
