@@ -1,5 +1,5 @@
 draft
-test.*
+test*
 .idea
 .ipynb_checkpoints
 .swp
