@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -f ./init.sh ]; then source init.sh; else source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"; fi
+[ -f ./init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
 repo=$1
 

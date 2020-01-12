@@ -22,11 +22,11 @@ echo_yellow(){         echo_color 93 "$@"; }
 echo_cyan(){           echo_color 36 "$@"; }
 echo_cyan_bright(){    echo_color 96 "$@"; }
 
-echo_success(){ echo_green "[$(now)] <SUCCESS> $@"; }
-echo_error(){ echo_red "[$(now)] <ERROR> $@"; }
-echo_hightlight(){ echo_yellow "[$(now)] <!!!> $@"; }
-echo_debug(){ echo_cyan "[$(now)] <DEBUG> $@"; }
-echo_info(){ echo_cyan_bright "[$(now)] <INFO> $@"; }
+echo_success(){        echo_green "[$(now)] <SUCCESS> $@"; }
+echo_error(){            echo_red "[$(now)] <ERROR> $@"; }
+echo_hightlight(){    echo_yellow "[$(now)] <!!!> $@"; }
+echo_debug(){           echo_cyan "[$(now)] <DEBUG> $@"; }
+echo_info(){     echo_cyan_bright "[$(now)] <INFO> $@"; }
 
 run(){ echo_debug "$@"; eval "$@"; }
 
