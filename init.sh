@@ -12,7 +12,8 @@ now(){ date "+%H:%M:%S"; }
 
 echo_color(){ 
     color=$1
-    echo -e "\e[${color}m$@\e[0m"; 
+    shift
+    echo -e "\e[${color}m$@\e[0m"
 }
 
 echo_green(){ echo_color 92 "$@"; }
@@ -23,78 +24,11 @@ echo_cyan_bright(){ echo_color 96 "$@"; }
 
 echo_info(){ echo_cyan_bright "[$(now)] <INFO> $@"; }
 
-pstree--pgrep(){
-	ps aux | grep -P $1 | grep -v grep | awk  '{print $2}' | xargs pstree -lap -s
-}
-
-curl_download--url(){
-    curl -sSLO $1
-    # -S, --show-error    Show error. With -s, make curl show errors when they occur
-    # -s, --silent        Silent mode (don't output anything)
-    # -o, --output FILE   Write to FILE instead of stdout
-    # -O, --remote-name   Write output to a file named as the remote file
-    # -L, --location      Follow redirects (H)
-}
-
-curl_then_source--url() {
-    source /dev/stdin <<< "$(curl -sSL $1)"
-}
+curl_then_source--url() { source /dev/stdin $@ <<< "$(curl -sSL $1)"; }
 alias source_url=curl_then_source--url
 
-cat_highlight--keyword--file(){
-    # https://unix.stackexchange.com/questions/106565
-    grep --color=auto -E "$1|$" $2
-    #   -E, --extended-regexp     PATTERN is an extended regular expression (ERE)
-}
-
-search_in_files--regex--path() {
-    grep --color=auto -rn -P "$1" $2
-    # -r, --recursive           like --directories=recurse
-    # -n, --line-number         print line number with output lines
-    # -P, --perl-regexp         PATTERN is a Perl regular expression
-}
-
-find--path--name() {
-    find $1 -iname $2
-    # find . ! -readable / -writable / -executabl
-    # find . ! -perm -g=w
-}
-
-chmod+x() {
-    find -regextype posix-extended -regex ".*[.](py|sh)" -exec chmod +x {} \;
-}
-
-tar_help(){
-    cat << EOL
-tar -cf archive.tar foo bar  # Create archive.tar from files foo and bar.
-tar -tvf archive.tar         # List all files in archive.tar verbosely.
-tar -xf archive.tar          # Extract all files from archive.tar.
-    -t, --list                 list the contents of an archive
-    -c, --create               create a new archive
-    -x, --extract, --get       extract files from an archive
-    -f, --file=ARCHIVE         use archive file or device ARCHIVE
-    -j, --bzip2                filter the archive through bzip2
-    -z, --gzip, --gunzip, --ungzip   filter the archive through gzip
-    -v, --verbose              verbosely list files processed
-EOL
-}
-
-
-tar_help(){
-    cat << EOL
-zip [options] zipfile files_list
-    -r   recurse into directories
-    -x   exclude the following names
-    -v   verbose operation/print version info
-
-    -m   move into zipfile (delete OS files) !!
-    -d   delete entries in zipfile !!!
-    -u   update: only changed or new files
-EOL
-}
-
-rsync--local--remote---port() {
-    rsync -aP -e "ssh -p $3" $1 root@$2
+pstree--pgrep(){
+	ps aux | grep -P $1 | grep -v grep | awk  '{print $2}' | xargs pstree -lap -s
 }
 
 # network
