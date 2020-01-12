@@ -16,15 +16,21 @@ echo_color(){
     echo -e "\e[${color}m$@\e[0m"
 }
 
-echo_green(){ echo_color 92 "$@"; }
-echo_red(){ echo_color 91 "$@"; }
-echo_yellow(){ echo_color 93 "$@"; }
-echo_cyan(){ echo_color 36 "$@"; }
-echo_cyan_bright(){ echo_color 96 "$@"; }
+echo_green(){          echo_color 92 "$@"; }
+echo_red(){            echo_color 91 "$@"; }
+echo_yellow(){         echo_color 93 "$@"; }
+echo_cyan(){           echo_color 36 "$@"; }
+echo_cyan_bright(){    echo_color 96 "$@"; }
 
+echo_success(){ echo_green "[$(now)] <SUCCESS> $@"; }
+echo_error(){ echo_red "[$(now)] <ERROR> $@"; }
+echo_hightlight(){ echo_yellow "[$(now)] <!!!> $@"; }
+echo_debug(){ echo_cyan "[$(now)] <DEBUG> $@"; }
 echo_info(){ echo_cyan_bright "[$(now)] <INFO> $@"; }
 
-curl_then_source--url() { source /dev/stdin $@ <<< "$(curl -sSL $1)"; }
+run(){ echo_debug "$@"; eval "$@"; }
+
+curl_then_source--url() { source /dev/stdin <<< "$(curl -sSL $1)"; }
 alias source_url=curl_then_source--url
 
 pstree--pgrep(){

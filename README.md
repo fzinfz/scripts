@@ -2,6 +2,8 @@
     source ./init.sh         # set
     my_functions && alias    # check
 
+    source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
+
 ## Naming rules
 `--`: followed by required parameter  
 `---`: followed by optional parameter
