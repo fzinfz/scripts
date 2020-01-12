@@ -8,6 +8,21 @@ shopt -s expand_aliases
 
 alias ls="ls --color=auto"
 
+now(){ date "+%H:%M:%S"; }
+
+echo_color(){ 
+    color=$1
+    echo -e "\e[${color}m$@\e[0m"; 
+}
+
+echo_green(){ echo_color 92 "$@"; }
+echo_red(){ echo_color 91 "$@"; }
+echo_yellow(){ echo_color 93 "$@"; }
+echo_cyan(){ echo_color 36 "$@"; }
+echo_cyan_bright(){ echo_color 96 "$@"; }
+
+echo_info(){ echo_cyan_bright "[$(now)] <INFO> $@"; }
+
 pstree--pgrep(){
 	ps aux | grep -P $1 | grep -v grep | awk  '{print $2}' | xargs pstree -lap -s
 }
