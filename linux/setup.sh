@@ -15,28 +15,6 @@ add_current_path_to_PATH() {
     fi
 }
 
-# ssh
-
-ssh_key_add() {
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-  eval `ssh-agent -s` 
-  ssh-add 
-else
-  echo "key exists: $SSH_AUTH_SOCK"
-fi
-}
-
-ssh_key_add_silent() {
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-  eval `ssh-agent -s` > /dev/null
-  ssh-add > /dev/null
-fi
-}
-
-sshd-change--port() {
-    sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
-    service sshd restart
-}
 
 install-browser-debian8() {
     apt install -y firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw \
