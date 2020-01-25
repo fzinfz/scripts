@@ -1,4 +1,4 @@
-[ -f ../init.sh ] && source ../init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
+[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
 check_sys(){
     run uname -an
@@ -25,11 +25,4 @@ check_ps_top(){
          run 'top -b -o %MEM | head -n12 | tail -n6'
 }
 
-echo_script_header
-
-run_title check_sys
-run_title check_cpu
-run_title check_memory
-run_title check_pci
-run_title check_grub
-run_title check_ps_top
+run_if_shell
