@@ -16,7 +16,8 @@ check_disk(){
 
 check_lvm(){
     run 'pvs -o+pv_used,vg_uuid,UUID'
-    run vgs
+    echo_tip 'pvdisplay -v -m'
+    run 'vgs -o+vg_uuid'
     run lvs
 }
 

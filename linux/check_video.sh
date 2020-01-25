@@ -1,34 +1,27 @@
+[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
-check_video() {
-    dmesg | grep drm
+check_video_card() {
+    run "cat_one_line_files /sys/class/drm/card$1/device/{label,uevent,power_method,power_dpm_state}"
+    run "cat_one_line_files /sys/kernel/debug/dri/$1/radeon_{fence_info,gem_info,pm_info,sa_info,vram_mm}"
+}
 
-    lsmod | grep video
-    lsmod | grep drm
+check_video(){
+    run 'dmesg | grep drm'
 
-    # https://askubuntu.com/questions/28033/how-to-check-the-information-of-current-installed-video-drivers
-    lspci | grep VGA
-    find /dev -group video
-    glxinfo | grep direct
-    egrep -i " connected|card detect|primary dev|Setting driver" /var/log/Xorg.*.log
-    egrep "EE" /var/log/Xorg.*.log
+    run 'lsmod | grep video'
+    run 'lsmod | grep drm'
+
+    run 'lspci | grep VGA'
+    
+    run 'find /dev -group video'
+    for i in $(find /dev -group video | grep -oP "(?<=card)\w"); do run check_video_card $i; done
+    
+    run 'for f in /var/log/Xorg.*.log; do ls -l $f; grep Output $f; done'
+    run 'grep "EE" /var/log/Xorg.*.log | fgrep -v ??'
 
     # https://wiki.archlinux.org/index.php/kernel_mode_setting#Forcing_modes_and_EDID
-    echo "Current status of connectors: "
-    for p in /sys/class/drm/*/status; \
-        do con=${p%/status}; echo -n "${con#*/card?-}: "; cat $p;
-    done
+    run 'cat_one_line_files /sys/class/drm/*/status'
+
 }
 
-check_video_amd(){
-    dpkg -l amdgpu-pro
-}
-
-check_video_glxgears() {
-    GALLIUM_HUD=help glxgears
-}
-
-check_video--card_index(){
-    echo "card$1:"
-    cat /sys/class/drm/card$1/device/{label,uevent,power_method,power_dpm_state}
-    cat /sys/kernel/debug/dri/$1/radeon_{fence_info,gem_info,pm_info,sa_info,vram_mm}
-}
+run_if_shell
