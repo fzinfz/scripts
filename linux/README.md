@@ -4,4 +4,4 @@
 
 # Check functions
 
-    for f in check_*.sh; do echo "# $f"; my_functions $f; echo; done
+    for f in check_*.sh; do echo "# $f"; cat $f | grep_functions; echo; done

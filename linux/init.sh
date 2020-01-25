@@ -38,12 +38,12 @@ run_title(){ echo_hightlight "$@"; eval "$@"; }
 curl_N_source__url() { source /dev/stdin <<< "$(curl -sSL $1)"; }
 
 ## Parameters: file [echo_prefix]
-my_functions(){ cat $1 | grep -oP '^\w[^(]+(?=\()' | xargs -I% sh -c "echo $2 %" ; }
+grep_functions(){ grep -oP '^\w[^(]+(?=\()' ; }
 
 run_if_shell(){
     if [ -z "${0##*.sh}" ]; then
         echo_script_header
-        for cmd in $(my_functions $0 run_title); do eval "$cmd"; done
+        for cmd in $(cat $0 | grep_functions); do run_title "$cmd"; done
     fi
 }
 

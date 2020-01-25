@@ -5,7 +5,7 @@ check_sys(){
 }
 
 check_cpu(){
-    run 'dmidecode -t processor | grep -E "(Speed|Version):"'
+    run 'dmidecode -t processor | grep -E "(Speed|Version):" | sort | uniq'
     run "lscpu | egrep 'Byte Order'"    
 }
 

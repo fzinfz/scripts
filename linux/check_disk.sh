@@ -1,31 +1,23 @@
-#!/bin/bash
+[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
-echo_info(){ echo -e "\033[92m$1\033[m"; }
+check_disk(){
 
-echo_info "lshw"
-lshw -class disk -short
-#lshw -class disk -class storage
+    run 'lshw -class storage | grep "product:" -C1'
 
-echo_info "lsblk -S"
-lsblk -S | sort
-echo_info "lsblk | grep"
-lsblk  | grep -vE 'loop|rom'
+    run 'lshw -class disk -short'
 
-# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/logical_volume_manager_administration/disk_remove_ex
+    run 'lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,RM,MAJ:MIN,TYPE,MODEL,UUID | grep -vE "loop|rom"'
 
-echo_info "pvs"
-pvs -o+pv_used
+    run 'df -TPh | grep -vE "tmpfs|squashfs|overlay" '
 
-echo_info "lvs"
-lvs
+    run 'cat /proc/mounts | grep -P "/(mapper|\wd\w\d?\b)" '
+    
+}
 
-grep_disk(){ grep -P "/(mapper|\wd\w\d?\b)"; }
+check_lvm(){
+    run 'pvs -o+pv_used,vg_uuid,UUID'
+    run vgs
+    run lvs
+}
 
-echo_info "df"
-df -TPh | head -n 1
-df -TPh | grep_disk
-
-echo_info "/proc/mounts"
-cat /proc/mounts | grep_disk
-
-
+run_if_shell
