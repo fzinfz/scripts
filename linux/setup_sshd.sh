@@ -1,3 +1,5 @@
+[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
+
 setup_sshd(){
     sshd_port=$1
     root_password=$2
@@ -32,7 +34,7 @@ ssh_key_add_silent() {
     fi
 }
 
-sshd-change--port() {
+sshd-change__port() {
     sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
     service sshd restart
 }

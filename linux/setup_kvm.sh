@@ -1,13 +1,9 @@
-
-kvm_install() {
-    apt install -y virt-manager qemu-kvm qemu-utils
-}
-
+[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
 kvm_check() {
-    egrep --color=auto 'vmx|svm|0xc0f' /proc/cpuinfo
-    lsmod | grep kvm
-    lsmod | grep virtio
+    run 'egrep --color=auto "vmx|svm|0xc0f" /proc/cpuinfo | uniq'
+    run 'lsmod | grep kvm'
+    run 'lsmod | grep virtio'
 }
 
 kvm_intel_reload() {
@@ -24,10 +20,8 @@ kvm_intel_nested() {
     echo qemu-system-x86_64 -enable-kvm -cpu host
 }
 
-kvm_intel_GVTg_dependency(){
-
 # https://github.com/intel/gvt-linux/wiki/GVTg_Setup_Guide#23-library-dependence 
-
+kvm_intel_GVTg_dependency(){
     apt-get install -y \
         git vim \
         libfdt-dev libpixman-1-dev libssl-dev socat libsdl1.2-dev libspice-server-dev \
@@ -35,5 +29,4 @@ kvm_intel_GVTg_dependency(){
         xtightvncviewer tightvncserver x11vnc \
         libsdl1.2-dev uuid-runtime uuid uml-utilities \
         bridge-utils python-dev liblzma-dev libc6-dev
-
 }
