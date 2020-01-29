@@ -4,9 +4,16 @@ Examples:
   
     [ -f ./init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
-# install.sh
+# install.sh examples
 
+    ./install.sh -h  # show help
     ./install.sh -i -p=base,VT,docker -f=vscodei
+    
+    Parameters: ( can be used together )
+        -u            # update repo
+        -p=base       # dry run for packages will be installed, will grep `$regex_packages`
+        -p=base,VT,docker -i  # install packages
+        -f=vscodei     # run install_*() functions in script, don't need -i
 
 # Check
 Check All

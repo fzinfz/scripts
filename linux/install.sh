@@ -1,29 +1,33 @@
 [ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
 print_usage(){
-cat <<'EOF'
+    if [ -f init.sh ]; then
+        echo_tip "Usage exampels: "
+        perl -ne 'print if /^# install.sh/ ... /^#/' README.md | head -n-1 | tail +2
 
-    Usage examples: ( can be used together with other parameters )
-        -u            # update repo
-        -p=base       # dry run for packages will be installed, will grep `$regex_packages`
-        -p=base,VT,docker -i  # install packages
-        -f=vscode     # run install_*() functions in script, don't need -i
-        # Others: vscodei(code-insiders) 
+        echo_tip "values for -f=..."
+        grep -oP '^install_\w[^(]+(?=\(\)\{)'  install.sh | sed s/install_// | grep -v _
+        echo "vscodei=code-insiders"
+        echo
 
-EOF
+        echo_tip "values for -p=..."
+        perl -ne 'print if /^packages_list()/ ... /^EOF/' install.sh | head -n-1 | tail +3
+    else
+        echo_tip "Usage: https://github.com/fzinfz/scripts/tree/master/linux"
+    fi
 }
 
 packages_list(){
 cat <<EOF
 
-    base_sys:     software-properties-common tmux htop openssh-server
+    base_sys:     software-properties-common openssh-server tmux
     base_hw:      numactl pciutils
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq    
     base_fs:      unzip locate ncdu lsof 
     base_fs_net:  cifs-utils nfs-common
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
-    base_bench:   iperf3 sysstat
+    base_perf:   iperf3 sysstat htop iotop
     bench:        sysbench fio
     VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils
     docker:       docker.io
@@ -35,25 +39,21 @@ cat <<EOF
 EOF
 }
 
-install-docker(){     
-    curl -fsSL get.docker.com | bash
-    # or `-p=docker` to install docker.io
-}
 
 install_vscode_update(){
-	if [ ! -f /etc/apt/trusted.gpg.d/microsoft.gpg ]; then
+    if [ ! -f /etc/apt/trusted.gpg.d/microsoft.gpg ]; then
         curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.gpg
     fi
     
     fgrep packages.microsoft.com/repos/vscode /etc/apt/sources.list.d/vscode.list 1>/dev/null
     [ $? -ne 0 ] && echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
 
-	repo_update
+    repo_update
 
 	# $pkg_mgmt --fix-broken install -y
 }
-install_vscode(){  install_vscode_update; run $pkg_mgmt install code ; }
-install_vscodei(){ install_vscode_update; run $pkg_mgmt install code-insiders ; }
+install_vscode(){  install_vscode_update; run $pkg_mgmt install -y code ; }
+install_vscodei(){ install_vscode_update; run $pkg_mgmt install -y code-insiders ; }
 
 
 detect_cmd(){
@@ -83,7 +83,7 @@ package_install(){
     
     if [ $? -ne 0 ]; then
         for pkg in ${packages_array[@]}; do
-            run $pkg_mgmt install $pkg
+            run $pkg_mgmt install -y $pkg
         done
     fi
 }
