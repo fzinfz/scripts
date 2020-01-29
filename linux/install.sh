@@ -49,8 +49,6 @@ install_vscode_update(){
     [ $? -ne 0 ] && echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
 
     repo_update
-
-	# $pkg_mgmt --fix-broken install -y
 }
 install_vscode(){  install_vscode_update; run $pkg_mgmt install -y code ; }
 install_vscodei(){ install_vscode_update; run $pkg_mgmt install -y code-insiders ; }
@@ -79,7 +77,7 @@ repo_update(){
 }
 
 package_install(){
-    run $pkg_mgmt install ${packages_array[@]}
+    run $pkg_mgmt install -y ${packages_array[@]}
     
     if [ $? -ne 0 ]; then
         for pkg in ${packages_array[@]}; do

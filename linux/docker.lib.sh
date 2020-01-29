@@ -1,12 +1,5 @@
 #!/bin/bash
 
-mode_d='-d --restart unless-stopped'
-mode_host="--privileged --user=root --cap-add=ALL \
-    --pid=host --ipc=host --net host \
-    -v /dev:/dev -v /lib/modules:/lib/modules \
-    -v /boot:/boot -v /:/host"
-
-
 # Install
 
 docker_install_from_curl(){  curl -fsSL get.docker.com | bash ; }
@@ -80,6 +73,12 @@ docker_rmi_all_none() {
 }
 
 # Run
+
+mode_d='-d --restart unless-stopped'
+mode_host="--privileged --user=root --cap-add=ALL \
+    --pid=host --ipc=host --net host \
+    -v /dev:/dev -v /lib/modules:/lib/modules \
+    -v /boot:/boot -v /:/host"
 
 docker_run_rmit(){     docker run --rm -it $mode_host -v $PWD:/data -w /data $* ; }
 docker_run_vim() {     docker_run_rmit --entrypoint vim haron/vim $1 ; }
