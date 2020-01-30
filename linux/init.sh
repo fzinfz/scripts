@@ -40,7 +40,9 @@ echo_script_header(){ echo_yellow $(linesep -); echo_info `whoami` @ `hostname` 
 run(){ echo_debug "$@"; eval "$@"; }
 run_title(){ echo_title "$@"; eval "$@"; }
 
-curl_N_source__url() { source /dev/stdin <<< "$(curl -sSL $1)"; }
+curl_N_source() { source /dev/stdin <<< "$(curl -sSL $1)"; }
+
+cat_script(){ [ -f $1 ] && cat $1 || curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/$1 ; }
 
 grep_functions(){ grep -oP '^\w[^(]+(?=\()' ; }  # func_name(
 

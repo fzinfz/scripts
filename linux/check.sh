@@ -1,9 +1,10 @@
-. init.sh
+[ -f init.sh ] && source ./init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
 
-for f in check_*.sh; do 
+for tag in disk network sys video; do 
+    f=check_${tag}.sh
     echo_title "Running $f"; 
-    cat $f | grep_functions
+    cat_script $f | grep_functions
     echo
-    ./$f
+    [ -f $f ] && bash $f
     echo
 done

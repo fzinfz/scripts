@@ -10,10 +10,11 @@ Examples:
 
 # install.sh examples
 
-    ./install.sh -h  # show help
-    ./install.sh -i -p=base,VT,docker -f=vscodei
+    curl -sS http://tx.mpio.win:8090/scripts/linux/install.sh | bash -s -- -p=base
     
-    Parameters: ( can be used together )
+Parameters: ( can be used together )
+
+        -h            # show help
         -u            # update repo
         -p=base       # dry run for packages will be installed, will grep `$regex_packages`
         -p=base,VT,docker -i  # install packages
@@ -22,7 +23,7 @@ Examples:
 # Check
 Check All
 
-    ./check.sh
+    ./check.sh # local only
     
 Source `check_*` functions
 

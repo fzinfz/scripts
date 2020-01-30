@@ -1,20 +1,18 @@
 [ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
 
-print_usage(){
-    if [ -f init.sh ]; then
-        echo_tip "Usage exampels: "
-        perl -ne 'print if /^# install.sh/ ... /^#/' README.md | head -n-1 | tail +2
+print_usage(){ 
 
-        echo_tip "values for -f=..."
-        grep -oP '^install_\w[^(]+(?=\(\)\{)'  install.sh | sed s/install_// | grep -v _
-        echo "vscodei=code-insiders"
-        echo
+    echo_tip "Usage exampels: "
+    cat_script README.md | perl -ne 'print if /^# install.sh/ ... /^#/' | head -n-1 | tail -n+2
 
-        echo_tip "values for -p=..."
-        perl -ne 'print if /^packages_list()/ ... /^EOF/' install.sh | head -n-1 | tail +3
-    else
-        echo_tip "Usage: https://github.com/fzinfz/scripts/tree/master/linux"
-    fi
+    echo_tip "values for -f=..."
+    cat_script install.sh | grep -oP '^install_\w[^(]+(?=\(\)\{)' | sed s/install_// | grep -v _
+    echo_tip "vscodei=code-insiders"
+    echo
+
+    echo_tip "values for -p=..."
+    cat_script install.sh | perl -ne 'print if /^packages_list()/ ... /^EOF/' | head -n-1 | tail -n+3
+
 }
 
 packages_list(){
@@ -27,7 +25,7 @@ cat <<EOF
     base_fs:      unzip locate ncdu lsof 
     base_fs_net:  cifs-utils nfs-common
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
-    base_perf:   iperf3 sysstat htop iotop
+    base_perf:    iperf3 sysstat htop iotop
     bench:        sysbench fio
     VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils
     docker:       docker.io
