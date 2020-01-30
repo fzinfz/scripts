@@ -1,16 +1,17 @@
 [ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
 
-setup_sshd(){
-    sshd_port=$1
-    root_password=$2
+sshd_change_port(){
+    sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
+    grep ^Port /etc/ssh/sshd_config
+}
 
-    apt update || yum update
-    apt install -y openssh-server || yum install -y openssh-server
-    mkdir /var/run/sshd
+sshd_allow_root_login(){
     sed -r -i 's/^[#]? *PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-    sed -r -i "s/^[#]? *Port .*/Port ${sshd_port}/" /etc/ssh/sshd_config
-    echo "root:${root_password}" | chpasswd
-    /usr/sbin/sshd
+    grep PermitRootLogin /etc/ssh/sshd_config
+}
+
+sshd_change_root_password(){
+    echo "root:${1}" | chpasswd
 }
 
 # https://docs.docker.com/engine/examples/running_ssh_service/#run-a-test_sshd-container
@@ -32,9 +33,4 @@ ssh_key_add_silent() {
         eval `ssh-agent -s` > /dev/null
         ssh-add > /dev/null
     fi
-}
-
-sshd-change__port() {
-    sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
-    service sshd restart
 }

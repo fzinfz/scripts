@@ -21,11 +21,15 @@ cat <<EOF
     base_sys:     software-properties-common openssh-server tmux
     base_hw:      numactl pciutils
     base_web:     aria2 curl wget
-    base_text:    vim git gettext jq    
+    base_text:    vim git gettext jq  
+    base_font:    locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
     base_fs:      unzip locate ncdu lsof 
     base_fs_net:  cifs-utils nfs-common
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
     base_perf:    iperf3 sysstat htop iotop
+    dev:          gcc build-essential python-dev
+    dev_mq:       libzmq3-dev
+    dev_db:       libmariadbclient-dev-compat 
     bench:        sysbench fio
     VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils
     docker:       docker.io

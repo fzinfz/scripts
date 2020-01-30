@@ -10,13 +10,13 @@ Examples:
 
 # install.sh examples
 
-    curl -sS http://tx.mpio.win:8090/scripts/linux/install.sh | bash -s -- -p=base
+    curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/install.sh | bash -s -- -p=base,dev
     
 Parameters: ( can be used together )
 
         -h            # show help
         -u            # update repo
-        -p=base       # dry run for packages will be installed, will grep `$regex_packages`
+        -p=...        # dry run for packages will be installed, will grep `$regex_packages`
         -p=base,VT,docker -i  # install packages
         -f=vscodei     # run install_*() functions in script, don't need -i
 
