@@ -2,7 +2,7 @@
 
 command -v conda >/dev/null 2>/dev/null && cmd_conda=Y
 
-install_packages(){
+install_py_packages(){
 
     conda config --add channels conda-forge
     conda install -y \
@@ -11,6 +11,18 @@ install_packages(){
 
     pip install fabric2
 
+}
+
+install_kernel_bash(){
+
+    # https://github.com/Calysto/metakernel/tree/master/metakernel_bash
+    pip install metakernel_bash
+
+    # https://github.com/takluyver/bash_kernel
+    pip install --upgrade pexpect
+    pip install bash_kernel
+    python -m bash_kernel.install
+    
 }
 
 install_kernel_py27(){
@@ -22,3 +34,23 @@ install_kernel_py27(){
     source deactivate py27
 
 }
+
+unset install
+
+for i in "$@"; do
+    case $i in
+        -i=*|--install=*)
+            install="${i#*=}"
+        ;;           
+        *)
+            echo_error "Unknown Parameter: $i"
+        ;;
+    esac
+done
+
+echo_debug "install=$install"
+
+for func in ${install//,/ }
+do
+    run "install_$func"
+done
