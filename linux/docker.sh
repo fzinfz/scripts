@@ -1,4 +1,5 @@
-[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+[ -f $SCRIPTPATH/init.sh ] && source $SCRIPTPATH/init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
 
 # Install
 
@@ -102,3 +103,9 @@ mode_host="--privileged --user=root --cap-add=ALL \
 docker_run_rmit(){     docker run --rm -it $mode_host -v $PWD:/data -w /data $* ; }
 docker_run_vim() {     docker_run_rmit --entrypoint vim haron/vim $1 ; }
 docker_run_vim_py() {  docker_run_rmit --entrypoint vim fedeg/python-vim $1 ; }
+
+# handling parameters
+
+for func in "$@"; do
+    run "docker_$func"
+done
