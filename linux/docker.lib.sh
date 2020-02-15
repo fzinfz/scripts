@@ -1,4 +1,4 @@
-#!/bin/bash
+[ -f init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
 
 # Install
 
@@ -24,7 +24,7 @@ docker_stats() {
 # Log
 
 docker_log_json_path--container(){
-    docker inspect --format='{{.LogPath}}' $1
+    docker inspect --format='{{.LogPath}}' $1    
 }
 
 docker_log_clear--container() {
@@ -36,6 +36,25 @@ docker_logs--container---pgrep() {
 }
 
 # Container
+docker_ps(){
+    printf "ps -ef \n    "
+    docker exec -it $1 ps -ef | grep -v 'ps -ef'
+}
+
+docker_inspect(){
+    for k in .Name .HostConfig.Binds .Config.Cmd .Config.Entrypoint; do
+        printf "$k\n    "
+        docker inspect --format="{{$k}}" $1
+    done
+}
+
+docker_inspect_all(){
+    for c in $(docker ps -q); do
+        docker_inspect $c
+        echo_yellow $(linesep -)
+    done
+}
+
 
 docker_update_restart_unless_stopped--container(){
     docker container update $1 --restart unless-stopped

@@ -31,7 +31,12 @@ echo_hightlight(){    echo_yellow "[$(now)] <!!!> $@"; }
 echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 
 linesep(){
-    columns=$(expr $(tput cols)  - 20)
+    if [ "$TERM" = "xterm" ]; then
+        columns=$(expr $(tput cols)  - 20)
+    else
+        columns=30
+    fi
+    
     for i in $(seq 1 $columns); do printf "$1"; done
 }
 
