@@ -1,0 +1,127 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>bootstrap + vue textbox</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container" id="textbox-helper">
+        <form class="mt-2">
+            <div class="form-group">
+                <textarea type="text" class="form-control mb-2" rows="6" placeholder="User Input" id='input_raw'
+                    v-model="input_raw"></textarea>
+                <textarea type="text" class="form-control mb-2" rows="2" placeholder="User Input" id='users'
+                    v-model="users"></textarea>
+                <div>
+                    <input type="radio" value="One" id="1" v-model="picked">
+                    <label for="one">1</label>
+                    <input type="radio" value="Two" id="2" v-model="picked">
+                    <label for="two">2</label>
+                    <button type="button" class="btn-sm" v-on:click="clear">Clear</button>
+                </div>
+            </div>
+        </form>
+        <form v-if="seen" v-bind:action="action" method="post">
+            <p>{{ result }} [{{ time }}]</p>
+            <p class="text-danger">.text-danger</p>
+            <li v-for="item in input_filtered">
+                <a v-bind:href="item.url">{{ item.text }}</a>
+            </li>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+
+    <script>
+
+        var vm = new Vue({
+            el: '#textbox-helper',
+            data: {
+                input_raw: '',
+                users: 'fzinfz',
+                picked: "x",
+                cache: ['input_raw', 'users', 'picked'],
+
+                seen: false,
+                result: '',
+                time: '',
+                input_filtered: '',
+                action: window.location.href.split("/").pop(),
+            },
+            mounted() {
+                for (i in this.cache) {
+                    key = this.cache[i]
+                    if (localStorage.getItem(key)) {
+                        this.$data[key] = localStorage.getItem(key)
+                    }
+                }
+                this.timer()
+            },
+            watch: {
+                input_raw: function (newVal, oldVal) {
+                    this.seen = true
+                    this.input_filtering()
+                },
+            },
+            methods: {
+                timer: function () {
+                    var self = this
+                    this.time = moment().format("HH:mm:ss")
+                    setTimeout(self.timer, 1000) // recursive!
+                },
+                input_filtering: function () {
+                    var lines = this.input_raw.split("\n")
+
+                    output = []
+                    for (var i in lines) {
+                        var col_1 = lines[i].split(/\s+/)[0] + this.users
+
+                        var col_2 = lines[i].split(/\s+/)[1]
+                        var col_2r = /\d+/.exec(col_2)
+
+                        rs = {
+                            'text': `col+user: [${col_1}], col2_digits: [${col_2r}], picked: [${this.picked}]`,
+                            'url': `http://test.${col_2}`
+                        }
+                        output.push(rs)
+                    }
+                    this.result = lines.length + " lines / " + output.length + " results"
+                    console.log(output)
+                    this.input_filtered = output
+                },
+                clear: function () {
+                    this.input_raw = ''
+                    document.getElementById("input_raw").select()
+                }
+            }
+        })
+
+        vm.$watch(
+            function () {
+                rs = []
+                data = this.$data
+                this.cache.forEach(function (key, i) {
+                    rs.push(data[key])
+                });
+                return rs
+            },
+            function (newVal, oldVal) {
+                data = this.$data
+                this.cache.forEach(function (key, i) {
+                    localStorage.setItem(key, data[key])
+                });
+                this.input_filtering()
+            }
+        )        
+    </script>
+
+</body>
+
+</html>

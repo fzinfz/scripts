@@ -1,3 +1,7 @@
-test.*
+draft
+test*
 .idea
 .ipynb_checkpoints
+.swp
+*result.*
+*.pyc
