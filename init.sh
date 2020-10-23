@@ -369,10 +369,6 @@ top_custom(){
          #inxi -C ; echo ;
 }
 
-top_custom_watch(){
-#watch -n 1  cat /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_cur_freq
-
-}
 
 # hardware
 
@@ -388,6 +384,10 @@ check_sys() {
     $nl
 
     inxi -Fxz
+}
+
+check_cpu_info(){
+	for f in $(ls /sys/devices/system/cpu/cpu*/cpufreq/*); do printf "$f: "; cat $f; done
 }
 
 check_cpu_vendor(){
