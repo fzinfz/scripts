@@ -13,15 +13,11 @@ D1 = {
     '功率-一分钟有功总平均': ('02 80 00 03', 2, 4, 'kW'),
     
     '功率因数-总':           ('02 06 00 00', 1, 3, ''),  
-    
-    '表内温度':             ('02 80 00 07', 3, 1, '°C'),    
+       
     '内部电池电压':          ('02 80 00 08', 2, 2, 'V'),    
-    '内部电池工作时间':       ('02 80 00 0A', 8, 0, '分'), 
     
     '日期':                 ('04 00 01 01', 6, 2, '年月日.星期'),  
     '时间':                 ('04 00 01 02', 4, 2, 'hhmm.ss'),  
-    '表号':                 ('04 00 04 02', 12, 0, '#'),  
-    '每月第1结算日':         ('04 00 0B 01', 2, 2, '日.时'),  
     
 }
 
@@ -42,7 +38,15 @@ D2 = {
     '零线电流':             ('02 80 00 01', 3, 3, 'A'),  
     '频率':                 ('02 80 00 02', 2, 2, 'Hz'),  
     
-    '通信地址':             ('04 00 04 01', 12, 0, '#'),    
+    '表内温度':             ('02 80 00 07', 3, 1, '°C'),    
+    '内部电池工作时间':       ('02 80 00 0A', 8, 0, '分'), 
+    
+    '表号':                 ('04 00 04 02', 12, 0, '#'),  
+    '通信地址':             ('04 00 04 01', 12, 0, '#'),  
+
+    '每月第1结算日':         ('04 00 0B 01', 2, 2, '日.时'),  
+    '每月第2结算日':         ('04 00 0B 02', 2, 2, '日.时'),  
+    '每月第3结算日':         ('04 00 0B 03', 2, 2, '日.时'),  
     
     '型号':                 ('04 00 04 0B', 20, 0, ''),  
     
@@ -57,7 +61,7 @@ D2 = {
 }
 
 D = {**D1, **D2}
-# D = D1
+D = D1
 
 def read_chn(chn, addr, cmd, verbose = 0):
     chn.encode(addr, 0x11, cmd)
@@ -66,6 +70,7 @@ def read_chn(chn, addr, cmd, verbose = 0):
 
 
 def get_data(chn, addr, item):
+    
     d = D[item]    
     payload = read_chn( chn, addr, [ int(x, 16) for x in d[0].split(' ')[::-1] ] )
     
@@ -85,25 +90,23 @@ def get_data(chn, addr, item):
 def read_meter(chn, addr):
     
     result = {}
-
+    
     for item in D:
         result[item] = get_data(chn, addr, item)
-
-    # convert all 'kW' to 'W'
+  
     for k, v in D.items():
-        if v[3] == 'kW':
-            result[k] = "{:,.2f}".format( result[k][0] * 1000 ) , 'W'   
-    
+        unit = v[3]
+        if unit == 'kW':
+            result[k] = "{:,.2f}".format( result[k][0] * 1000 ) , 'W'           
+        if unit == '#':
+            result[k] = "{0:0>12d}".format(int(result[k][0])), ''   
+        if unit == '分':            
+            result[k] = "{:,.2f}".format( result[k][0] / (60*24) / 365 ), '年'
+
     result['功率-A相'] = "{:,.2f}".format( result['A相电压'][0] * result['A相电流'][0] ) , 'W'
     result['电能:本周期'] = "{:,.2f}".format( 
         result['电能-组合有功总-当前'][0] - result['电能-组合有功总-上结算日'][0] ) , 'kWh'
     
-    result['内部电池工作时间'] = "{:,.2f}".format( result['内部电池工作时间'][0] / (60*24) / 365 ), '年'
-
-    for k, v in D.items():
-        if v[3] == '#':
-            result[k] = "{0:0>12d}".format(int(result[k][0])), ''   
-
     try:
         result['日期时间'] = '20' + str(result['日期'][0]).split('.')[0] + ' ' + \
              ':'.join( re.findall('..', "{0:0>6d}".format(int(result['时间'][0]*100))) ), ''

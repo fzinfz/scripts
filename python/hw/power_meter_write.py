@@ -1,5 +1,8 @@
 import time, sys, re
 
+passwd = [0x04,0x11,0x11,0x11]
+opid = [0x00,0x00,0x00,0x00]
+
 # algorithms taken from: https://github.com/glx-technologies/meter-dlt645
 
 def write_meter(chn, addr, cmd, data):
