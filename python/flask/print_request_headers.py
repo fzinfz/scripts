@@ -6,4 +6,4 @@ app = Flask(__name__)
 @app.route('/')
 def hello_world():
     print(request.headers)
-    return "hello"
+    return "check console for headers output"
