@@ -6,6 +6,17 @@ check_disk(){
 
     run 'lshw -class disk -short'
 
+#   run 'parted -l'
+
+    echo 
+    for d in $(parted -l | grep -oP '(?<=Disk )/dev/\w+'); do
+        echo_tip "----- $d -----"
+	run "parted $d 'print free'"
+	run "parted $d 'unit s print free' | tail +6"
+        echo_tip "===== $d ====="
+        echo
+    done
+
     run 'lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,RM,MAJ:MIN,TYPE,MODEL,UUID | grep -vE "loop|rom"'
 
     run 'df -TPh | grep -vE "tmpfs|squashfs|overlay" '
