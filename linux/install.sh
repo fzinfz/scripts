@@ -31,7 +31,7 @@ cat <<EOF
     dev_mq:       libzmq3-dev
     dev_db:       libmariadbclient-dev-compat 
     bench:        sysbench fio
-    VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils
+    VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils libguestfs-tools
     docker:       docker.io
     X:            inxi mc
     firefox:      firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw
