@@ -13,7 +13,7 @@ check_disk(){
         echo_tip "~~~~~ $d ~~~~~"
 	run "parted $d 'print free'"
 	run "parted $d 'unit s print free' | tail +6"
-        echo_tip "_____ $d _____"
+        echo_tip "_____ $d ____________________"
         echo
     done
 
@@ -34,7 +34,7 @@ check_lvm(){
 
 check_ssd(){
 
-    for d in $( lsblk -d -o rota,name | grep -P '^ *0' | awk '{print $2}' ); do
+    for d in $( lsblk -d -o rota,name | grep -P '^ *0' | awk '{print $2}' | grep -v loop ); do
 	run "ls -l /sys/block/$d | cut -d'>' -f2"
 	for p in $( parted /dev/$d print | grep -P '^ *\d' |  awk '{print $1}' ); do
             parted /dev/$d "align-check opt $p"
