@@ -17,12 +17,6 @@ Parameters: ( can be used together )
         -p=base,VT,docker -i  # install packages
         -f=vscodei     # run install_*() functions in script, don't need -i
 
-# Check
-Check All
+# Check OS Env
 
     ./check.sh # local only
-    
-Source `check_*` functions
-
-    for f in check_*.sh; do echo "# $f"; . $f; cat $f | grep_functions; echo; done
-    
