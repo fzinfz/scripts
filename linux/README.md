@@ -4,11 +4,6 @@ Examples:
   
     [ -f ./init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
-# docker.sh
-
-    source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/docker.sh)"
-    
-    /data/scripts/linux/docker.sh inspect_all
 
 # install.sh examples
 

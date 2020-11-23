@@ -20,3 +20,4 @@ git_log---head(){
 }
 
 alias git_diff_staged="git diff --cached"
+alias git_diff_last_commit="git show"
