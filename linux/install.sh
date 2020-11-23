@@ -23,7 +23,7 @@ cat <<EOF
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq  
     base_font:    locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
-    base_fs:      unzip locate ncdu lsof 
+    base_fs:      unzip locate ncdu lsof f2fs-tools
     base_fs_net:  cifs-utils nfs-common
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
     base_perf:    iperf3 sysstat htop iotop
