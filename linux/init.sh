@@ -65,24 +65,3 @@ cat_one_line_files(){
         [ -f $f ] && echo $f : $(cat $f)
     done            
 }
-
-# git
-
-alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
-alias git_commit_amend="git commit --amend -C ORIG_HEAD"
-alias git_discard_changes="git checkout -- ."
-alias git_unstage="git reset HEAD "
-alias git_uncommit="git reset --soft HEAD~1"
-alias git_gitignore_download-py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
-
-git_add_commit_push---comment() {
-    if [ -z $1 ];then
-        c='update'
-    else
-        c=$1
-    fi
-
-    git add -A
-    git commit -am "$c"
-    git push
-}
