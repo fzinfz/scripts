@@ -7,4 +7,5 @@ run 'docker images --format "{{.CreatedAt}}\t{{.Repository}}:{{.Tag}}" | sort'
 
 echo_title 'docker ps'
 run 'docker ps'
-run 'docker ps --no-trunc --format "{{.Names}}\t{{.Image}}\t{{.Command}}" | sort'
+run 'docker ps --no-trunc --format "{{.Names}}  \t : {{.Command}}" | sort'
+run 'docker ps --no-trunc --format "{{.Names}}  \t : {{.Mounts}}"  | sort'
