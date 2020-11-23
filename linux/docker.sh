@@ -1,5 +1,10 @@
 source ../linux/init.sh
 
+echo_title 'systemctl enable'
+run "service docker status | grep Loaded | grep 'disabled;'"
+[ $? -eq 0 ] && run 'systemctl enable --now docker.service'
+run 'service docker status | head -3'
+
 echo_title 'docker images'
 run 'docker images --format "{{.Repository}}:{{.Tag}}" | sort'
 run 'docker images --format "{{.Size}}\t{{.Repository}}:{{.Tag}}" | sort -h'

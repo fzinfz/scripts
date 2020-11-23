@@ -1,4 +1,4 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; [ -f $SCRIPTPATH/init.sh ] && source $SCRIPTPATH/init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
+source ./init.sh
 
 # Install
 
@@ -12,13 +12,6 @@ docker_install_CE_on_RHEL(){
     sudo yum makecache fast
     sudo yum -y install docker-ce
     sudo systemctl start docker
-}
-
-# Status
-
-docker_stats() {
-     # https://github.com/moby/moby/issues/20973
-    docker stats $(docker ps --format={{.Names}}) --no-stream | sort -h -k4
 }
 
 # Log
@@ -36,12 +29,12 @@ docker_logs--container---pgrep() {
 }
 
 # Container
-docker_ps(){
+docker_ps--container(){
     printf "ps -ef \n    "
     docker exec -it $1 ps -ef | grep -v 'ps -ef'
 }
 
-docker_inspect(){
+docker_inspect--container(){
     for k in .Name .HostConfig.Binds .Config.Cmd .Config.Entrypoint; do
         printf "$k\n    "
         docker inspect --format="{{$k}}" $1
@@ -50,7 +43,7 @@ docker_inspect(){
 
 docker_inspect_all(){
     for c in $(docker ps -q); do
-        docker_inspect $c
+        docker_inspect--container $c
         echo_yellow $(linesep -)
     done
 }
@@ -65,7 +58,7 @@ docker_stop_all() {
 }
 
 docker_rm_all() {
-    sh stop_all.sh
+    docker_stop_all
     docker rm $(docker ps -a -q)
 }
 
@@ -81,13 +74,10 @@ docker_kill_N_rm--container() {
 
 # Image
 
-docker_images_sort_by_size(){ docker images | sort -k7 -h ; }
-
 docker_rmi_all(){        docker rmi $(docker images -q) ; }
 docker_rmi_all_unused(){ docker image prune ; }
 
 docker_rmi_all_none() {
-    docker_rm_all_stopped
     docker images | egrep '<none>' | awk '{print $3}' | xargs --no-run-if-empty docker rmi
 }
 
@@ -102,9 +92,3 @@ mode_host="--privileged --user=root --cap-add=ALL \
 docker_run_rmit(){     docker run --rm -it $mode_host -v $PWD:/data -w /data $* ; }
 docker_run_vim() {     docker_run_rmit --entrypoint vim haron/vim $1 ; }
 docker_run_vim_py() {  docker_run_rmit --entrypoint vim fedeg/python-vim $1 ; }
-
-# handling parameters
-
-for func in "$@"; do
-    run "docker_$func"
-done
