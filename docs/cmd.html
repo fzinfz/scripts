@@ -118,7 +118,11 @@
                 var txt = $(this).closest('form').find('.txt').val() + ' '; //input text
 
                 if (result.includes('docker run'))
-                    result += '--name ' + txt.replace(/.*\//, "").replace(/:/, "-") + ' ';   // --name
+                    name = txt.replace(/.*\//, "").replace(/:/, "-");
+                    result = "n=" + name 
+                        + "; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null\n\n" 
+                        + result;
+                    result += '--name $n '
 
                 $(this).closest('form').find('input').each(function (index, item) {
                     if ($(item).prop('checked') || (!$(item).is(':checkbox'))) {
