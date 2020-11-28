@@ -31,7 +31,7 @@
                 <div class="input-group-prepend">
                     <button id="btn_copy" class="btn btn-success" onclick="javascript:return false;">Copy</button>
                 </div>
-                <textarea type="text" class="form-control" rows="3" placeholder="Result will shown here" id='result'> </textarea>
+                <textarea type="text" class="form-control" rows="6" placeholder="Result will shown here" id='result'> </textarea>
             </div>
         </form>
     </div>
@@ -91,7 +91,7 @@
         <hr />
         <div class="container d-flex justify-content-center">
             <p>
-                <a href="https://github.com/fzinfz/scripts/blob/master/docs/cmd.html">Source Code</a>
+                <a href="https://github.com/fzinfz/scripts/blob/master/docs/docker.html">Source Code</a>
             </p>
         </div>
     </div>
@@ -116,14 +116,15 @@
 
                 var result = $(this).closest('form').find('a').text() + ' '; //prefix
                 var txt = $(this).closest('form').find('.txt').val() + ' '; //input text
-
-                if (result.includes('docker run'))
-                    name = txt.replace(/.*\//, "").replace(/:/, "-");
+                name = txt.replace(/.*\//, "").replace(/:/, "-");
+                
+                if (result.includes('docker run')){                    
                     result = "n=" + name 
                         + "; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null\n\n" 
                         + result;
                     result += '--name $n '
-
+                } 
+                                
                 $(this).closest('form').find('input').each(function (index, item) {
                     if ($(item).prop('checked') || (!$(item).is(':checkbox'))) {
                         result += $(item).val() + ' ';

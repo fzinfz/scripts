@@ -1,5 +1,5 @@
-source ./init.sh
-source ./docker.init.sh
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; [ -f $SCRIPTPATH/init.sh ] && \
+    source $SCRIPTPATH/init.sh && source $SCRIPTPATH/docker.init.sh
 
 echo_title 'systemctl enable'
 run "service docker status | grep Loaded | grep 'disabled;'"

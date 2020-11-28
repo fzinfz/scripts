@@ -1,3 +1,6 @@
+# Ref
+https://www.gnu.org/software/bash/manual/bashref.html
+
 Examples:
 
 # init.sh (base functions)
