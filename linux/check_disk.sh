@@ -1,4 +1,4 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; [ -f $SCRIPTPATH/init.sh ] && source $SCRIPTPATH/init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
+source $( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/init.sh
 
 check_disk(){
 
@@ -29,7 +29,7 @@ check_lvm(){
     run 'pvs -o+pv_used,vg_uuid,UUID'
     echo_tip 'pvdisplay -v -m'
     run 'vgs -o+vg_uuid'
-    run lvs
+    run 'lvs -o+UUID'
 }
 
 check_ssd(){
@@ -37,7 +37,7 @@ check_ssd(){
     for d in $( lsblk -d -o rota,name | grep -P '^ *0' | awk '{print $2}' | grep -v loop ); do
 	run "ls -l /sys/block/$d | cut -d'>' -f2"
 	for p in $( parted /dev/$d print | grep -P '^ *\d' |  awk '{print $1}' ); do
-            parted /dev/$d "align-check opt $p"
+            run1 "parted /dev/$d "align-check opt $p""
 	done
     done
 

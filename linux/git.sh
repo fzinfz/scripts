@@ -5,6 +5,8 @@ source ./init.sh
 
 echo_script_header
 
+git_config_show
+
 for d in $(ls -d $p/*); do
     if [ -d $d/.git ]; then
         cd $d && run "git $action # $d"

@@ -1,17 +1,35 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; [ -f $SCRIPTPATH/init.sh ] && source $SCRIPTPATH/init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; 
+source $SCRIPTPATH/init.sh
 
 check_sys(){
+    run ldd /bin/ps
+    run file /bin/ps
+
     run uname -an
+    run "dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' # list kernels"
+    
+    run1 'ls -l ls -l /etc/localtime'
+    run1 'cat /etc/timezone'
 }
 
 check_cpu(){
     run 'dmidecode -t processor | grep -E "(Speed|Version):" | sort | uniq'
     run "lscpu | egrep 'Byte Order'"    
+    run1 "getconf LONG_BIT"    
+    
+    echo_tip "ls /sys/devices/system/cpu/cpu*/cpufreq/"
+
+    
+    if command -v inxi >/dev/null 2>/dev/null;then 
+        echo_tip "inxi -Fxz"
+    fi 
+
 }
 
 check_memory(){
     run free -m
     run numactl -H
+    echo_tip lshw -C memory
 }
 
 check_pci(){

@@ -45,14 +45,15 @@ echo_script_header(){ echo_yellow $(linesep -); echo_info `whoami` @ `hostname` 
 
 run(){ echo_debug "$@"; eval "$@"; }
 run_title(){ echo_title "$@"; eval "$@"; }
+run1(){ echo_debug "$@" | tr -d '\n'; echo_yellow ' ===> ' | tr -d '\n';  eval "$@"; }
 
 curl_N_source() { source /dev/stdin <<< "$(curl -sSL $1)"; }
 
 cat_script(){ [ -f $1 ] && cat $1 || curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/$1 ; }
 
-grep_functions(){ grep -oP '^\w[^(]+(?=\()' ; }  # func_name(
+grep_functions(){ grep -oP '^[a-z][^(]+(?=\()' ; }  # func_name(
 
-grep_functions_autorun(){ grep -oP '^\w[^(]+(?=\(\)\{)' ; }  # func_name(){  
+grep_functions_autorun(){ grep -oP '^[a-z][^(]+(?=\(\)\{)' ; }  # func_name(){  
 run_if_shell(){
     if [ -z "${0##*.sh}" ]; then
         echo_script_header
