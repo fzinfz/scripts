@@ -1,6 +1,3 @@
-# nbviewer
-http://nbviewer.jupyter.org/github/fzinfz/scripts/tree/master/python/
-
 # Folders
 `docs`: Web code snippets ([Preview](https://html.ferro.pro/))  
 `fork`: 3rd party code  
