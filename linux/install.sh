@@ -35,7 +35,7 @@ cat <<EOF
     docker:       docker.io
     X:            inxi mc
     firefox:      firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw
-    chrome:       chromium chromium-l10n    
+    chrome:       chromium-browser chromium-browser-l10n    
     hack:         trickle wondershaper 
 
 EOF

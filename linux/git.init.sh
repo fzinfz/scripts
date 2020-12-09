@@ -15,6 +15,9 @@ git_discard_change--files(){
 alias git_unstage="git reset HEAD "
 alias git_uncommit="git reset --soft HEAD~1"
 
+alias git_stop_track="git update-index --assume-unchanged"
+alias git_resume_track="git update-index --no-assume-unchanged"
+
 # commit
 
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
