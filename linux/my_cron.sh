@@ -10,7 +10,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )";
 cat <<EOF | crontab -
 SHELL=/bin/bash
 
-5-55/10 * * * * $SCRIPTPATH/git.sh $dir_git_parent pull &>/var/log/cron/git.log
+5-55/10 * * * * cd /data/scripts/linux && ./git.sh /data pull &>/var/log/cron/git.log
 0 2 * * * docker exec jupyter bash -c "cd /data/flask-DLT645 && echo y | ./push_to_influxdb.sh" &>/tmp/influxdb.txt
 EOF
 
