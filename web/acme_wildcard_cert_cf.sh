@@ -1,4 +1,4 @@
-. ./cf.init.sh
+. ./init.sh
 
 [ ! -d ~/.acme.sh ] && wget -O - https://get.acme.sh | sh
 
