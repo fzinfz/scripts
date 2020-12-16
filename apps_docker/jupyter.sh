@@ -2,7 +2,14 @@ source ../linux/init.sh
 
 folder_to_map=/data
 
-n=jupyter ; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
+n=jupyter
+docker ps | grep $n
+[ $? -eq 0 ] && run "docker logs $n 2>&1 | grep token"
+
+read -p "Re-create container? (y/n) " a
+[ "$a" != 'y' ] & exit
+
+docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
 cmd="
 docker run --name $n \
@@ -25,7 +32,6 @@ cmd="$cmd fzinfz/jupyter \
 
 run "$cmd"
 
-echo_tip "docker logs $n 2>&1 | grep token"
 run "docker logs $n -f"
 
 

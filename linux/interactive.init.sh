@@ -46,6 +46,7 @@ tar -tvf archive.tar         # List all files in archive.tar verbosely.
 tar -xf archive.tar          # Extract all files from archive.tar.
     -t, --list                 list the contents of an archive
     -c, --create               create a new archive
+    -C, --directory=DIR        change to directory DIR
     -x, --extract, --get       extract files from an archive
     -f, --file=ARCHIVE         use archive file or device ARCHIVE
     -j, --bzip2                filter the archive through bzip2

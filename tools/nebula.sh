@@ -1,1 +1,0 @@
-wget https://github.com/slackhq/nebula/releases/download/v1.3.0/nebula-linux-amd64.tar.gz -O /tmp/nebula-linux-amd64.tar.gz

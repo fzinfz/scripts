@@ -7,9 +7,12 @@ check_sys(){
 
     run uname -an
     run "dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' # list kernels"
-    
-    run1 'ls -l ls -l /etc/localtime'
+}
+
+check_time(){
+    run1 'ls -l /etc/localtime'
     run1 'cat /etc/timezone'
+    run  timedatectl
 }
 
 check_cpu(){
