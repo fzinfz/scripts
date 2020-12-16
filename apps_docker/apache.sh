@@ -18,6 +18,7 @@ run "docker run --name $n -d --restart unless-stopped --net host \
     -v $PWD/apache/custom:/usr/local/apache2/conf/custom \
     -v $PATH_CRT:/usr/local/apache2/conf/server.crt \
     -v $PATH_KEY:/usr/local/apache2/conf/server.key \
+    -v ${DIR_CERT}/fullchain.cer:/usr/local/apache2/conf/server-ca.crt \
     httpd \
 "
 
