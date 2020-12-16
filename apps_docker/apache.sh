@@ -14,8 +14,8 @@ run "docker stop $n 2>/dev/null; docker rm $n 2>/dev/null"
 
 run "docker run --name $n -d --restart unless-stopped --net host \
     -v apache:/usr/local/apache2/htdocs \
-    -v $PWD/apache.conf.d/httpd.conf:/usr/local/apache2/conf/httpd.conf \
-    -v $PWD/apache.conf.d/custom:/usr/local/apache2/conf/custom \
+    -v $PWD/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf \
+    -v $PWD/apache/custom:/usr/local/apache2/conf/custom \
     -v $PATH_CRT:/usr/local/apache2/conf/server.crt \
     -v $PATH_KEY:/usr/local/apache2/conf/server.key \
     httpd \
