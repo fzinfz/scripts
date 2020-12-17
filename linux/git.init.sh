@@ -18,6 +18,13 @@ alias git_uncommit="git reset --soft HEAD~1"
 alias git_stop_track="git update-index --assume-unchanged"
 alias git_resume_track="git update-index --no-assume-unchanged"
 
+# pull
+
+git_pull_force(){ 
+    git reset --hard master@{1}
+    git pull
+}
+
 # commit
 
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
@@ -27,6 +34,7 @@ git_add_commit---comment() {
     [ -z $1 ] && c='update' || c=$1
     git commit -am "$c"
 }
+
 
 # log
 

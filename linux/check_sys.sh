@@ -9,6 +9,10 @@ check_sys(){
     run "dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' # list kernels"
 }
 
+check_os(){
+    run lsb_release -a
+}
+
 check_time(){
     run1 'ls -l /etc/localtime'
     run1 'cat /etc/timezone'
