@@ -1,0 +1,7 @@
+version: 0.1
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+    maxthreads: 100
+proxy:
+  remoteurl: https://hub-mirror.c.163.com

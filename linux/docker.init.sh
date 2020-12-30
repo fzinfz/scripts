@@ -5,15 +5,6 @@ source ./init.sh
 docker_install_from_curl(){  curl -fsSL get.docker.com | bash ; }
 docker_install_from_apt(){   apt install -y docker.io ; }
 
-docker_install_CE_on_RHEL(){
-    # EE supported on RHEL officially
-    sudo yum install -y yum-utils
-    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    sudo yum makecache fast
-    sudo yum -y install docker-ce
-    sudo systemctl start docker
-}
-
 # Log
 
 docker_log_json_path--container(){
@@ -74,6 +65,17 @@ docker_kill_N_rm--container() {
 
 # Image
 
+docker_image_transfer--host--image(){
+    run "docker save $2 | ssh -C $1 docker load"
+}
+
+docker_image_transfer_all--host(){
+    [ -z "$1" ] && read -p 'Host: ' h || h=$1 
+    for i in $(docker images | tail +2 | awk '{print $1}'); do
+	docker_image_transfer--host--image $h $i
+    done
+}
+
 docker_rmi_all(){        docker rmi $(docker images -q) ; }
 docker_rmi_all_unused(){ docker image prune ; }
 
@@ -83,12 +85,6 @@ docker_rmi_all_none() {
 
 # Run
 
-mode_d='-d --restart unless-stopped'
-mode_host="--privileged --user=root --cap-add=ALL \
-    --pid=host --ipc=host --net host \
-    -v /dev:/dev -v /lib/modules:/lib/modules \
-    -v /boot:/boot -v /:/host"
-
-docker_run_rmit(){     docker run --rm -it $mode_host -v $PWD:/data -w /data $* ; }
+docker_run_rmit(){     docker run --rm -it --net host -v $PWD:/data -w /data $* ; }
 docker_run_vim() {     docker_run_rmit --entrypoint vim haron/vim $1 ; }
 docker_run_vim_py() {  docker_run_rmit --entrypoint vim fedeg/python-vim $1 ; }
