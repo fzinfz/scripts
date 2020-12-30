@@ -47,6 +47,8 @@ run(){ echo_debug "$@"; eval "$@"; }
 run_title(){ echo_title "$@"; eval "$@"; }
 run1(){ echo_debug "$@" | tr -d '\n'; echo_yellow ' ===> ' | tr -d '\n';  eval "$@"; }
 
+read_if_empty(){ eval "[ -z \"\$$1\" ] && read -p '$1: ' $1 && export $1=\$$1"; }
+
 curl_N_source() { source /dev/stdin <<< "$(curl -sSL $1)"; }
 
 cat_script(){ [ -f $1 ] && cat $1 || curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/$1 ; }
