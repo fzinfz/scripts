@@ -1,4 +1,4 @@
-. ./git.init.sh
+. ../lib/git.sh
 
 [ -z "$1" ] && p=/data || p=$1
 [ -z "$2" ] && action='status' || action=$2

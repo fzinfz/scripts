@@ -1,4 +1,4 @@
-source ./init.sh
+source ../linux/init.sh
 
 # Install
 

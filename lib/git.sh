@@ -1,4 +1,4 @@
-source ./init.sh
+source ../linux/init.sh
 
 alias git_gitignore_download_py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
 
