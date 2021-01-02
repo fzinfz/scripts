@@ -30,29 +30,6 @@ history--tail_count() {
     # echo "if history items missing, run init_bashrc.sh first."
 }
 
-# ssh
-
-ssh_key_add() {
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-  eval `ssh-agent -s` 
-  ssh-add 
-else
-  echo "key exists: $SSH_AUTH_SOCK"
-fi
-}
-
-ssh_key_add_silent() {
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-  eval `ssh-agent -s` > /dev/null
-  ssh-add > /dev/null
-fi
-}
-
-sshd-change--port() {
-    sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
-    service sshd restart
-}
-
 # 3rd party hw
 
 hw_dell--ip--action() {
