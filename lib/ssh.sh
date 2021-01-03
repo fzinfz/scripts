@@ -1,4 +1,4 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; [ -f $SCRIPTPATH/init.sh ] && source $SCRIPTPATH/init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
+. ../linux/init.sh
 
 sshd_change_port(){
     sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config

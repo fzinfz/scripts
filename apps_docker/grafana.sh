@@ -19,7 +19,7 @@ setup_loki(){
     n=grafana_loki ; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
     run "docker run --name $n -d --restart unless-stopped --net host \
-        -v grafana_loki:/loki -v $PWD/grafana/loki.yaml:/etc/loki/config.yaml \
+        -v grafana_loki:/loki -v $PWD/conf.d_grafana/loki.yaml:/etc/loki/config.yaml \
         grafana/loki"
 
     sleep 2
@@ -33,7 +33,7 @@ setup_promtail(){
     n=grafana_promtail ; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
     run "docker run --name $n -d --restart unless-stopped --net host \
-        -v /var/log:/var/log -v $PWD/grafana/promtail.yml:/etc/promtail/config.yml \
+        -v /var/log:/var/log -v $PWD/conf.d_grafana/promtail.yml:/etc/promtail/config.yml \
         grafana/promtail"
 
     sleep 2

@@ -6,8 +6,8 @@ n=polemarch ; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
 docker run --name polemarch \
     --restart always --net host -d \
-    -v /data/conf/polemarch/projects:/projects \
-    -v /data/conf/polemarch/hooks:/hooks \
+    -v /data/docker-data/polemarch/projects:/projects \
+    -v /data/docker-data/polemarch/hooks:/hooks \
     vstconsulting/polemarch
     
 echo_tip ":8080 admin/admin"
