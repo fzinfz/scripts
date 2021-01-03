@@ -18,7 +18,7 @@ print_usage(){
 packages_list(){
 cat <<EOF
 
-    base_sys:     software-properties-common openssh-server tmux
+    base_sys:     software-properties-common openssh-server tmux bash-completion
     base_hw:      numactl pciutils
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq  
