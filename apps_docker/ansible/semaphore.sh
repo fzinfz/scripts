@@ -1,10 +1,12 @@
-. ./_pre.sh
+. ../_pre.sh
 
 n1=mysql-5-semaphore
 n2=semaphore 
 
 MYSQL_PORT=3306 # default in /etc/semaphore/config.json
-PMA_HTTP=8082
+PMA_HTTP_PORT=9080
+
+dir_etc_ansible=/data/ansible
 
 # ========================================= #
 
@@ -40,7 +42,7 @@ n=${n1}-pma; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
 run "\
 docker run --name $n -d --restart unless-stopped \
-    -p $PMA_HTTP:80 \
+    -p $PMA_HTTP_PORT:80 \
     --link $n1:db \
     -e PMA_USER=semaphore \
     -e PMA_PASSWORD=semaphore \
@@ -65,22 +67,33 @@ echo_tip "https://github.com/ansible-semaphore/semaphore/blob/develop/deployment
 
 n=$n2; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
+run "\
 docker run --name $n -d --restart unless-stopped --net host \
-    ansiblesemaphore/semaphore 
+    -e ANSIBLE_HOST_KEY_CHECKING=False \
+    -v $dir_etc_ansible:/etc/ansible \
+    -w /etc/ansible \
+    -v ~/.ssh/id_rsa:/root/.ssh/id_rsa \
+    ansiblesemaphore/semaphore
+"
 
 run docker exec -it $n cat /etc/semaphore/config.json
 run docker exec -it $n cat /tmp/semaphore/config.stdin
 
 }
 
-read -p "Re-create web? (y/n) " a
+read -p "Re-create $n2? (y/n) " a
 [ "$a" = 'y' ] && setup_web
 
 run docker exec -it $n2 ls -lrt /tmp/semaphore/
 
 echo_tip ":3000 Admin/semaphorepassword"
-echo_tip "docker exec -it $n2 /bin/sh"
-echo_tip "Config: Key Store -> empty env -> inventory -> templates"
+cat <<EOF
+    
+    Web: Key Store -> empty env -> inventory -> templates
+    
+    docker exec -u root -it $n2 /bin/sh
+    
+EOF
 
 # ========================================= #
 

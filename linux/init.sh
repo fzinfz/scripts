@@ -42,6 +42,7 @@ linesep(){
 }
 
 echo_script_header(){ echo_yellow $(linesep -); echo_info `whoami` @ `hostname` @ `date` ; echo; }
+alias echo_header=echo_script_header
 
 cmd_exist() { eval "command -v $1 >/dev/null 2>/dev/null" ; }
 

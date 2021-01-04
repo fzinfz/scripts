@@ -18,6 +18,12 @@ alias git_uncommit="git reset --soft HEAD~1"
 alias git_stop_track="git update-index --assume-unchanged"
 alias git_resume_track="git update-index --no-assume-unchanged"
 
+# remove files
+git_remove_from_all_commits--path(){
+    git filter-branch --tree-filter "rm -rf $1" -- --all
+    echo_tip "run: git push -f"
+}
+
 # pull
 
 git_pull_force(){ 
@@ -28,7 +34,13 @@ git_pull_force(){
 # commit
 
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
-alias git_commit_amend="git commit --amend -C ORIG_HEAD"
+
+git_commit_amend(){
+    git commit --amend -C HEAD@{1}
+    git status
+    read -p 'push? (y/n) ' a
+    [ "$a" = "y" ] && git push -f
+}
 
 git_add_commit---comment() {
     [ -z $1 ] && c='update' || c=$1

@@ -1,7 +1,7 @@
 . ./_pre.sh
 
 MYSQL_PORT=13306
-PMA_HTTP=8081
+PMA_HTTP_PORT=18080
 
 n1=mariadb
 n2=mariadb-pma
@@ -36,7 +36,7 @@ n=$n2; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
 run "\
 docker run --name $n -d --restart unless-stopped \
-    -p $PMA_HTTP:80 \
+    -p $PMA_HTTP_PORT:80 \
     --link $n1:db \
     -e PMA_PORT=$MYSQL_PORT \
     -e PMA_USER=root \
@@ -44,7 +44,7 @@ docker run --name $n -d --restart unless-stopped \
     phpmyadmin/phpmyadmin
 "
 
-echo_tip ":$PMA_HTTP no password"
+echo_tip ":$PMA_HTTP_PORT no password"
 
 }
 

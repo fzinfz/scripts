@@ -1,6 +1,7 @@
 source ../linux/init.sh
 
 folder_to_map=/data
+JUPYTER_PORT=8888
 
 n=jupyter
 
@@ -28,9 +29,9 @@ for dev in $(ls /dev/ttyUSB*); do
 done
 
 cmd="$cmd fzinfz/jupyter \
-    jupyter notebook --ip=* --allow-root --port=8888
+    jupyter notebook --ip=* --allow-root --port=$JUPYTER_PORT
 "
 
 run "$cmd"
 
-run "docker logs $n -f"
+./_post.sh $n
