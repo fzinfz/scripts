@@ -1,4 +1,9 @@
-source ../linux/init.sh
+. ../linux/init.sh
+
+cd_docker_volumn(){
+    [ -z "$1" ] && cd /var/lib/docker || \
+        cd /var/lib/docker/volumes/$1/_data/
+}
 
 # Install
 

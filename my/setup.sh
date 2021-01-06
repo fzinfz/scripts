@@ -1,7 +1,7 @@
 . ../linux/init.sh
 
 echo_title $SHELL | grep bash
-[ $? -eq 0 ] && [ ! -f ~/.bash_profile ] && cp -pv .bash_profile ~/cd .cd ..。。
+[ $? -eq 0 ] && [ ! -f ~/.bash_profile ] && cp -pv .bash_profile ~/
 
 echo_title 'setup timezone'
 timedatectl set-ntp true

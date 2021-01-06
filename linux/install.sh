@@ -25,9 +25,9 @@ cat <<EOF
     base_font:    locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
     base_files:   xarchiver
     base_fs:      unzip locate ncdu lsof f2fs-tools
-    base_fs_net:  cifs-utils nfs-common
+    base_perf:    iperf3 sysstat htop iotop    
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
-    base_perf:    iperf3 sysstat htop iotop
+    net_fs:       cifs-utils nfs-common
     dev:          gcc build-essential python-dev
     dev_mq:       libzmq3-dev
     dev_db:       libmariadbclient-dev-compat 
@@ -83,9 +83,12 @@ package_install(){
     run $pkg_mgmt install -y ${packages_array[@]}
     
     if [ $? -ne 0 ]; then
-        for pkg in ${packages_array[@]}; do
-            run $pkg_mgmt install -y $pkg
-        done
+        read -p 'Try force install ALL packages? (y/n) ' a
+        if [ "$a" = "y" ]; then
+            for pkg in ${packages_array[@]}; do
+                run $pkg_mgmt install -y $pkg
+            done
+        fi
     fi
 }
 

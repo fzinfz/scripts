@@ -33,6 +33,8 @@ if [ $? -eq 0 ]; then
     
     read -p "Re-create container? (y/n) " a
     [ "$a" = 'y' ] && apache_setup
+else
+    apache_setup
 fi
 
 sleep 2
