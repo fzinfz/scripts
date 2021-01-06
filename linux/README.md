@@ -23,3 +23,6 @@ Parameters: ( can be used together )
 # Check OS Env
 
     ./check.sh # local only
+    
+# Templates
+* Gen README.md: https://github.com/fzinfz/scripts/blob/master/apps_docker/_gen_README.sh

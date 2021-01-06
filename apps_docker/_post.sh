@@ -8,3 +8,4 @@ run "docker stats --no-stream | grep -P '^CONTAINER|$n'"
 
 run "free -h"
 
+[ ! -z "${n##*\|*}" ] && run "docker logs -f $n"
