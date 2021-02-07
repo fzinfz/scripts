@@ -21,11 +21,15 @@ for d in apps_docker cloud linux my web; do
 done
 
 echo_title 'create links for /data'
-for d in /data_*; do
-    echo_title $d
-    for d2 in $d/*/; do
-        n=`basename $d2`
-        [ ! -d /data/$n ] && run ln -s $d2 /data/$n
+for p in /data_*; do
+    echo_title $p
+    for p2 in $p/*/; do
+        n=`basename $p2`
+        if [ -d /data/$n ]; then
+            [ ! -L /data/$n ] && echo_error `ls -ld /data/$n`
+        else
+            run ln -s $p2 /data/$n
+        fi
     done
 done
-ls /data/ -l
+run ls /data/ -l
