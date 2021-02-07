@@ -19,7 +19,7 @@ packages_list(){
 cat <<EOF
 
     base_sys:     software-properties-common openssh-server tmux bash-completion
-    base_hw:      numactl pciutils
+    base_hw:      numactl pciutils lshw
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq  
     base_font:    locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
@@ -27,6 +27,7 @@ cat <<EOF
     base_fs:      unzip locate ncdu lsof f2fs-tools
     base_perf:    iperf3 sysstat htop iotop    
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
+    py:           python3-pip
     net_fs:       cifs-utils nfs-common
     dev:          gcc build-essential python-dev
     dev_mq:       libzmq3-dev

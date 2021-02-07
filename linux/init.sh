@@ -6,6 +6,7 @@ alias ls="ls --color=auto"
 alias ll="ls -l"
 
 now(){ date "+%H:%M:%S"; }
+ts(){ date "+%Y%m%d_%H%M%S"; }
 
 echo_color(){ 
     color=$1
