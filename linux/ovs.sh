@@ -1,5 +1,13 @@
 . ./init.sh
-. ../lib/ovs.sh
+. ../lib/nw*.sh
+
+if ! cmd ovs-vsctl; then
+    cmd apt || exit_err "only support install OVS with: apt"
+
+    read -p "Install ovs? (y/n) " a
+    [[ $a =~ [Yy] ]] && apt update && apt install -y openvswitch-switch
+    [ $? -ne 0 ] && exit_err "failed installing OVS"
+fi
 
 for t in $(ovs-vsctl --help | grep "by UUID" -B1 | grep : | sed s/://); do
     echo_tip ovs-vsctl list $t
@@ -10,9 +18,25 @@ run ovs-appctl ovs/route/show
 run ls -l /etc/openvswitch/conf.db
 
 run "ps -efHww | grep ovs"
+
+if [ $(ovs-vsctl list-br | wc -l) -eq 0 ]; then
+    ask 'Create default bridges?'
+    [[ $a =~ [Yy] ]] && ovs_add_br br0 br1
+fi    
+
 run ovs-vsctl show
 
-for ovsbr in $(ovs_br); do
-    run ovs-ofctl dump-flows $ovsbr
-    echo_tip ovs-vsctl --if-exists del-port $ovsbr PORT
+for br in $(ovs-vsctl list-br); do
+    run ovs-ofctl dump-flows $br
+
+    [ $(ovs-vsctl list-ports $br | wc -l) -eq 0 ] && \
+        echo_tip ovs-vsctl add-port $br PORT
+        
+    [ $(ovs-vsctl list-ports $br | wc -l) -gt 0 ] && \
+        echo_tip ovs-vsctl --if-exists del-port $br PORT
+        
 done
+
+lshw_net
+
+run ls -lrth /var/log/openvswitch/*

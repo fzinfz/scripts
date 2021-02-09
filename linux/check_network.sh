@@ -1,8 +1,6 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; 
 source $SCRIPTPATH/init.sh
 
-iptables_list(){ run 'iptables -L -n -v --line-numbers' ; }
-
 check_bbr(){
     run 'tc qdisc show'
     run 'sysctl net.core.default_qdisc'
@@ -13,8 +11,6 @@ check_network_config(){
     run 'ls /etc/network/* -l'
     [ -f /etc/network/interfaces ] && run 'cat /etc/network/interfaces | grep -v ^# | grep -v ^$'
 }
-
-check_ip_list_v4(){ run "ip addr | grep -P 'inet\b' -B2" ; }
 
 check_netplan(){
     for d in run etc lib; do
@@ -34,6 +30,11 @@ check_bridge(){
     run 'ip link show type bridge'    
 }
 
-interface_list(){ ls /sys/class/net ; }
+iptables_list(){ run 'iptables -L -n -v --line-numbers' ; }
+
+check_ip_list_v4(){ run "ip addr | grep -P 'inet\b' -B2" ; }
+
+lshw_net(){ run 'lshw -short -C network | grep ^\/0' ; }
+ls_net(){ ls /sys/class/net ; }
 
 run_if_shell

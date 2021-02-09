@@ -1,1 +1,0 @@
-ovs_br(){ ovs-vsctl list bridge | grep ^name | grep -oP '(?<=\").*(?=\")'; }

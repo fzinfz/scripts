@@ -31,6 +31,10 @@ echo_tip(){          echo_magenta "[$(now)] <TIP> $@"; }
 echo_hightlight(){    echo_yellow "[$(now)] <!!!> $@"; }
 echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 
+BC=$'\e[95m'
+EC=$'\e[0m'
+ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " a ; }
+
 linesep(){
     
     if [ "$TERM" = "xterm" ]; then
@@ -45,7 +49,9 @@ linesep(){
 echo_script_header(){ echo_yellow $(linesep -); echo_info `whoami` @ `hostname` @ `date` ; echo; }
 alias echo_header=echo_script_header
 
-cmd_exist() { eval "command -v $1 >/dev/null 2>/dev/null" ; }
+cmd(){ command -v $1 &>/dev/null ; }
+
+exit_err(){ echo_error "$1"; exit; }
 
 run(){ echo_debug "$@"; eval "$@"; }
 run_title(){ echo_title "$@"; eval "$@"; }
