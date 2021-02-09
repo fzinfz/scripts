@@ -1,5 +1,5 @@
-. ./init.sh
-. ../lib/nw*.sh
+. ../lib/nw_*.sh
+. ./nw.sh
 
 if ! cmd ovs-vsctl; then
     cmd apt || exit_err "only support install OVS with: apt"
@@ -38,5 +38,7 @@ for br in $(ovs-vsctl list-br); do
 done
 
 lshw_net
+ls_net
+check_ip_list_v4
 
 run ls -lrth /var/log/openvswitch/*

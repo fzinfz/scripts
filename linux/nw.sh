@@ -1,5 +1,4 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; 
-source $SCRIPTPATH/init.sh
+. ./init.sh
 
 check_bbr(){
     run 'tc qdisc show'
@@ -35,6 +34,6 @@ iptables_list(){ run 'iptables -L -n -v --line-numbers' ; }
 check_ip_list_v4(){ run "ip addr | grep -P 'inet\b' -B2" ; }
 
 lshw_net(){ run 'lshw -short -C network | grep ^\/0' ; }
-ls_net(){ ls /sys/class/net ; }
+ls_net(){ run ls /sys/class/net ; }
 
 run_if_shell

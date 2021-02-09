@@ -1,4 +1,4 @@
-source $( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/init.sh
+. ./init.sh
 
 check_disk(){
 

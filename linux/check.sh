@@ -1,11 +1,9 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; 
-[ ! -f ./init.sh ] && cd $SCRIPTPATH
+. ./init.sh
 
-for tag in disk network sys video; do 
-    f=check_${tag}.sh
-    echo_title "Running $f"; 
-    cat_script $f | grep_functions
-    echo
-    [ -f $f ] && bash $f
-    echo
+for tag in disk nw sys video; do 
+    for f in ${tag}*.sh; do
+        echo_tip "./$f"; 
+        cat_script $f | grep_functions
+        echo
+    done
 done

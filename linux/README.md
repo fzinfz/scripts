@@ -3,12 +3,13 @@ https://www.gnu.org/software/bash/manual/bashref.html
 
 Examples:
 
-# init.sh (base functions)
+# init.sh
+base functions for shell scripting
   
     [ -f ./init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
 
 
-# install.sh examples
+# install.sh
 
     curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/install.sh | bash -s -- -p=base,dev
     
@@ -20,9 +21,9 @@ Parameters: ( can be used together )
         -p=base,VT,docker -i  # install packages
         -f=vscodei     # run install_*() functions in script, don't need -i
 
-# Check OS Env
+# others
 
-    ./check.sh # local only
-    
+    ./SCRIPT_NAME.sh # local only
+
 # Templates
 * Gen README.md: https://github.com/fzinfz/scripts/blob/master/apps_docker/_gen_README.sh
