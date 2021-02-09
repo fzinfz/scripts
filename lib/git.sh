@@ -60,7 +60,7 @@ git_log---head(){
 
 git_diff(){
     git status
-    read -p ">>Press Enter<<"
+    pause
     git diff --cached
 }
 

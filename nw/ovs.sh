@@ -1,5 +1,5 @@
 . ../lib/nw_*.sh
-. ./nw.sh
+. ../nw/check.sh
 
 if ! cmd ovs-vsctl; then
     cmd apt || exit_err "only support install OVS with: apt"

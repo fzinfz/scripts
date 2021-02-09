@@ -23,6 +23,7 @@ echo_cyan_bright(){    echo_color 96 "$@"; }
 
 echo_success(){        echo_green "[$(now)] <SUCCESS> $@"; }
 echo_error(){            echo_red "[$(now)] <ERROR> $@"; }
+echo_warn(){         echo_magenta "[$(now)] <WARN> $@"; }
 
 echo_debug(){           echo_cyan "[$(now)] <DEBUG> $@"; }
 echo_info(){     echo_cyan_bright "[$(now)] <INFO> $@"; }
@@ -34,6 +35,7 @@ echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 BC=$'\e[95m'
 EC=$'\e[0m'
 ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " a ; }
+pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " a ; }
 
 linesep(){
     

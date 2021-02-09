@@ -18,3 +18,5 @@ run qemu-system-x86_64 --version
 run libvirtd --version
 
 run grep ^SHUTDOWN_TIMEOUT /etc/init.d/libvirt-guests
+
+./qemu.sh

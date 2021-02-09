@@ -1,3 +1,5 @@
+. ./init.sh
+
 enable_bbr_temp(){
     modprobe tcp_bbr
     lsmod | grep bbr
@@ -12,3 +14,4 @@ enable_bbr_perm(){
 }
 
 run_if_shell
+check_bbr

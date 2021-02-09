@@ -9,7 +9,6 @@
 |k8s|.yaml|
 |lib|.sh|
 |linux|.sh|
-|linux_shell|.ipynb|
 |mongodb|.js|
 |python|.ipynb|
 |web|.sh|

@@ -1,7 +1,14 @@
 . ../linux/init.sh
 
 echo_title $SHELL | grep bash
-[ $? -eq 0 ] && [ ! -f ~/.bash_profile ] && cp -pv bash_profile ~/.bash_profile
+if [ $? -eq 0 ]; then    
+    if [ -f ~/.bash_profile ]; then
+        run "head ~/.bash_profile"
+    else
+        cp -pv bash_profile.sh ~/.bash_profile_my
+        echo '. ~/.bash_profile_my' > ~/.bash_profile
+    fi
+fi
 
 [ ! -f ~/.vimrc ] && cp -pv vimrc ~/.vimrc
 
@@ -23,12 +30,12 @@ done
 echo_title 'create links for /data'
 for p in /data_*; do
     echo_title $p
-    for p2 in $p/*/; do
+    for p2 in $(ls -d $p/*); do
         n=`basename $p2`
-        if [ -d /data/$n ]; then
-            [ ! -L /data/$n ] && echo_error `ls -ld /data/$n`
+        if [ -d "/data/$n" ]; then
+            [ ! -L /data/$n ] && echo_warn `ls -ld /data/$n`
         else
-            run ln -s $p2 /data/$n
+            [ -d $p2 ] && run ln -s $p2 /data/$n
         fi
     done
 done
