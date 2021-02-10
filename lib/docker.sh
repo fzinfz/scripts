@@ -1,6 +1,31 @@
 . ../linux/init.sh
 
-cd_docker_volumn(){
+# check
+
+docker_images(){
+    echo_title 'docker images'
+    run 'docker images --format "table {{.Repository}}\t{{.Tag}}" | (sed -u 1q; sort)'
+    run 'docker images --format "table {{.Size}}\t{{.Repository}}:{{.Tag}}" | sort -h'
+    run 'docker images --format "table {{.CreatedAt}}\t{{.Repository}}:{{.Tag}}" | sort -h'
+}
+alias di=docker_images
+
+docker_status(){
+    echo_title "docker info"
+    docker info 2>/dev/null | grep Proxy
+    docker info 2>/dev/null | perl -ne 'print if /Registry Mirrors/ ... /Live/' | head -n -1
+    
+    echo_title "docker ps"
+    run 'docker ps --format "table {{.CreatedAt}}\t{{.Names}}\t{{.Status}}" | sort -h'
+    run 'docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Ports}}" | (sed -u 1q; sort)' 
+    run 'docker ps --no-trunc --format "{{.Names}}\t : {{.Command}}" | sort' && echo
+    run 'docker ps --no-trunc --format "table {{.Names}}\t : {{.Mounts}}"  | (sed -u 1q; sort)'
+}
+alias dk=docker_status
+
+# volumn
+
+docker_volumes_cd(){
     [ -z "$1" ] && cd /var/lib/docker || \
         cd /var/lib/docker/volumes/$1/_data/
 }

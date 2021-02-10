@@ -30,9 +30,6 @@ check_ip_list_v4(){ run "ip addr | grep -P 'inet\b' -B2" ; }
 lshw_net(){ run 'lshw -short -C network | grep ^\/0' ; }
 ls_net(){ run ls /sys/class/net ; }
 
-netstat_listen_ipv4(){
-    netstat -lntup | tail -n +3 | grep LISTEN | \
-        perl -lane 'print "$F[3]\t$F[0]\t$F[-1]"' | grep -v ^: | sort
-}
-
 run_if_shell
+
+netstat_lntup_ipv4

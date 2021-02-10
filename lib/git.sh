@@ -2,15 +2,13 @@ source ../linux/init.sh
 
 # undo
 
-alias git_discard_changes="git checkout -- ."
-
-git_discard_change--files(){
-    git restore --staged "$@"
-    git checkout -- "$@"
-    git status
+git_undo(){
+    read -p ". | files => " a
+    run "git checkout -- $a"
+    run git status
 }
 
-alias git_unstage="git reset HEAD "
+alias git_unstage="git reset HEAD"
 alias git_uncommit="git reset --soft HEAD~1"
 
 # index
@@ -44,6 +42,7 @@ git_commit_amend(){
 }
 
 git_add_commit---comment() {
+    git add -A
     [ -z $1 ] && c='update' || c=$1
     git commit -am "$c"
 }
@@ -76,4 +75,4 @@ git_config_proxy_http--ip--port(){
 
 # misc
 
-alias git_gitignore_download_py="wget https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"
+alias gitignore_py="curl -O https://raw.githubusercontent.com/fzinfz/tsadmin/master/.gitignore"

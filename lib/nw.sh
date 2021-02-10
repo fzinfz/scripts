@@ -8,6 +8,12 @@ ip_addr--interface() {
     ifconfig $1 | grep -P -o '(?<=inet )[0-9.]+'
 }
 
+netstat_lntup_ipv4(){
+    netstat -lntup | tail -n +3 | grep LISTEN | \
+        perl -lane 'print "$F[3]\t$F[0]\t$F[-1]"' | grep -v ^: | sort | grep --color "$1"
+}
+alias ns=netstat_lntup_ipv4
+
 netstat_an--egrep() {
     netstat -an | egrep $1 | \
     awk '{ print $4 ":" $5 ":" $6}' | \
