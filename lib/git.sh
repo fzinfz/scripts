@@ -34,10 +34,15 @@ git_pull_force(){
 
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"
 
-git_commit_amend(){
-    git commit --amend -C HEAD@{1}
-    git status
-    read -p 'push? (y/n) ' a
+git_amend(){
+    git add -A
+    
+    read -p "new msg: (Enter if no change) " a
+    [ -z "$a" ] && run "git commit --amend -C HEAD" || run "git commit --amend -m '$a'"
+    
+    run git status
+    
+    ask "git push?"
     [ "$a" = "y" ] && git push -f
 }
 

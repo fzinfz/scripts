@@ -11,11 +11,12 @@ curl_download--url(){
 
 rsync--local--remote---port() { rsync -aP -e "ssh -p $3" $1 $2 ; }
 
-grep_in_files--regex--path() {
-    grep --color=auto -rn -P "$1" $2
-    # -r, --recursive           like --directories=recurse
-    # -n, --line-number         print line number with output lines
-    # -P, --perl-regexp         PATTERN is a Perl regular expression
+grep_in_files--regex--path---ext() {
+    s="grep --color=auto --line-number --exclude-dir=.ipynb_checkpoints"
+    [ -n "$3" ] && s="$s --include \*.$ext"
+    
+    s="$s -r -P '$1' $2"
+    run "$s"
 }
 
 find--path--name() {
