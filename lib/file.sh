@@ -47,15 +47,19 @@ archive_handle(){
 if_replace_file(){
     src=$1
     dest=$2
-    run "diff $src $dest &>/dev/null"
-    if [ $? -ne 0 ]; then
-        if [ -f $dest ]; then
-            run "head $dest"
-            run "cat $dest | wc -l"
-            action="rm -f $dest"
-            ask "${action} ?"
-            [[ $a =~ [Yy] ]] && run $action
+    if [ ! -f $dest ]; then
+        run "cp -pv $src $dest"
+    else
+        run "diff $src $dest"
+        if [ $? -ne 0 ]; then
+            if [ -f $dest ]; then
+                run "head $dest"
+                run "cat $dest | wc -l"
+                action="rm -f $dest"
+                ask "${action} ?"
+                [[ $a =~ [Yy] ]] && run $action
+            fi
+            [ -f $dest ] || cp -pv $src $dest
         fi
-        [ -f $dest ] || cp -pv $src $dest
-    fi
+    fi    
 }

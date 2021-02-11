@@ -1,8 +1,8 @@
+. ../linux/init.sh
 . ../lib/file.sh
 
 echo_title $SHELL | grep bash
 [ $? -eq 0 ] && if_replace_file ./bash_profile.sh ~/.bash_profile
-
 cmd vim && if_replace_file ./vimrc ~/.vimrc
 
 echo_title 'setup timezone'
@@ -20,6 +20,8 @@ for d in apps_docker cloud linux my nw web; do
     run "chmod +x ../$d/*.sh"
 done
 
+run "chmod -x ../lib/*.sh"
+
 echo_title 'create links for /data'
 for p in /data_*; do
     echo_title $p
@@ -34,3 +36,4 @@ for p in /data_*; do
 done
 run ls /data/ -l
 
+. ~/.bash_profile

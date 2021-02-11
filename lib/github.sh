@@ -1,3 +1,5 @@
+github_query(){
+
 repo=$1
 
 echo_info "URL Web: https://github.com/${repo}/releases"
@@ -11,3 +13,5 @@ echo_info "browser_download_url list:"
 echo $latest_release_str | grep -oP '(?<=browser_download_url": ")[^"]+'
 
 run "env | grep ^github"
+
+}

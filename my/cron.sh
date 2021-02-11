@@ -1,5 +1,3 @@
-source ./init.sh
-
 dir_git_parent=/data
 
 mkdir -p /var/log/cron
