@@ -1,16 +1,9 @@
-. ../linux/init.sh
+. ../lib/file.sh
 
 echo_title $SHELL | grep bash
-if [ $? -eq 0 ]; then    
-    if [ -f ~/.bash_profile ]; then
-        run "head ~/.bash_profile"
-    else
-        cp -pv bash_profile.sh ~/.bash_profile_my
-        echo '. ~/.bash_profile_my' > ~/.bash_profile
-    fi
-fi
+[ $? -eq 0 ] && if_replace_file ./bash_profile.sh ~/.bash_profile
 
-[ ! -f ~/.vimrc ] && cp -pv vimrc ~/.vimrc
+cmd vim && if_replace_file ./vimrc ~/.vimrc
 
 echo_title 'setup timezone'
 timedatectl set-ntp true
@@ -40,3 +33,4 @@ for p in /data_*; do
     done
 done
 run ls /data/ -l
+

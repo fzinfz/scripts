@@ -32,9 +32,8 @@ echo_tip(){          echo_magenta "[$(now)] <TIP> $@"; }
 echo_hightlight(){    echo_yellow "[$(now)] <!!!> $@"; }
 echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 
-BC=$'\e[95m'
-EC=$'\e[0m'
-ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " a ; }
+BC=$'\e[95m'; EC=$'\e[0m'; 
+ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " ${2:-a} ; }
 pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " a ; }
 
 linesep(){

@@ -1,15 +1,9 @@
-. ./init.sh
+. ../lib/os.sh
 
 check_sys(){
     run ldd /bin/ps
     run file /bin/ps
-
-    run uname -an
     run "dpkg -l | tail -n +6 | grep -E 'linux-image-[0-9]+' # list kernels"
-}
-
-check_os(){
-    run lsb_release -a
 }
 
 check_time(){
@@ -50,3 +44,5 @@ check_ps_top(){
 }
 
 run_if_shell
+
+os

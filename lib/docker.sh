@@ -4,7 +4,7 @@
 
 docker_images(){
     echo_title 'docker images'
-    run 'docker images --format "table {{.Repository}}\t{{.Tag}}" | (sed -u 1q; sort)'
+    run 'docker images | (sed -u 1q; sort)'
     run 'docker images --format "table {{.Size}}\t{{.Repository}}:{{.Tag}}" | sort -h'
     run 'docker images --format "table {{.CreatedAt}}\t{{.Repository}}:{{.Tag}}" | sort -h'
 }
@@ -26,8 +26,8 @@ alias dk=docker_status
 # volumn
 
 docker_volumes_cd(){
-    [ -z "$1" ] && cd /var/lib/docker || \
-        cd /var/lib/docker/volumes/$1/_data/
+    [ -z "$1" ] && cd /var/lib/docker/volumes/ || \
+        cd $(docker inspect --format='{{.Mounts}}' $1 | grep -oP '/\S+' | head -1)
 }
 
 # Install
@@ -71,7 +71,8 @@ docker_inspect_all(){
 
 
 docker_update_restart_unless_stopped--container(){
-    docker container update $1 --restart unless-stopped
+    run "docker container update $1 --restart unless-stopped"
+    echo_tip other options: no always on-failure[:max-retries]
 }
 
 docker_stop_all() {
