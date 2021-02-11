@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 nmap--ip--port() {
     nmap -sV -p$2 $1
 }

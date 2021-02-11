@@ -3,7 +3,6 @@
 shopt -s expand_aliases
 
 alias ls="ls --color=auto"
-alias ll="ls -l"
 
 now(){ date "+%H:%M:%S"; }
 ts(){ date "+%Y%m%d_%H%M%S"; }
@@ -34,7 +33,7 @@ echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 
 BC=$'\e[95m'; EC=$'\e[0m'; 
 ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " ${2:-a} ; }
-pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " a ; }
+pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " ; }
 
 linesep(){
     

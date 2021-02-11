@@ -16,8 +16,8 @@ git config user.name fzinfz
 git config user.email fzinfz@gmail.com
 
 echo_title 'chmod'
-for d in apps_docker cloud linux my web; do 
-    run "chmod 755 ../$d/*.sh"
+for d in apps_docker cloud linux my nw web; do 
+    run "chmod +x ../$d/*.sh"
 done
 
 echo_title 'create links for /data'

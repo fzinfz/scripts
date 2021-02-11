@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 qcow2_install(){ 
     apt install libguestfs-tools
 }

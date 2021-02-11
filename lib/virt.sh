@@ -1,4 +1,3 @@
-. ../linux/init.sh
 . ./ovs.sh
 
 virt_install(){

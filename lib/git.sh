@@ -1,5 +1,3 @@
-source ../linux/init.sh
-
 # undo
 
 git_undo(){

@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 kvm_intel_reload() {
     rmmod kvm_intel
     modprobe kvm_intel

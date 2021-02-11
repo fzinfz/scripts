@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 check_dev(){
     lsblk && echo
     read -p 'check: /dev/' d

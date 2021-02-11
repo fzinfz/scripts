@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 sshd_change_port(){
     sed -r -i "s/^[#]? *Port .*/Port $1/" /etc/ssh/sshd_config
     grep ^Port /etc/ssh/sshd_config

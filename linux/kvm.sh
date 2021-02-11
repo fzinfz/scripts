@@ -1,5 +1,3 @@
-. ./init.sh
-
 run 'egrep --color=auto "vmx|svm|0xc0f" /proc/cpuinfo | head -2'
 
 run virt-host-validate

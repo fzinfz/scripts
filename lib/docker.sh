@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 # check
 
 docker_images(){

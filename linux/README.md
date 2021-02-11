@@ -3,12 +3,6 @@ https://www.gnu.org/software/bash/manual/bashref.html
 
 Examples:
 
-# init.sh
-base functions for shell scripting
-  
-    [ -f ./init.sh ] && source init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/init.sh)"
-
-
 # install.sh
 
     curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/install.sh | bash -s -- -p=base,dev
@@ -23,7 +17,7 @@ Parameters: ( can be used together )
 
 # others
 
-    ./SCRIPT_NAME.sh # local only
+    ./init.sh && ./SCRIPT_NAME.sh # local only
 
 # Templates
 * Gen README.md: https://github.com/fzinfz/scripts/blob/master/apps_docker/_gen_README.sh

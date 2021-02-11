@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 curl_download--url(){
     curl -sSLO $1
     # -S, --show-error    Show error. With -s, make curl show errors when they occur
@@ -13,7 +11,7 @@ rsync--local--remote---port() { rsync -aP -e "ssh -p $3" $1 $2 ; }
 
 grep_in_files--regex--path---ext() {
     s="grep --color=auto --line-number --exclude-dir=.ipynb_checkpoints"
-    [ -n "$3" ] && s="$s --include \*.$ext"
+    [ -n "$3" ] && s="$s --include \*.$3"
     
     s="$s -r -P '$1' $2"
     run "$s"

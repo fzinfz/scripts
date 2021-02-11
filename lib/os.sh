@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 os(){    
     run lsb_release -a 
     run uname -an

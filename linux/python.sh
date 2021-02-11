@@ -1,13 +1,11 @@
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"; [ -f $SCRIPTPATH/init.sh ] && source $SCRIPTPATH/init.sh || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
-
-command -v conda >/dev/null 2>/dev/null && cmd_conda=Y
+. ./init.sh &>/dev/null || source /dev/stdin <<< "$(curl -sSL https://raw.githubusercontent.com/fzinfz/scripts/master/linux/init.sh)"
 
 install_py_packages(){
 
     conda config --add channels conda-forge
     conda install -y \
         pika pyzmq scrapy uwsgi gunicorn django flask bottle hug pyramid python-graphviz \
-        pyzmq pymongo pymysql mysql-connector-python psycopg2 sqlite
+        pyzmq pymongo pymysql mysql-connector-python psycopg2 sqlite influxdb-client
 
     pip install fabric2
 

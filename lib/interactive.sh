@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 # tmux
 
 tmux_show_screen_keys(){

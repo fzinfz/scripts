@@ -1,5 +1,3 @@
-. ./init.sh
-
 check_disk(){
 
     run 'lshw -class storage | grep "product:" -C1'

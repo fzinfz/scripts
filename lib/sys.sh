@@ -1,5 +1,3 @@
-. ../linux/init.sh
-
 who_using_file(){ run fuser -v -m $1 ; }
 
 check_memory_huge(){
@@ -17,3 +15,5 @@ top_custom(){
     ps -eo %mem,pid,command --sort -%mem | head -n6 ; echo ;
 
 }
+
+cron_list(){ run "crontab -l | grep -v ^# | grep -v ^$" ; }
