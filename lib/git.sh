@@ -24,8 +24,8 @@ git_remove_from_all_commits--path(){
 # pull
 
 git_pull_force(){ 
-    git reset --hard master@{1}
-    git pull
+    git fetch --all
+    git reset --hard origin/master
 }
 
 # commit
