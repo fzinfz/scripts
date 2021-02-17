@@ -33,6 +33,7 @@ echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 
 BC=$'\e[95m'; EC=$'\e[0m'; 
 ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " ${2:-a} ; }
+ask_run(){ ask "$@"; [[ $a =~ [Yy] ]] && run "$@"; }
 pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " ; }
 
 linesep(){
