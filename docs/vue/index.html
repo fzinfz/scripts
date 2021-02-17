@@ -11,6 +11,11 @@
         const data = await response.json();
         let htmlString = '<div class="container pt-3">';
         for (let file of data) {
+            htmlString += `
+        <p>
+            <a href="./${file.name}" type="button" class="btn btn-outline-primary">
+                ${file.name}</a>
+        </p>`;
         }
         htmlString += '</div>';
         document.getElementsByTagName('body')[0].innerHTML = htmlString;
