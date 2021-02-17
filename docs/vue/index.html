@@ -11,9 +11,10 @@
         const data = await response.json();
         let htmlString = '<div class="container pt-3">';
         for (let file of data) {
+            if ( !file.name.startsWith('index.') )
             htmlString += `
         <p>
-            <a href="./${file.name}" type="button" class="btn btn-outline-primary">
+            <a href="./${file.name}" target="_blank" type="button" class="btn btn-outline-primary">
                 ${file.name}</a>
         </p>`;
         }
