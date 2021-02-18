@@ -1,3 +1,5 @@
+. ./init.sh
+
 for tag in disk ../nw/check sys video; do 
     for f in ${tag}*.sh; do
         echo_tip "./$f"; 

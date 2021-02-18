@@ -1,3 +1,4 @@
+. ./init.sh
 . ../lib/git.sh
 
 [ -z "$1" ] && p=/data || p=$1

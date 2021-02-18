@@ -1,3 +1,4 @@
+. ./init.sh
 . ../lib/os.sh
 
 check_sys(){

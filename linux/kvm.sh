@@ -1,3 +1,5 @@
+. ./init.sh
+
 run 'egrep --color=auto "vmx|svm|0xc0f" /proc/cpuinfo | head -2'
 
 run virt-host-validate
@@ -16,5 +18,3 @@ run qemu-system-x86_64 --version
 run libvirtd --version
 
 run grep ^SHUTDOWN_TIMEOUT /etc/init.d/libvirt-guests
-
-./qemu.sh

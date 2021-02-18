@@ -7,7 +7,7 @@ ip_addr--interface() {
 }
 
 netstat_lntup_ipv4(){
-    netstat -lntup | tail -n +3 | grep LISTEN | \
+    netstat -lntup | tail -n +3 | \
         perl -lane 'print "$F[3]\t$F[0]\t$F[-1]"' | awk -F '[:]*' '{ print $2 "   \t" $1 }' | \
         sort -h | grep --color "$1"
 }
