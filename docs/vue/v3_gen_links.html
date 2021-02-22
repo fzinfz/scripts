@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bookmarks</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.5/vue.global.prod.js"
+        integrity="sha512-7mjRUL9551cOFF57PSrURwSa9UsUmufUCU9icwUEoUrECcxpa20PakbPplb7b4ZGbCc0StIr9ytHoXH9+v6ygA=="
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="conainer">
+        <table class="table mx-5 mt-3" id="Links">
+            <tr class="d-flex" v-for="item in itmes">
+                <template v-if="item.link.length">
+                    <td class="col-2">{{ item.desc }}</td>
+                    <td class="col-10"><a target="_blank" :href="item.link">{{ item.link }}</a></td>
+                </template>
+                <template v-else>
+                    <th class="col-12">{{ item.desc }}</th>
+                </template>
+            </tr>
+        </table>
+    </div>
+    <script src="v3_gen_links.data.js?v=1"></script>
+    <script>
+        const lines = s.split('\n').filter(line => line.includes("|"));
+        var itmes = [];
+        lines.forEach(function (line) {
+            var item = {};
+            item['desc'] = line.split(" |")[0].trim();
+            item['link'] = line.split(" |")[1].trim();
+            itmes.push(item);
+        });
+
+        Vue.createApp({
+            data() {
+                return {
+                    itmes: itmes,
+                }
+            }
+        }).mount('#Links')
+    </script>
+</body>
+
+</html>
