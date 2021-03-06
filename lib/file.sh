@@ -17,10 +17,11 @@ grep_in_files--regex--path---ext() {
     run "$s"
 }
 
-find--path--name() {
-    find $1 -iname $2
-    # find . ! -readable / -writable / -executabl
-    # find . ! -perm -g=w
+find--path() {    
+    echo_tip find . ! -readable / -writable / -executabl
+    echo_tip find . ! -perm -g=w
+    q   "find $1 -iname '*___'"
+    run "find $1 -iname '*$a'"
 }
 
 _archive_handle(){
