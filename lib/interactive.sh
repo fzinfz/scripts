@@ -35,3 +35,7 @@ hw_dell--ip--action() {
     echo Doc: http://www.dell.com/support/manuals/us/en/04/integrated-dell-remote-access-cntrllr-8-with-lifecycle-controller-v2.00.00.00/racadm_idrac_pub-v1/serveraction?guid=guid-69ea52c5-153d-4369-b7c4-6694a3b9e0d4&lang=en-us
     ssh root@$1 "racadm serveraction  $2"
 }
+
+# misc
+
+source_url() { source /dev/stdin <<< "$(curl -sSL $1)" ; }

@@ -1,7 +1,6 @@
 #!/bin/sh
 
-shopt -s expand_aliases
-
+[ ! -f ]
 alias ls="ls --color=auto"
 
 now(){ date "+%H:%M:%S"; }
@@ -59,8 +58,6 @@ read_if_empty(){ eval "[ -z \"\$$1\" ] && read -p '$1: ' $1 && export $1=\$$1"; 
 curl_N_source() { source /dev/stdin <<< "$(curl -sSL $1)"; }
 
 cat_script(){ [ -f $1 ] && cat $1 || curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/$1 ; }
-
-source_url() { source /dev/stdin <<< "$(curl -sSL $1)" ; }
 
 grep_functions(){ grep -oP '^[a-z][^(]+(?=\()' ; }  # func_name(
 
