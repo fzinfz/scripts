@@ -14,4 +14,15 @@ ps_qemu(){
         grep -v master-key.aes | perl -pe 's/guest/\nguest/g'
 }
 
+modprobe_ignore_msrs(){
+    if cmd systool; then
+        run 'systool -vm kvm | grep ignore_msrs'
+        [ $? -ne 0 ] && echo_tip 'echo "options kvm ignore_msrs=1" >> /etc/modprobe.d/kvm.conf'
+    else
+        echo_tip "apt install sysfsutils"
+    fi
+}
+
 run_if_shell
+
+run "virsh list --all"

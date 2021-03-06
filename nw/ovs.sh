@@ -15,7 +15,7 @@ done
 
 run ovs-appctl ovs/route/show
 
-run "ps -efHww | grep ovs"
+run "ps -efHww | grep ovs --color"
 run service openvswitch-switch status
 
 if [ $(ovs-vsctl list-br | wc -l) -eq 0 ]; then
@@ -40,4 +40,4 @@ lshw_net
 ls_net
 check_ip_list_v4
 
-run 'ls -lrth /var/log/openvswitch/*'
+run 'ls -lrth /var/log/openvswitch/* | tail'

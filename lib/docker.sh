@@ -95,10 +95,10 @@ docker_kill_N_rm--container() {
 # Image
 
 docker_image_transfer--host--image(){
-    run "docker save $2 | ssh -C $1 docker load"
+    run "docker save $2 | ssh $1 docker load"
 }
 
-docker_image_transfer_all--host(){
+docker_images_transfer--host(){
     [ -z "$1" ] && read -p 'Host: ' h || h=$1 
     for i in $(docker images | tail +2 | awk '{print $1}'); do
 	docker_image_transfer--host--image $h $i

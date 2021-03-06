@@ -30,6 +30,20 @@ check_ip_list_v4(){ run "ip addr | grep -P 'inet\b' -B2" ; }
 lshw_net(){ run 'lshw -short -C network | grep ^\/0' ; }
 ls_net(){ run ls /sys/class/net ; }
 
+check_nmcli(){
+    if cmd nmcli; then
+        run nmcli connection
+        IFS=$'\n' connections=( $(nmcli -g name connection show | fgrep -v "br-" ) )
+        for i in ${connections[@]}; do
+            run "nmcli conn show '$i' | egrep 'ipv4.method|autoconnect:'"
+            nmcli conn show "$i" | fgrep 'connection.autoconnect:' | grep yes &>/dev/null
+            [ $? -eq 0 ] && \
+                echo_tip "nmcli connection modify '$i' connection.autoconnect no" || \
+                echo_tip "nmcli connection modify '$i' connection.autoconnect yes"            
+        done
+    fi
+}
+
 run_if_shell
 
-netstat_lntup_ipv4
+run netstat_lntup_ipv4

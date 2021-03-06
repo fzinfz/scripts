@@ -19,7 +19,7 @@ packages_list(){
 cat <<EOF
 
     base_sys:     software-properties-common openssh-server tmux bash-completion
-    base_hw:      numactl pciutils lshw
+    base_hw:      numactl pciutils lshw sysfsutils
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq  
     base_font:    locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy

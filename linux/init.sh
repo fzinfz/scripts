@@ -7,12 +7,7 @@ alias ls="ls --color=auto"
 now(){ date "+%H:%M:%S"; }
 ts(){ date "+%Y%m%d_%H%M%S"; }
 
-echo_color(){ 
-    color=$1
-    shift
-    echo -e "\e[${color}m$@\e[0m"
-}
-
+echo_color(){ color=$1; shift; echo -e "\e[${color}m$@\e[0m"; }
 echo_green(){          echo_color 92 "$@"; }
 echo_red(){            echo_color 91 "$@"; }
 echo_yellow(){         echo_color 93 "$@"; }
@@ -32,7 +27,8 @@ echo_hightlight(){    echo_yellow "[$(now)] <!!!> $@"; }
 echo_title(){         echo_yellow "[$(now)] <TITLE> $@"; }
 
 BC=$'\e[95m'; EC=$'\e[0m'; 
-ask(){ read -p "${BC}[$(now)] <ASK> $1${EC} (y/n) " ${2:-a} ; }
+q(){   read -p "${BC}[$(now)] <Question> $1${EC} " ${2:-a} ; }
+ask(){ read -p "${BC}[$(now)] <Question> $1${EC} (y/n) " ${2:-a} ; }
 ask_run(){ ask "$@"; [[ $a =~ [Yy] ]] && run "$@"; }
 pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " ; }
 
@@ -80,4 +76,21 @@ cat_one_line_files(){
     for f in $1; do
         [ -f $f ] && echo $f : $(cat $f)
     done            
+}
+
+select_file(){
+    files=( $(ls $@ | sort) )
+    
+    if [ ${#files[@]} -eq 1 ]; then
+        selected_file=${files[0]}
+    else    
+        for i in "${!files[@]}"; do
+          printf '[%s] %s\n' "$i" "${files[i]}"
+        done
+
+        read -p "Please input file index: " i
+        [[ $i =~ [0-9]+ ]] || exit_err non-num
+        selected_file=${files[i]}
+    fi
+    echo_debug "selected_file=$selected_file"
 }

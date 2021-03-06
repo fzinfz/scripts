@@ -18,7 +18,7 @@ for ovsbr in $(ovs-vsctl list-br); do
     s="$s --network bridge=$ovsbr,model=virtio,virtualport_type=openvswitch"
 done
 
-s="$s --boot hd --noautoconsole"
+s="$s --boot hd --noautoconsole --noreboot"
 
 echo_tip "$s"
 

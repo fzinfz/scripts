@@ -1,3 +1,7 @@
+alias ll='ls -l'
+
+mount -a
+
 if [ -d /data/scripts/lib ]; then
 	cd /data/scripts/lib && for f in *.sh; do . $f; done
 fi

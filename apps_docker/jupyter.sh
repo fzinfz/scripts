@@ -1,6 +1,8 @@
 source ../linux/init.sh
 
-folder_to_map=/data
+df | grep /data_nfs
+[ $? -eq 0 ] && folder_to_map=/data_nfs || folder_to_map=/data
+
 JUPYTER_PORT=8888
 
 n=jupyter
