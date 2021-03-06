@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-[ ! -f ]
+shopt -s expand_aliases
+
 alias ls="ls --color=auto"
 
 now(){ date "+%H:%M:%S"; }
@@ -56,6 +57,7 @@ run1(){ echo_debug "$@" | tr -d '\n'; echo_yellow ' ===> ' | tr -d '\n';  eval "
 read_if_empty(){ eval "[ -z \"\$$1\" ] && read -p '$1: ' $1 && export $1=\$$1"; }
 
 curl_N_source() { source /dev/stdin <<< "$(curl -sSL $1)"; }
+alias source_url=curl_N_source
 
 cat_script(){ [ -f $1 ] && cat $1 || curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/$1 ; }
 
@@ -76,11 +78,11 @@ cat_one_line_files(){
 }
 
 select_file(){
-    files=( $(ls $@ | sort) )
+    files=( $(ls $@ 2>/dev/null | sort) )
     
     if [ ${#files[@]} -eq 1 ]; then
         selected_file=${files[0]}
-    else    
+    elif [ ${#files[@]} -gt 1 ]; then 
         for i in "${!files[@]}"; do
           printf '[%s] %s\n' "$i" "${files[i]}"
         done
@@ -88,6 +90,8 @@ select_file(){
         read -p "Please input file index: " i
         [[ $i =~ [0-9]+ ]] || exit_err non-num
         selected_file=${files[i]}
+    else
+        selected_file=''
     fi
     echo_debug "selected_file=$selected_file"
 }
