@@ -3,7 +3,7 @@
 for tag in disk ../nw/check sys video; do 
     for f in ${tag}*.sh; do
         echo_tip "./$f"; 
-        cat_script $f | grep_functions
+        cat $f | grep_functions
         echo
     done
 done

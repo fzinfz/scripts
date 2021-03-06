@@ -32,8 +32,7 @@ ask(){ read -p "${BC}[$(now)] <Question> $1${EC} (y/n) " ${2:-a} ; }
 ask_run(){ ask "$@"; [[ $a =~ [Yy] ]] && run "$@"; }
 pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " ; }
 
-linesep(){
-    
+linesep(){    
     if [ "$TERM" = "xterm" ]; then
         columns=$(expr $(tput cols)  - 20)
     else
@@ -61,19 +60,17 @@ alias source_url=curl_N_source
 
 cat_script(){ [ -f $1 ] && cat $1 || curl -sS https://raw.githubusercontent.com/fzinfz/scripts/master/linux/$1 ; }
 
-grep_functions(){ grep -oP '^[a-z][^(]+(?=\()' ; }  # func_name(
-
-grep_functions_autorun(){ grep -oP '^[a-z][^(]+(?=\(\)\{)' ; }  # func_name(){  
+grep_functions(){ grep -oP '^[a-z][^(]+(?=\(\)\{)' ; }  # func_name(){  
 run_if_shell(){
     if [ -z "${0##*.sh}" ]; then
         echo_script_header
-        for cmd in $(cat $0 | grep_functions_autorun); do run_title "$cmd"; done
+        for cmd in $(cat $0 | grep_functions); do run_title "$cmd"; done
     fi
 }
 
 cat_one_line_files(){
     for f in $1; do
-        [ -f $f ] && echo $f : $(cat $f)
+        [ -f $f ] && printf "${BC}$f : ${EC}" && head -1 $f
     done            
 }
 
