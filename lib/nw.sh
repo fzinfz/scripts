@@ -3,8 +3,15 @@ nmap--ip--port() {
 }
 
 ip_addr--interface() {
-    ifconfig $1 | grep -P -o '(?<=inet )[0-9.]+'
+    ip addr show dev $1 &>/dev/null
+    if [ $? -eq 0 ]; then
+        ip addr show dev $1 | grep -P -o '(?<=inet )[0-9.]+'
+    fi
 }
+
+nw_ls_interface_ip(){ echo -e "$1 : $(ip_addr--interface $1)"; }
+nw_ls_interfaces(){ netstat -i | grep -P '^[a-z]' | awk '{print $1}'; }
+nw_ls_ip_list(){ for i in $(nw_ls_interfaces); do nw_ls_interface_ip $i; done; }
 
 netstat_lntup_ipv4(){
     netstat -lntup | tail -n +3 | \

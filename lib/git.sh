@@ -28,6 +28,17 @@ git_pull_force(){
     git reset --hard origin/master
 }
 
+# branch
+
+git_clone--branch--url(){ git clone -b $1 $2; }
+
+git_branch_new(){  git checkout -b $1 ; }
+
+git_branch_rm(){ 
+    run "git branch -d $1"
+    run "git push origin --delete $1"
+}
+
 # commit
 
 alias git_commit_reuse_previous_message="git commit -c ORIG_HEAD"

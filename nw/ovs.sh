@@ -1,4 +1,5 @@
 . ../lib/nw_*.sh
+. ../lib/virt.sh
 . ../nw/check.sh
 
 if ! cmd ovs-vsctl; then
@@ -15,15 +16,15 @@ done
 
 run ovs-appctl ovs/route/show
 
+run 'ls -lrth /var/log/openvswitch/* | tail'
+
 run "ps -efHww | grep ovs --color"
-run service openvswitch-switch status
+run "service openvswitch-switch status | head -3"
 
 if [ $(ovs-vsctl list-br | wc -l) -eq 0 ]; then
     ask 'Create default bridges?'
     [[ $a =~ [Yy] ]] && ovs_add_br br0 br1
 fi    
-
-run ovs-vsctl show
 
 for br in $(ovs-vsctl list-br); do
     run ovs-ofctl dump-flows $br
@@ -36,8 +37,8 @@ for br in $(ovs-vsctl list-br); do
         
 done
 
-lshw_net
-ls_net
-check_ip_list_v4
+run ovs-vsctl show
+run ovs_interfaces
+virt_list_vnet
+run nw_ls_ip_list
 
-run 'ls -lrth /var/log/openvswitch/* | tail'
