@@ -22,7 +22,6 @@ cat <<EOF
     base_hw:      numactl pciutils lshw sysfsutils
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq  
-    base_font:    locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
     base_files:   xarchiver
     base_fs:      unzip locate ncdu lsof f2fs-tools
     base_perf:    iperf3 sysstat htop iotop    
@@ -33,9 +32,10 @@ cat <<EOF
     dev_mq:       libzmq3-dev
     dev_db:       libmariadbclient-dev-compat 
     bench:        sysbench fio
-    VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils libguestfs-tools virt-top
+    VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils libguestfs-tools 
     docker:       docker.io
     X:            inxi mc
+    X_font:       locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
     firefox:      firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw
     chrome:       chromium-browser chromium-browser-l10n    
     hack:         trickle wondershaper 
