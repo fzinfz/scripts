@@ -25,6 +25,7 @@ run "chmod -x ../lib/*.sh"
 echo_title 'create links for /data'
 for p in /data_*; do
     echo_title $p
+    ls /data_1T/* &>/dev/null || continue
     for p2 in $(ls -d $p/*); do
         n=`basename $p2`
         if [ -d "/data/$n" ]; then
@@ -34,6 +35,5 @@ for p in /data_*; do
         fi
     done
 done
-run ls /data/ -l
 
-. ~/.bash_profile
+run . ~/.bash_profile
