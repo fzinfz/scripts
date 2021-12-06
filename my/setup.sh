@@ -2,8 +2,8 @@
 . ../lib/file.sh
 
 echo_title $SHELL | grep bash
-[ $? -eq 0 ] && if_replace_file ./bash_profile.sh ~/.bash_profile
-cmd vim && if_replace_file ./vimrc ~/.vimrc
+[ $? -eq 0 ] && if_replace_file ./conf/bash_profile.sh ~/.bash_profile
+cmd vim && if_replace_file ./conf/vimrc ~/.vimrc
 
 echo_title 'setup timezone'
 timedatectl set-ntp true

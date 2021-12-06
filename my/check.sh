@@ -1,6 +1,7 @@
 . ../linux/init.sh
 
-run "netstat -lntup | grep :80"
-run "netstat -lntup | grep 443"
+run "netstat -lntp | grep -v "127.0.0.1" | grep -v docker-proxy"
 
-run "ls ~/.acme.sh/*.*/ -ld"
+run docker ps
+
+[ -d ~/.acme.sh ] && run "ls ~/.acme.sh/*.*/ -ld"
