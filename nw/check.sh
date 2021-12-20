@@ -47,3 +47,5 @@ check_nmcli(){
 run_if_shell
 
 run netstat_lntup_ipv4
+
+echo_tip 'tc qdisc show'

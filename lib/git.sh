@@ -62,11 +62,12 @@ git_add_commit---comment() {
 }
 
 
-# log
+# log | https://stackoverflow.com/questions/1441010
 
-git_log---head(){
-    [ -z "$1" ] && items=5 || items=$1
-    git log | grep -v ^Author | grep -v ^$ | grep commit.* -A2 | head -n $(( $items * 3 ))
+git config --global alias.hs "log --pretty='%C(yellow)%h %C(cyan)%cd %Cblue%aN%C(auto)%d %Creset%s' --graph --date=relative --date-order"
+git_log---lines(){ 
+    [ -z "$1" ] && lines=15 || lines=$1
+    git hs -${lines}; 
 }
 
 # diff
