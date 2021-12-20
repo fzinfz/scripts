@@ -1,4 +1,5 @@
 docker run -i -t --net host --name anaconda3 \
+    --restart unless-stopped \
     -v /data:/data \
     continuumio/anaconda3 /bin/bash -c "\
     jupyter notebook \
