@@ -26,7 +26,7 @@ scrape_configs:
     # scheme defaults to 'http'.
 
     static_configs:
-      - targets: 
+    - targets: 
       - h1:9090
 
   - job_name: linux
@@ -35,6 +35,7 @@ scrape_configs:
     - targets:
       - h1:9100
       - us:9100
+      - cn:9100
 
   - job_name: cadvisor
     scrape_interval: 5s
@@ -42,3 +43,4 @@ scrape_configs:
     - targets:
       - h1:8080
       - us:8080
+      - cn:8080
