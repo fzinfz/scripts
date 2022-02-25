@@ -5,3 +5,4 @@ test*
 .swp
 *result.*
 *.pyc
+*.swp
