@@ -41,6 +41,6 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
     - targets:
-      - h1:8080
-      - us:8080
-      - cn:8080
+      - h1:8082
+      - us:8082
+      - cn:8082
