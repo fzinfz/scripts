@@ -16,10 +16,13 @@ if (!(
 
 # Install
 
-Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*' | Where-Object State -eq 'NotPresent' |
-  ForEach-Object {"Installing $_"; Add-WindowsCapability -Online -Name $_}
+Get-WindowsCapability -Online | 
+  Where-Object Name -like 'OpenSSH*' | 
+  Where-Object State -eq 'NotPresent' |
+  Select-Object -ExpandPropert Name |
+  ForEach-Object {">>> Installing $_"; Add-WindowsCapability -Online -Name $_}
 
-Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*' | Where-Object State -eq 'Installed'
+Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
 
 # Start the sshd service
 Start-Service sshd
