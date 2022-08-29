@@ -24,16 +24,32 @@ Get-WindowsCapability -Online |
 
 Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
 
-# Start the sshd service
-Start-Service sshd
-
-# OPTIONAL but recommended:
-Set-Service -Name sshd -StartupType 'Automatic'
-
 # (forked) Confirm the Firewall rule is configured. It should be created automatically by setup.
 if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
     Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
     New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 } else {
     Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
+}
+
+
+$sshd_config = 'C:\ProgramData\ssh\sshd_config'
+(Get-Content $sshd_config) -Replace '#PubkeyAuthentication yes', 'PubkeyAuthentication yes' | Set-Content $sshd_config
+dir $sshd_config
+
+# Set the sshd service to be started automatically
+Get-Service -Name sshd | Set-Service -StartupType Automatic
+Get-Service -Name sshd
+
+# Start the sshd service
+Start-Service sshd
+
+# .pub key
+$file_pub_key = "$env:USERPROFILE\.ssh\authorized_keys"
+if (!(Test-Path $file_pub_key)){
+Write-Host -ForegroundColor Green "
+    [TIP]
+    create: $file_pub_key
+    run: Restart-Service sshd
+"
 }
