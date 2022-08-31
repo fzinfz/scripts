@@ -47,9 +47,16 @@ Start-Service sshd
 # .pub key
 $file_pub_key = "$env:USERPROFILE\.ssh\authorized_keys"
 if (!(Test-Path $file_pub_key)){
-Write-Host -ForegroundColor Green "
-    [TIP]
-    create: $file_pub_key
-    run: Restart-Service sshd
-"
+    Write-Host -ForegroundColor Green "`n[TIP] create: $file_pub_key"
 }
+"`n"
+$file_administrators_authorized_keys = "$env:ProgramData\ssh\administrators_authorized_keys"
+if (!(Test-Path $file_administrators_authorized_keys)){
+    Write-Host -ForegroundColor Green "`n[TIP] create: $file_administrators_authorized_keys"
+}else{ 
+    icacls.exe ""$file_administrators_authorized_keys"" /inheritance:r /grant ""Administrators:F"" /grant ""SYSTEM:F""
+}
+
+Write-Host -ForegroundColor Green "`n[TIP] run: Restart-Service sshd"
+Get-ChildItem $env:USERPROFILE\.ssh, C:\ProgramData\ssh | 
+  Select-Object Mode, FullName, Length, LastWriteTime | Format-Table -AutoSize 

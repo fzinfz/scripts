@@ -9,5 +9,7 @@ dir $env:USERPROFILE\.ssh | select FullName
 Write-Host -ForegroundColor Green '
 [TIP] gen key & cmd examples:
     ssh-add $env:USERPROFILE\.ssh\id_rsa
-    ssh localhost\root@192.168.88.11
+    ssh root@127.0.0.1 # no @localhost
 '
+
+# auto ssh-add in *profile.ps1
