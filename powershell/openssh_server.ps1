@@ -3,11 +3,7 @@
 # Pre-check
 
 $PSVersionTable.PSVersion
-
-$PSVersion_Major = $PSVersionTable.PSVersion | Select-Object -ExpandPropert Major
-$PSVersion_Minor = $PSVersionTable.PSVersion | Select-Object -ExpandPropert Minor
-$PSVersion = "$PSVersion_Major.$PSVersion_Minor" -as [double]
-""; if ($PSVersion -lt 5.1) {throw "!!! PSVersion >= 5.1 required"}
+""; if ($PSVersionTable.PSVersion -lt (new-object 'Version' 5,1)) {throw "!!! PSVersion >= 5.1 required"}
 
 if (!(
     New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent()       )
