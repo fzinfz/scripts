@@ -6,8 +6,10 @@ if (!(Test-Path $PROFILE.CurrentUserCurrentHost)){
 dir $PROFILE.CurrentUserCurrentHost
 
 . .\EnvPath.lib.ps1
-Add-EnvPath  D:\sdk\flutter\bin
+'
+D:\sdk\flutter\bin
+'.Split([Environment]::NewLine) | ? {$_.trim() -ne "" } | % { Add-EnvPath User $_ }
+
+Get-Childitem  -Directory d:\sdk\*\bin | % { Add-EnvPath User $_ }
 
 . .\check_env.ps1
-
-
