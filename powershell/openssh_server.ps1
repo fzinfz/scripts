@@ -53,6 +53,12 @@ if (!(Test-Path $file_administrators_authorized_keys)){
     icacls.exe ""$file_administrators_authorized_keys"" /inheritance:r /grant ""Administrators:F"" /grant ""SYSTEM:F""
 }
 
-Write-Host -ForegroundColor Green "`n[TIP] run: Restart-Service sshd"
 Get-ChildItem $env:USERPROFILE\.ssh, C:\ProgramData\ssh | 
   Select-Object Mode, FullName, Length, LastWriteTime | Format-Table -AutoSize 
+
+. .\Lib.ps1
+run '
+Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | sort -Property ifIndex | ft
+Restart-Service sshd
+Get-WinEvent OpenSSH* | select -first 10
+'

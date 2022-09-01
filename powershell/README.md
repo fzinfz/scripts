@@ -24,3 +24,6 @@
     Alias           tee -> Tee-Object
     Alias           type -> Get-Content
     Alias           wget -> Invoke-WebRequest
+
+# Docs
+Quoting: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_quoting_rules

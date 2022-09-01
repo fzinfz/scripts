@@ -9,21 +9,26 @@ Get-Counter '\Process(*)\% Processor Time' `
     | Select-Object -ExpandProperty countersamples `
     | Select-Object -Property instancename, cookedvalue `
     | Sort-Object -Property cookedvalue -Descending | Select-Object -First 20 `
-    | ? { $_.cookedvalue -gt 1 } `
+    | ? cookedvalue -gt 1 `
     | ft InstanceName, @{L='CPU';E={($_.Cookedvalue/100).toString('P')}} -AutoSize
 
     Write-Host -ForegroundColor Green "`n=== Memory ==="
 
 run 'Get-Counter "\Memory\Available MBytes" | Format-Table'
 
-Write-Host -ForegroundColor Green "`n[DEBUG] ps | sort Working Set"
-ps | sort WS -Descending | select -First 10 |
-    Format-Table `
-    @{Label = "NonPagedMem(K)"; Expression = {[int]($_.NPM / 1KB)}},
-    @{Label = "PM(M)"; Expression = {[int]($_.PM / 1MB)}},    
-    @{Label = "CPU(s)"; Expression = {if ($_.CPU) {$_.CPU.ToString("N")}}},
-    @{Label = "WS(M)"; Expression = {[int]($_.WS / 1MB)}},
-    Id, ProcessName -AutoSize
+Write-Host -ForegroundColor Green "`n[DEBUG] ps | sort Memory"
 
+# ref: https://stackoverflow.com/a/64080148
+Get-Process |
+  Group-Object -Property Name -NoElement |
+    Where-Object { ! $_.Count -lt 1 } |
+      ForEach-Object {
+        [PSCustomObject]@{
+            Count= $_.Count            
+            'Mem(MB)' = [math]::Round(( Get-Process -Name $_.Name |
+              Measure-Object WorkingSet -sum).sum /1MB, 0)
+            Name = $_.Name
+        }
+      }  | Sort-Object -Property 'Mem(MB)' -Descending | select -First 10
 
 
