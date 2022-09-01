@@ -1,4 +1,4 @@
-. .\Init.lib.ps1
+. .\Lib.ps1
 
 Write-Host -ForegroundColor Green "`n=== CPU ==="
 

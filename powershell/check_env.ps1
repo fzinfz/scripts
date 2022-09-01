@@ -1,4 +1,4 @@
-. .\Init.lib.ps1
+. .\Lib.ps1
 
 run '
 $PROFILE | fl -Force

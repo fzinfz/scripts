@@ -8,8 +8,8 @@ filter run {
         [string] $commands
     )
 
-    $commands | split-lines | % { 
+    $commands | split-lines | % {
         Write-Host -ForegroundColor Green "`n[RUN] $_"
         Invoke-Expression $_
-    }    
+    }
 }
