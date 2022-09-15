@@ -10,6 +10,8 @@
 
 # Get-Alias
 
+    Get-Alias | findstr Object
+
     CommandType     Name                                               Version    Source
     -----------     ----                                               -------    ------
     Alias           % -> ForEach-Object
