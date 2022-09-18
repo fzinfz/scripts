@@ -23,7 +23,7 @@ run "service openvswitch-switch status | head -3"
 
 if [ $(ovs-vsctl list-br | wc -l) -eq 0 ]; then
     ask 'Create default bridges?'
-    [[ $a =~ [Yy] ]] && ovs_add_br br0 br1
+    [[ $a =~ [Yy] ]] && ovs_add_br ovs-br0 ovs-br1
 fi    
 
 for br in $(ovs-vsctl list-br); do

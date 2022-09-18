@@ -15,6 +15,6 @@ run docker_status
 
 echo_title 'check os'
 doker_dir=$(docker info 2>/dev/null | grep "Docker Root Dir" | cut -d: -f2)
-run "df -h $doker_dir"
+run "df -h $doker_dir # Docker Root Dir"
 
 run "free -h"

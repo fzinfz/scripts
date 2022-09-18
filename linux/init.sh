@@ -31,6 +31,7 @@ q(){   read -p "${BC}[$(now)] <Question> $1${EC} " ${2:-a} ; }
 ask(){ read -p "${BC}[$(now)] <Question> $1${EC} (y/n) " ${2:-a} ; }
 ask_run(){ ask "$@"; [[ $a =~ [Yy] ]] && run "$@"; }
 pause(){ read -p "${BC}[$(now)] Press <ENTER> to continue${EC} " ; }
+pause_run(){ echo; read -p "${BC}[$(now)] Press <ENTER> to run $1 or <Ctrl+C> to quit${EC} " ; }
 
 linesep(){    
     if [ "$TERM" = "xterm" ]; then
@@ -42,7 +43,7 @@ linesep(){
     for i in $(seq 1 $columns); do printf "$1"; done
 }
 
-echo_script_header(){ echo_yellow $(linesep -); echo_info `whoami` @ `hostname` @ `date` ; echo; }
+echo_script_header(){ echo_yellow $(linesep -); echo_info `whoami` @ `hostname` @ `date` \| $0 ; echo; }
 alias echo_header=echo_script_header
 
 cmd(){ command -v $1 &>/dev/null ; }
@@ -52,6 +53,7 @@ exit_err(){ echo_error "$1"; exit; }
 run(){ echo_debug "$@"; eval "$@"; }
 run_title(){ echo_title "$@"; eval "$@"; }
 run1(){ echo_debug "$@" | tr -d '\n'; echo_yellow ' ===> ' | tr -d '\n';  eval "$@"; }
+runT(){ echo; echo_title "$@"; type "$@"; eval "$@"; }
 
 read_if_empty(){ eval "[ -z \"\$$1\" ] && read -p '$1: ' $1 && export $1=\$$1"; }
 
