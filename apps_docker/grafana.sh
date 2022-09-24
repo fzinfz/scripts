@@ -11,6 +11,7 @@ setup_grafana(){
     lsof -i 2>/dev/null | grep LISTEN | grep ^grafana  
     
     echo_tip "add data source & explore"
+    echo_tip "grafana-cli admin reset-admin-password newpass"
     
 }
 

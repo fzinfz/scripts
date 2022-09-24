@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  whoami:
-    # A container that exposes an API to show its IP address
-    image: containous/whoami
-    labels:
-      - "traefik.http.routers.whoami2.rule=PathPrefix(`/whoami`)" #  curl http://127.0.0.1/whoami # /api not working

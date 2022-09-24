@@ -3,6 +3,8 @@
 run 'docker network ls'
 
 files=( $(ls -t *.yml) )
+[ ${#files[@]} -eq 0 ] && exit_err "no ./_.yml file found!"
+
 for i in "${!files[@]}"; do
   printf '[%s] %s\n' "$i" "${files[i]}"
 done
@@ -15,7 +17,7 @@ f=${files[i]}
 run "head $f"
 h=$(cat $f | grep routers | grep Host | grep -oP '(?<=`).*(?=`)')
 
-run "docker-compose -f $f up -d --force-recreate"
+run "docker compose -f $f up -d --force-recreate"
 
 n=$(echo $f | cut -d. -f1)
 run "docker ps | grep $n"
