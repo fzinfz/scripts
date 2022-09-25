@@ -26,7 +26,7 @@ run "docker run --name $n -d --restart unless-stopped --net host \
 
 #################################
 
-docker ps | grep $n
+docker ps | grep $n | grep -v Restarting
 if [ $? -eq 0 ]; then
     read -p "restart apache? (y/n) " a
     [ "$a" = 'y' ] && docker exec -it apache apachectl -k restart

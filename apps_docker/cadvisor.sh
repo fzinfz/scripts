@@ -10,8 +10,13 @@ github_query google/cadvisor
 image=gcr.io/cadvisor/cadvisor:$github_latest_release_ver
 echo_tip  $image
 
+image_dockerhub=fzinfz/tools:cadvisor
+
 ping gcr.io -c 1 | grep "100% packet loss"
-[ $? -eq 0 ] && image=fzinfz/tools:cadvisor
+[ $? -eq 0 ] && { image=$image_dockerhub; docker pull $image; } || {
+  docker tag $image $image_dockerhub
+  docker push $image_dockerhub
+}
 
 run docker run \
   --volume=/:/rootfs:ro \
@@ -27,4 +32,4 @@ run docker run \
   $image
 
 echo_tip https://github.com/google/cadvisor#quick-start-running-cadvisor-in-a-docker-container
-run "docker ps | grep cadvisor"
+./_post.sh $n
