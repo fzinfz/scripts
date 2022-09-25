@@ -8,4 +8,4 @@ Get-NetTCPConnection -State Listen | sort LocalPort `
 
 run "netsh int ipv4 show dynamicportrange tcp"
 
-tip "netsh int ipv4 set dynamicport tcp start=30000 num=20000"
+tip "netsh int ipv4 set dynamicport tcp start=40000 num=25536"

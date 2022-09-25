@@ -1,3 +1,5 @@
+Enable-WindowsOptionalFeature -Online -FeatureName "TelnetClient"
+
 if (!(Test-Path $PROFILE.CurrentUserCurrentHost)){
     $folder_CurrentUserCurrentHost = Split-Path -parent $PROFILE.CurrentUserCurrentHost
     New-Item -ItemType Directory -Force -Path $folder_CurrentUserCurrentHost
