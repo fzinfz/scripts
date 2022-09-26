@@ -17,9 +17,11 @@ f=${files[i]}
 run "head $f"
 h=$(cat $f | grep routers | grep Host | grep -oP '(?<=`).*(?=`)')
 
-run "docker compose -f $f up -d --force-recreate"
-
 n=$(echo $f | cut -d. -f1)
+
+run "docker compose -f $f -p $n up --remove-orphans -d"
+run "docker compose ls"
+
 run "docker ps | grep $n"
 
 [ -n "$h" ] && echo_tip "curl -H Host:$h http://127.0.0.1 --head"

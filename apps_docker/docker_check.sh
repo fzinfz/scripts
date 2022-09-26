@@ -18,3 +18,4 @@ doker_dir=$(docker info 2>/dev/null | grep "Docker Root Dir" | cut -d: -f2)
 run "df -h $doker_dir # Docker Root Dir"
 
 run "free -h"
+echo_tip docker_inspect_all
