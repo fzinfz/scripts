@@ -18,7 +18,7 @@ function run {
     }
 }
 
-function check_volume() { 
-    get-wmiobject -Class Win32_Volume | select DriveType, Name | ft 
+function check_volume() {
+    get-wmiobject -Class Win32_Volume | select DriveType, Name | ft
     Write-Host -ForegroundColor Yellow "[DriveType] 2: Removable Disk | 3: Local Disk | More: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394515(v=vs.85)"
 }

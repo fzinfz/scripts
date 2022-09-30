@@ -1,10 +1,9 @@
 Enable-WindowsOptionalFeature -Online -FeatureName "TelnetClient"
 
 if (!(Test-Path $PROFILE.CurrentUserCurrentHost)){
-    $folder_CurrentUserCurrentHost = Split-Path -parent $PROFILE.CurrentUserCurrentHost
-    New-Item -ItemType Directory -Force -Path $folder_CurrentUserCurrentHost
-    Copy-Item *profile.ps1 -Destination $folder_CurrentUserCurrentHost
+    New-Item -ItemType Directory -Force -Path (Split-Path -parent $PROFILE.CurrentUserCurrentHost)
 }
+Copy-Item Profile.ps1 -Destination $PROFILE.CurrentUserCurrentHost -Force
 dir $PROFILE.CurrentUserCurrentHost
 
 . .\EnvPath.lib.ps1
