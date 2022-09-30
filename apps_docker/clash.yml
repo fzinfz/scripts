@@ -1,0 +1,24 @@
+# ref: https://juejin.cn/post/7079949974267494413#heading-8
+# config path: /data/conf/clash/config.yaml
+# after up, wait few minutes for MMDB download
+
+version: '3.7'
+services:
+    clash:
+        image: dreamacro/clash
+        restart: unless-stopped
+        volumes:
+            - /data/conf/clash:/root/.config/clash
+        container_name: clash
+        network_mode: "host"
+
+    clash_web:
+        image: haishanh/yacd
+        restart: always
+        depends_on:
+            # 依赖于clash服务，在clash启动后，web才启动
+            - clash
+        ports:
+            # 主机web访问端口  :  容器内部端口，80
+            - 7880:80
+        container_name: clash_web

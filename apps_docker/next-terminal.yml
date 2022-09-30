@@ -1,0 +1,30 @@
+# https://next-terminal.typesafe.cn/install/docker-install.html
+
+version: '3.3'
+services:
+  guacd:
+    image: dushixiang/guacd:latest
+    volumes:
+      - guacd:/usr/local/next-terminal/data
+    restart:
+      unless-stopped
+    container_name: guacd
+  next-terminal:
+    image: dushixiang/next-terminal:latest
+    environment:
+      DB: sqlite
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT: 4822
+      SSHD_ENABLE: "true"
+    ports:
+      - "8088:8088"
+      - "8089:8089"
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - guacd:/usr/local/next-terminal/data
+      - ~/.ssh/:/root/.ssh/
+    restart:
+      unless-stopped
+    container_name: next-terminal
+volumes:
+    guacd:

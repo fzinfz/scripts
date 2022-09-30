@@ -7,3 +7,5 @@ docker run -d --name $n --net host --restart always \
     prom/prometheus
 
 run grep targets $PWD/conf.d_prometheus/*.yml
+
+run tailscale status

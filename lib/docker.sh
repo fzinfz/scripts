@@ -15,7 +15,7 @@ docker_status(){
     
     echo_title "docker ps"
     run 'docker ps --format "table {{.CreatedAt}}\t{{.Names}}\t{{.Status}}" | sort -h'
-    run 'docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Ports}}" | (sed -u 1q; sort)' 
+    run 'docker ps --format "table {{.Names}}\t{{.ID}}\t{{.Networks}}\t{{.Ports}}" | (sed -u 1q; sort)' 
     run 'docker ps --no-trunc --format "{{.Names}}\t : {{.Command}}" | sort' && echo
     run 'docker ps --no-trunc --format "table {{.Names}}\t : {{.Mounts}}"  | (sed -u 1q; sort)'
 }
@@ -54,7 +54,9 @@ docker_ps--container(){
 }
 
 docker_inspect--container(){
-    for k in .Name .HostConfig.Binds .Config.Cmd .Config.Entrypoint; do
+    for k in .Name .HostConfig.Binds .Config.Cmd .Config.Entrypoint \
+	     .NetworkSettings.IPAddress .NetworkSettings.MacAddress \
+    ; do
         printf "$k\n    "
         docker inspect --format="{{$k}}" $1
     done
