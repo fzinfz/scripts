@@ -29,3 +29,19 @@
 
 # Docs
 Quoting: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_quoting_rules
+
+# Code Snippet
+
+    function test($a, $b){
+        if ($null -eq $b){}
+        Write-Information "don't assign text to returned value" -InformationAction Continue
+        return "Named para: $a"
+    }
+
+    for ($i=1; $i -eq/ne/gt/ge/lt/le 2; $i++){}
+    switch(1){ 1{"a"} default{"x"} }
+
+    [System.Environment]::GetEnvironmentVariable('', 'Process/User/Machine')
+
+    "true/false" -match "\w+"
+    "text" | Select-String -Pattern 't'  -All | % { $_.Matches } | % { $_.Value }
