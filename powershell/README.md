@@ -32,6 +32,9 @@ Quoting: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell
 
 # Code Snippet
 
+    "".GetType()
+    "" | Get-Member | findstr TypeName
+
     function test($a, $b){
         if ($null -eq $b){}
         Write-Information "don't assign text to returned value" -InformationAction Continue
