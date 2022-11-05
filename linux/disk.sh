@@ -9,7 +9,8 @@ check_disk(){
 #   run 'parted -l'
 
     echo 
-    for d in $(parted -l | grep -oP '(?<=Disk )/dev/\w+' | grep -v mapper); do
+    for d in $(parted -l -s 2>/dev/null | grep -oP '(?<=Disk )/dev/\w+' | grep -v mapper | grep -v /dev/sr
+); do
         echo_tip "~~~~~ $d ~~~~~"
 	run "parted $d 'print free'"
 	run "parted $d 'unit s print free' | tail +6"

@@ -1,5 +1,13 @@
 . ./_pre.sh
 
+command -v apt >/dev/null 2>/dev/null || exit_err "OS not supported"
+
+apt list --installed 2>/dev/null | grep docker.io
+[ $? -eq 0 ] && exit_err "docker.io by Linux installed"
+
+apt list --installed 2>/dev/null | grep docker-ce
+[ $? -eq 0 ] && exit_err "docker-ce by Docker Inc installed"
+
 echo_tip https://docs.docker.com/engine/install/debian/#set-up-the-repository
 
 apt-get update
@@ -17,4 +25,4 @@ echo \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 apt-get update
-echo_tip "To upgrade, run: apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin"
+run "apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin"

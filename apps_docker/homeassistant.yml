@@ -1,0 +1,16 @@
+# https://www.home-assistant.io/installation/linux#docker-compose
+
+version: '3'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+volumes:
+    homeassistant:

@@ -1,0 +1,37 @@
+version: '3.6'
+services:
+  frostmourne-monitor:
+    image: registry.cn-hangzhou.aliyuncs.com/kechangqing/frostmourne:0.9.1
+    container_name: frostmourne-monitor
+    environment:
+      datasource_frostmourne_url: jdbc:mysql://host.docker.internal:3306/frostmourne?useSSL=false&verifyServerCertificate=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=GMT%2B8
+      datasource_frostmourne_username: root
+      datasource_frostmourne_password: example
+      frostmourne_monitor_address: http://localhost:10054
+      initial_password:
+      alarmlog_reserve_days: 30
+      ldap_enabled: 'false'
+      spring_ldap_urls:
+      spring_ldap_username:
+      spring_ldap_password:
+      spring_ldap_base:
+      spring_ldap_auth_searchFilter:
+      frostmourne_message_title:
+      email.smtp-host: smtp.qq.com
+      email.smtp-port: 25
+      email.smtp-auth: 'true'
+      email.sender: xxx@qq.com
+      email.sender-password: xxx
+      wechat.corpid:
+      wechat.agentid:
+      wechat.secret:
+    ports:
+      - '10054:10054'
+    expose:
+      - '10054'
+    networks:
+      frostmourne_net:
+    command: bash -c "/opt/frostmourne/start.sh"
+
+networks:
+  frostmourne_net:
