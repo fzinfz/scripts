@@ -1,6 +1,7 @@
 draft
 test*
 .idea
+.vscode
 .ipynb_checkpoints
 .swp
 *result.*

@@ -31,8 +31,8 @@
         <div>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="action" value="action1" id="action1"
-                       v-model="action">
-                <label class="form-check-label" for="action1">action1</label>
+                       v-model="action" checked>
+                <label class="form-check-label" for="action1">Split into 2nd columns if starts with {{ sep }}</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="action" value="action2" id="action2"
@@ -54,11 +54,12 @@
             return {
                 action: "",
                 input: "",
+                sep: /[A-Z]/,
                 output: ""
             }
         },
         watch: {
-            input(newQuestion, oldQuestion) {
+            input(newInput, oldInput) {
                 this.getAnswer()
             },
             action(newQuestion, oldQuestion) {
@@ -66,8 +67,24 @@
             }
         },
         methods: {
+            split_line(line) { // return new line
+                index_en = line.search(this.sep)
+                if (index_en == -1) {
+                    console.log(line)
+                    return null
+                } else {
+                    str_zh = line.slice(0, index_en)
+                    str_en = line.slice(index_en, line.length)
+                    return str_zh + "\t" + str_en
+                }
+            },
             getAnswer() {
-                this.output = this.input + " / " + this.action
+                var lines = this.input.split("\n");
+                var lines_output = [];
+                lines.forEach(line => {
+                    lines_output.push(this.split_line(line))
+                });
+                this.output = lines_output.filter(n => n).join("\n")
             }
         }
     }).mount('#app')
