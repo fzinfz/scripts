@@ -20,23 +20,23 @@
                 <h4 class="text-muted">Text Tools</h4>
             </div>
             <div>
-                <a href="https://github.com/fzinfz/scripts/blob/master/docs/txt.html" class="mr-1" target="_blank">Vue Source</a>
+                <a href="https://github.com/fzinfz/scripts/blob/master/docs/txt.html" class="mr-1" target="_blank">Vue
+                    Source</a>
             </div>
         </div>
     </div>
 
     <div class="container my-1">
         <div class="my-2">
-            <textarea class="form-control" id="input" style="height: 250px" v-model="input"
-                      placeholder="Input text here"></textarea>
+            <textarea class="form-control" id="input" ref="input" style="height: 250px" v-model="input"></textarea>
         </div>
         <div class="my-1">
             <div class="form-check my-2">
                 <div>
                     <input class="form-check-input" type="radio" name="action" value="action1" id="action1"
                            v-model="action">
-                    <label class="form-check-label" for="action1">Split into 2nd column if /<input
-                            v-model="action1_sep">/, log line if NotFound</label>
+                    <label class="form-check-label" for="action1">Split by /<input v-model="action1_sep">/, columns
+                        <input size="5" v-model="action1_limit" @focus="$event.target.select()"></label>
                 </div>
                 <div class="d-flex justify-content-between pt-1">
                     <label>Output separator(Default: Tab): <input v-model="output_sep"></label>
@@ -51,15 +51,14 @@
             <div class="form-check my-2">
                 <input class="form-check-input" type="radio" name="action" value="action3" id="action3"
                        v-model="action">
-                <label class="form-check-label" for="action3">Replace <input v-model="action3_src"> to <input v-model="action3_target"></label>
+                <label class="form-check-label" for="action3">Replace /<input v-model="action3_src">/g to <input
+                        v-model="action3_target"></label>
             </div>
         </div>
     </div>
     <div class="my-2">
-        <textarea class="form-control" id="output" ref="output" style="height: 500px"
-                  placeholder="Result will be shown here">{{ output }}</textarea
+        <textarea class="form-control" id="output" ref="output" style="height: 500px">{{ output }}</textarea>
     </div>
-</div>
 </div>
 <script>
     const {createApp} = Vue
@@ -67,55 +66,64 @@
     createApp({
         data() {
             return {
-                action: "",
-                input: "",
-                action1_sep: "[A-Z]",
+                input: "Input text here, then select an action, and modify RegEx below 2",
+                action: "action1",
+                output_sep: "\\t",
+                action1_sep: ",",
+                action1_limit: -1,
                 action2_filter: '^\\d',
-                action3_src: "",
+                action3_src: "[、，,]",
                 action3_target: "",
                 output: "",
-                output_sep: "\\t",
                 output_copy: "Copy Output"
             }
         },
+        mounted() {
+            this.$refs.input.select()
+        },
         watch: {
-            input(newValue, oldValue) {
-                this.getAnswer()
+            input: {
+                handler(newValue) {
+                    this.getAnswer()
+                },
+                immediate: true // execute on page load
             },
             action(newValue, oldValue) {
+                this.getAnswer()
+            },
+            output_sep(newValue, oldValue) {
                 this.getAnswer()
             },
             action1_sep(newValue, oldValue) {
                 this.getAnswer()
             },
+            action1_limit(newValue, oldValue) {
+                this.getAnswer()
+            },
             action2_filter(newValue, oldValue) {
                 this.getAnswer()
             },
-            output_sep(newValue, oldValue) {
+            action3_src(newValue, oldValue) {
                 this.getAnswer()
-            }
+            },
+            action3_target(newValue, oldValue) {
+                this.getAnswer()
+            },
         },
         methods: {
             handle_line(line) { // return new line
+                let output_sep = this.output_sep.replace(/\\t/g, '\t')
+
                 if (this.action == "action1") {
-                    let index_en = line.search(new RegExp(this.action1_sep))
-                    if (index_en == -1) {
-                        const ts = (new Date()).toLocaleString()
-                        console.log(`${ts} : NotFound /${this.action1_sep}/ ${line}`)
-                        return null
-                    } else {
-                        let str_zh = line.slice(0, index_en)
-                        let str_en = line.slice(index_en, line.length)
-                        return str_zh + this.output_sep + str_en
-                    }
+                    return line.split(new RegExp(this.action1_sep), this.action1_limit).join(output_sep)
                 } else if (this.action == "action2") {
                     if (new RegExp(this.action2_filter).test(line)) {
                         return line
-                    } else {
-                        return null
                     }
+                } else if (this.action == "action3") {
+                    return line.replace(new RegExp(this.action3_src), this.action3_target)
                 } else {
-                    return
+                    return null
                 }
             },
             getAnswer() {
@@ -124,17 +132,19 @@
                 lines.forEach(line => {
                     lines_output.push(this.handle_line(line))
                 });
-                this.output = lines_output.filter(n => n).join("\n")
+                let output = lines_output.filter(n => n).join("\n")
+                // console.log(this.action + " getAnswer(): " + output)
+                this.output = output
             },
             copy() {
                 let output_text = this.$refs.output.value
                 navigator.clipboard.writeText(output_text).then(
                     () => {
-                        /* clipboard successfully set */
                         this.output_copy = output_text.length + " chars copied"
                     },
                     () => {
-                        /* clipboard write failed */
+                        const ts = (new Date()).toLocaleString()
+                        console.log(`${ts} : clipboard write failed`)
                     }
                 );
             }
