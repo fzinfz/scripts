@@ -31,8 +31,8 @@
             <textarea class="form-control" id="input" ref="input" style="height: 250px" v-model="input"></textarea>
         </div>
         <div class="my-1">
-            <div class="form-check my-2">
-                <div>
+            <div class="my-2">
+                <div class="form-check">
                     <input class="form-check-input" type="radio" name="action" value="action1" id="action1"
                            v-model="action">
                     <label class="form-check-label" for="action1">Split by /<input v-model="action1_sep">/, columns
@@ -48,11 +48,19 @@
                        v-model="action">
                 <label class="form-check-label" for="action2">Filter lines if /<input v-model="action2_filter">/</label>
             </div>
-            <div class="form-check my-2">
-                <input class="form-check-input" type="radio" name="action" value="action3" id="action3"
-                       v-model="action">
-                <label class="form-check-label" for="action3">Replace /<input v-model="action3_src">/g to <input
-                        v-model="action3_target"></label>
+            <div class="my-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="action" value="action3" id="action3"
+                           v-model="action">
+                    <label class="form-check-label" for="action3">Replace /<input v-model="action3_re_pattern">
+                        /<input size="6" v-model="action3_re_flags">
+                        (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#advanced_searching_with_flags"
+                            target="_blank">ReFlags</a>)
+                        to <input v-model="action3_target"></label>
+                </div>
+                <div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -66,13 +74,14 @@
     createApp({
         data() {
             return {
-                input: "Input text here, then select an action, and modify RegEx below 2",
+                input: "Input text here, then select an action, and modify RegEx below",
                 action: "action1",
                 output_sep: "\\t",
                 action1_sep: ",",
                 action1_limit: -1,
                 action2_filter: '^\\d',
-                action3_src: "[、，,]",
+                action3_re_pattern: "[、，,]",
+                action3_re_flags: "g",
                 action3_target: "",
                 output: "",
                 output_copy: "Copy Output"
@@ -103,7 +112,10 @@
             action2_filter(newValue, oldValue) {
                 this.getAnswer()
             },
-            action3_src(newValue, oldValue) {
+            action3_re_pattern(newValue, oldValue) {
+                this.getAnswer()
+            },
+            action3_re_flags(newValue, oldValue) {
                 this.getAnswer()
             },
             action3_target(newValue, oldValue) {
@@ -121,7 +133,7 @@
                         return line
                     }
                 } else if (this.action == "action3") {
-                    return line.replace(new RegExp(this.action3_src), this.action3_target)
+                    return line.replace(new RegExp(this.action3_re_pattern, this.action3_re_flags), this.action3_target)
                 } else {
                     return null
                 }
