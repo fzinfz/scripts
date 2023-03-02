@@ -11,42 +11,53 @@
 </head>
 <body>
 <div class="container" id="app">
-    <div class="container">
+    <div class="container my-1">
         <div class="d-flex justify-content-between">
-            <div></div>
+            <div>
+                <a href="https://ferro.pro" class="mr-1" target="_blank">Home</a>
+            </div>
             <div>
                 <h4 class="text-muted">Text Tools</h4>
             </div>
-            <div class="d-flex justify-content-end">
-                <a href="https://github.com/fzinfz/scripts/blob/master/docs/txt.html" class="mr-1">Source</a>
+            <div>
+                <a href="https://github.com/fzinfz/scripts/blob/master/docs/txt.html" class="mr-1" target="_blank">Vue Source</a>
             </div>
         </div>
     </div>
 
-    <div>
-        <div class="pb-1">
-            <textarea class="form-control" id="input" style="height: 150px" v-model="input"
+    <div class="container my-1">
+        <div class="my-2">
+            <textarea class="form-control" id="input" style="height: 250px" v-model="input"
                       placeholder="Input text here"></textarea>
         </div>
-        <div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="action" value="action1" id="action1"
-                       v-model="action" checked>
-                <label class="form-check-label" for="action1">Split into 2nd column if /<input v-model="action1_sep">/, log line if NotFound</label>
+        <div class="my-1">
+            <div class="form-check my-2">
+                <div>
+                    <input class="form-check-input" type="radio" name="action" value="action1" id="action1"
+                           v-model="action">
+                    <label class="form-check-label" for="action1">Split into 2nd column if /<input
+                            v-model="action1_sep">/, log line if NotFound</label>
+                </div>
+                <div class="d-flex justify-content-between pt-1">
+                    <label>Output separator(Default: Tab): <input v-model="output_sep"></label>
+                    <button id="btn_copy" class="btn btn-info m-1" @click="copy">{{ output_copy }}</button>
+                </div>
             </div>
-            <div class="form-check">
+            <div class="form-check my-2">
                 <input class="form-check-input" type="radio" name="action" value="action2" id="action2"
                        v-model="action">
-                <label class="form-check-label" for="action2">action2</label>
+                <label class="form-check-label" for="action2">Filter lines if /<input v-model="action2_filter">/</label>
             </div>
-            <div class="d-flex justify-content-between pt-2">
-                <label>Output separator(Default: Tab): <input v-model="output_sep">({{ output_sep }})</label>
-                <button id="btn_copy" class="btn btn-info m-1" @click="copy">{{ output_copy }}</button>
+            <div class="form-check my-2">
+                <input class="form-check-input" type="radio" name="action" value="action3" id="action3"
+                       v-model="action">
+                <label class="form-check-label" for="action3">Replace <input v-model="action3_src"> to <input v-model="action3_target"></label>
             </div>
         </div>
     </div>
-    <div class="pt-1">
-        <textarea class="form-control" id="output" ref="output"  style="height: 500px" placeholder="Result will be shown here">{{ output }}</textarea
+    <div class="my-2">
+        <textarea class="form-control" id="output" ref="output" style="height: 500px"
+                  placeholder="Result will be shown here">{{ output }}</textarea
     </div>
 </div>
 </div>
@@ -59,8 +70,11 @@
                 action: "",
                 input: "",
                 action1_sep: "[A-Z]",
+                action2_filter: '^\\d',
+                action3_src: "",
+                action3_target: "",
                 output: "",
-                output_sep: "\t",
+                output_sep: "\\t",
                 output_copy: "Copy Output"
             }
         },
@@ -74,28 +88,41 @@
             action1_sep(newValue, oldValue) {
                 this.getAnswer()
             },
+            action2_filter(newValue, oldValue) {
+                this.getAnswer()
+            },
             output_sep(newValue, oldValue) {
                 this.getAnswer()
             }
         },
         methods: {
-            split_line(line) { // return new line
-                let index_en = line.search(new RegExp(this.action1_sep))
-                if (index_en == -1) {
-                    const ts = (new Date()).toLocaleString()
-                    console.log(`${ts} : NotFound /${this.action1_sep}/ ${line}`)
-                    return null
+            handle_line(line) { // return new line
+                if (this.action == "action1") {
+                    let index_en = line.search(new RegExp(this.action1_sep))
+                    if (index_en == -1) {
+                        const ts = (new Date()).toLocaleString()
+                        console.log(`${ts} : NotFound /${this.action1_sep}/ ${line}`)
+                        return null
+                    } else {
+                        let str_zh = line.slice(0, index_en)
+                        let str_en = line.slice(index_en, line.length)
+                        return str_zh + this.output_sep + str_en
+                    }
+                } else if (this.action == "action2") {
+                    if (new RegExp(this.action2_filter).test(line)) {
+                        return line
+                    } else {
+                        return null
+                    }
                 } else {
-                    let str_zh = line.slice(0, index_en)
-                    let str_en = line.slice(index_en, line.length)
-                    return str_zh + this.output_sep + str_en
+                    return
                 }
             },
             getAnswer() {
                 let lines = this.input.split("\n");
                 let lines_output = [];
                 lines.forEach(line => {
-                    lines_output.push(this.split_line(line))
+                    lines_output.push(this.handle_line(line))
                 });
                 this.output = lines_output.filter(n => n).join("\n")
             },

@@ -8,203 +8,221 @@
     <title>Markdown Table Live</title>
     <meta name="description" content="A live editor to convert Plain Text or HTML Table to Markdown format.">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+          crossorigin="anonymous">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 
 <body>
-    <div class="container hide-in-pure-mode">
-        <div class="d-flex justify-content-between">
-            <div></div>
-            <div>
-                <h4 class="text-muted">Plain/HTML Table to Markdown</h4>
-            </div>
-            <div class="d-flex justify-content-end">
-                <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html" class="mr-1">Source</a>
-            </div>
+<div class="container hide-in-pure-mode my-1">
+    <div class="d-flex justify-content-between">
+        <div>
+            <a href="https://ferro.pro" class="mr-1" target="_blank">Home</a>
+        </div>
+        <div>
+            <h4 class="text-muted">Plain/HTML Table to Markdown</h4>
+        </div>
+        <div>
+            <a href="https://github.com/fzinfz/scripts/blob/master/docs/md.html" class="mr-1" target="_blank">Source</a>
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <form>
-            <textarea class="form-control m-1 hide-in-pure-mode" id="raw" rows="6"></textarea>
-            <textarea class="form-control m-1" id='raw2table_result' rows="8"></textarea>
-            <button id="btn_copy" class="btn btn-info m-1" onclick="javascript:return false;">Copy</button>
-            <label id="hint"></label>
-            <button id="btn_del" class="btn btn-success m-1" onclick="javascript:return false;" data-toggle="tooltip" data-placement="top"
-                title="Live Markdown Editor">Pure Edit Mode</button>
-            <label class="form-check-label">
-                <input class="form-check-input mx-2" type="checkbox" id="is_center" value="">Centered
-            </label>
-            <div id="preview" class="py-2"></div>
-        </form>
+<div class="container">
+    <form>
+        <textarea class="form-control my-2 hide-in-pure-mode" id="raw" rows="6"></textarea>
+        <textarea class="form-control my-2" id='raw2table_result' rows="8"></textarea>
+        <button id="btn_copy" class="btn btn-info mx-2" onclick="javascript:return false;">Copy</button>
+        <label id="hint"></label>
+        <button id="btn_del" class="btn btn-success mx-3" onclick="javascript:return false;" data-toggle="tooltip"
+                data-placement="top"
+                title="Live Markdown Editor">Pure Edit Mode
+        </button>
+        <label class="form-check-label">
+            <input class="form-check-input mx-2" type="checkbox" id="is_center" value="">Centered
+        </label>
+        <div id="preview" class="py-2"></div>
+    </form>
+</div>
+
+<div class="hide-in-pure-mode">
+    <hr/>
+    <div class="container d-flex justify-content-between">
+        <p>
+            Chrome extension recommended:
+            <a href="https://chrome.google.com/webstore/detail/copytables/ekdpkppgmlalfkphpibadldikjimijon">Copytables</a>
+        </p>
+        <p> Credits:
+            <a href="https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1">HtmlTable2MD</a>
+            (
+            <a href="https://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">Notes</a>)
+            |
+            <a href="https://github.com/showdownjs/showdown">MD2HTML</a>
+        </p>
     </div>
-
-    <div class="hide-in-pure-mode">
-        <hr />
-        <div class="container d-flex justify-content-between">
-            <p>
-                Chrome extension recommended:
-                <a href="https://chrome.google.com/webstore/detail/copytables/ekdpkppgmlalfkphpibadldikjimijon">Copytables</a>
-            </p>
-            <p> Credits:
-                <a href="https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1">HtmlTable2MD</a>
-                (
-                <a href="https://cdn.rawgit.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1/raw/fe74588b46c1133c315904fd7f6b54938cc1f37c/html-table-to-markdown-extra.html">Notes</a>) |
-                <a href="https://github.com/showdownjs/showdown">MD2HTML</a>
-            </p>
-        </div>
-    </div>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+</div>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.5/showdown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.5/showdown.min.js"></script>
 
-    <script>
-        $('a').attr('target', '_blank');
+<script>
+    $('a').attr('target', '_blank');
 
-        var md2html = new showdown.Converter();
-        md2html.setOption('tables', 'true');
-        function md_preview() {
-            setTimeout(() => {
-                document.getElementById('preview').innerHTML
-                    = md2html.makeHtml($('#raw2table_result').val());
-                $('table').attr('class', 'table table-bordered');
-            }, 100);
+    var md2html = new showdown.Converter();
+    md2html.setOption('tables', 'true');
+
+    function md_preview() {
+        setTimeout(() => {
+            document.getElementById('preview').innerHTML
+                = md2html.makeHtml($('#raw2table_result').val());
+            $('table').attr('class', 'table table-bordered');
+        }, 100);
+    }
+
+    function plain2md() {
+        var raw = $('#raw').val()
+            .replace(/(^|$|\t)/g, "|")
+            .replace(/\|\t\|/g, "|\t")
+            .replace(/\n/g, "|\n|")
+        ;
+
+        var head_line = raw.match(/.*/)[0].replace(/[^\|]+/g, "---");
+        var result = raw.replace(/\n/, ["\n", head_line, "\n"].join(""));
+        $('#raw2table_result').val(result);
+        md_preview();
+    }
+
+    // http://stackoverflow.com/a/5450113
+    function repeat(pattern, count) {
+        if (count < 1) return '';
+        var result = '';
+        while (count > 1) {
+            if (count & 1) result += pattern;
+            count >>= 1, pattern += pattern;
         }
+        return result + pattern;
+    }
 
-        function plain2md() {
-            var raw = $('#raw').val()
-                .replace(/(^|$|\t)/g, "|")
-                .replace(/\|\t\|/g, "|\t")
-                .replace(/\n/g, "|\n|")
-                ;
-
-            var head_line = raw.match(/.*/)[0].replace(/[^\|]+/g, "---");
-            var result = raw.replace(/\n/, ["\n", head_line, "\n"].join(""));
-            $('#raw2table_result').val(result);
-            md_preview();
-        }
-
-        // http://stackoverflow.com/a/5450113
-        function repeat(pattern, count) {
-            if (count < 1) return '';
-            var result = '';
-            while (count > 1) {
-                if (count & 1) result += pattern;
-                count >>= 1, pattern += pattern;
-            }
-            return result + pattern;
-        }
-        function html2md() {
-            var t = $('#raw').val();
-            if (true) {
-                // @Author: https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1
-                t = t.replace(/\t/g, ' '); // convert tabs to a single space
-                t = t.replace(/\s*[\r\n]\s*/g, ''); // remove lines
-                t = t.replace(/<\!--[\s\S]*?-->/g, ''); // remove html comments
-                t = t.replace(/ *<a[^>]* href="(.*?)"[^>]*> *(.*?)<\/a>/ig, '[$2]($1)'); // convert anchor tags
-                t = t.replace(/<\/?strong.*?>/g, '**'); // convert strong to **
-                t = t.replace(/<\/?em.*?>/g, '_'); // convert em to _
-                t = t.replace(/<\/?code.*?>/g, '`'); // convert code to `
-                t = t.replace(/<img[^>]* src="(.*?)"[^>]* alt="(.*?)"[^>]*>/ig, '![$2]($1)'); // convert images with src, alt
-                t = t.replace(/<img[^>]* alt="(.*?)"[^>]* src="(.*?)"[^>]*>/ig, '![$1]($2)'); // convert images with alt, src
-                t = t.replace(/ *<tr[^>]*>/ig, '\n|'); // build <tr> as "\n|"
-                t = t.replace(/\s*<t[dh].*?>/ig, ' '); // convert <td> and <th> to a space
-                t = t.replace(/\s*<\/t[dh]>/ig, ' |'); // build </td> and </th> as " |"
-                t = t.replace(/&nbsp;/ig, ''); // drop non-breaking spaces
-                t = t.replace(/&amp;/ig, '&'); // de-entize ampersands
-                t = t.replace(/<br[^>]*>/ig, '\t'); // temporarily convert BR tags to tabs
-                t = t.replace(/<\/?[^>]+>/ig, ''); // drop all other tags
-                t = t.replace(/\t *\|/g, ' |'); // drop cell-ending BRs
-                t = t.replace(/\s*\t\s*/g, '<br />'); // convert tabs back to BR tags
-                t = t.replace(/\| {2,}/g, '| '); // tighten spacing after the pipe symbols
-                t = t.replace(/ {2,}\|/g, ' |'); // tighten spacing before the pipe symbols
-                t = t.replace(/^ +\|/gm, '|'); // trim line-leading whitespace
-                t = t.replace(/ {4,}/g, '   '); // convert 4+ spaces to three spaces
-                t = t.replace(/^\s+|\s+$/g, ''); // trim whitespace
-                // generate the header row separators
-                var lines = t.split("\n");
-                if (lines && lines.length) {
-                    var segments = lines[0].split('|'),
-                        headers = '|';
-                    for (var j = 1; j < segments.length - 1; j++) {
-                        headers += repeat('-', segments[j].length) + '|';
-                    }
-                    // console.log(headers);
-                    t = lines[0] + "\n" + headers + "\n" + lines.slice(1).join("\n");
+    function html2md() {
+        var t = $('#raw').val();
+        if (true) {
+            // @Author: https://gist.github.com/sunnywalker/be7b2225b0ff175618c76695f7a888e1
+            t = t.replace(/\t/g, ' '); // convert tabs to a single space
+            t = t.replace(/\s*[\r\n]\s*/g, ''); // remove lines
+            t = t.replace(/<\!--[\s\S]*?-->/g, ''); // remove html comments
+            t = t.replace(/ *<a[^>]* href="(.*?)"[^>]*> *(.*?)<\/a>/ig, '[$2]($1)'); // convert anchor tags
+            t = t.replace(/<\/?strong.*?>/g, '**'); // convert strong to **
+            t = t.replace(/<\/?em.*?>/g, '_'); // convert em to _
+            t = t.replace(/<\/?code.*?>/g, '`'); // convert code to `
+            t = t.replace(/<img[^>]* src="(.*?)"[^>]* alt="(.*?)"[^>]*>/ig, '![$2]($1)'); // convert images with src, alt
+            t = t.replace(/<img[^>]* alt="(.*?)"[^>]* src="(.*?)"[^>]*>/ig, '![$1]($2)'); // convert images with alt, src
+            t = t.replace(/ *<tr[^>]*>/ig, '\n|'); // build <tr> as "\n|"
+            t = t.replace(/\s*<t[dh].*?>/ig, ' '); // convert <td> and <th> to a space
+            t = t.replace(/\s*<\/t[dh]>/ig, ' |'); // build </td> and </th> as " |"
+            t = t.replace(/&nbsp;/ig, ''); // drop non-breaking spaces
+            t = t.replace(/&amp;/ig, '&'); // de-entize ampersands
+            t = t.replace(/<br[^>]*>/ig, '\t'); // temporarily convert BR tags to tabs
+            t = t.replace(/<\/?[^>]+>/ig, ''); // drop all other tags
+            t = t.replace(/\t *\|/g, ' |'); // drop cell-ending BRs
+            t = t.replace(/\s*\t\s*/g, '<br />'); // convert tabs back to BR tags
+            t = t.replace(/\| {2,}/g, '| '); // tighten spacing after the pipe symbols
+            t = t.replace(/ {2,}\|/g, ' |'); // tighten spacing before the pipe symbols
+            t = t.replace(/^ +\|/gm, '|'); // trim line-leading whitespace
+            t = t.replace(/ {4,}/g, '   '); // convert 4+ spaces to three spaces
+            t = t.replace(/^\s+|\s+$/g, ''); // trim whitespace
+            // generate the header row separators
+            var lines = t.split("\n");
+            if (lines && lines.length) {
+                var segments = lines[0].split('|'),
+                    headers = '|';
+                for (var j = 1; j < segments.length - 1; j++) {
+                    headers += repeat('-', segments[j].length) + '|';
                 }
+                // console.log(headers);
+                t = lines[0] + "\n" + headers + "\n" + lines.slice(1).join("\n");
             }
-            $('#raw2table_result').val(t);
-            md_preview();
         }
+        $('#raw2table_result').val(t);
+        md_preview();
+    }
 
-        function to_md() {
-            var is_html = $('#raw').val().match(/\<td\>/i);
-            if (is_html) { html2md() } else { plain2md() };
+    function to_md() {
+        var is_html = $('#raw').val().match(/\<td\>/i);
+        if (is_html) {
+            html2md()
+        } else {
+            plain2md()
         }
+        ;
+    }
 
-        function center() {
-            var is_center = document.getElementById("is_center").checked;
-            var old_value = $('#raw2table_result').val();
-            var new_value = is_center
-                ? old_value.replace(/-{3,}/g, ":---:")
-                : old_value.replace(/:-{3,}:/g, "---");
-            setTimeout(() => {
-                $('#raw2table_result').val(new_value);
-            }, 100);
-            md_preview();
-        }
+    function center() {
+        var is_center = document.getElementById("is_center").checked;
+        var old_value = $('#raw2table_result').val();
+        var new_value = is_center
+            ? old_value.replace(/-{3,}/g, ":---:")
+            : old_value.replace(/:-{3,}:/g, "---");
+        setTimeout(() => {
+            $('#raw2table_result').val(new_value);
+        }, 100);
+        md_preview();
+    }
 
-        $("#raw").on("select paste input", to_md);
-        $('#raw2table_result').on("select paste input", md_preview);
-        $('#is_center').on("change", center);
-        $('#btn_copy').on("click", function () {
-            $('#raw2table_result').select();
-            document.execCommand("copy");
-            $('#hint').text("Copied");
-        });
-        $('#btn_del').on("click", function () {
-            $('.hide-in-pure-mode').hide();
-            $('#raw2table_result').val("").select();
-        });
+    $("#raw").on("select paste input", to_md);
+    $('#raw2table_result').on("select paste input", md_preview);
+    $('#is_center').on("change", center);
+    $('#btn_copy').on("click", function () {
+        $('#raw2table_result').select();
+        document.execCommand("copy");
+        $('#hint').text("Copied");
+    });
+    $('#btn_del').on("click", function () {
+        $('.hide-in-pure-mode').hide();
+        $('#raw2table_result').val("").select();
+    });
 
-        //demo on load
-        $('#raw').val(
-            `Paste\tText or HTML\tHere
+    //demo on load
+    $('#raw').val(
+        `Paste\tText or HTML\tHere
 Plain text table\tsupports\tTAB-separated columns
 HTML table\tsupports\ta/br/strong/em/code tags inside
 Support\tLive Preview
 Tip:\tCopy complex table to Excel, \tedit and then paste here
 Tip:\tHTML can be used in .md\tif converter not work`);
-        $('#raw').select();
-    </script>
+    $('#raw').select();
+</script>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4845608-5"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments) };
-        gtag('js', new Date());
-        gtag('config', 'UA-4845608-5');
-    </script>
-    <script>
-        var _hmt = _hmt || [];
-        (function () {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?2d7d9d6bb9fdf9d1d65d3d9c0624a6f9";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-4845608-5"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments)
+    };
+    gtag('js', new Date());
+    gtag('config', 'UA-4845608-5');
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?2d7d9d6bb9fdf9d1d65d3d9c0624a6f9";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
 
 </body>
 
