@@ -22,7 +22,7 @@ run "ps -efHww | grep ovs --color"
 run "service openvswitch-switch status | head -3"
 
 if [ $(ovs-vsctl list-br | wc -l) -eq 0 ]; then
-    ask 'Create default bridges?'
+    ask 'Create default bridges? (skip if using netplan)'
     [[ $a =~ [Yy] ]] && ovs_add_br ovs-br0 ovs-br1
 fi    
 

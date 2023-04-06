@@ -5,11 +5,19 @@ check_bbr(){
     run 'sysctl net.ipv4 | grep control'
 }
 
+check_bond(){
+    for f in $(ls /proc/net/bonding/*); do
+	echo_tip ip link delete dev $f
+        run cat $f
+    done
+
+}
+
 check_netplan(){
     for d in run etc lib; do
         ls -l /$d/netplan 2>/dev/null
         
-        for f in $(ls /$d/netplan/* 2>/dev/null); do
+        for f in $(ls /$d/netplan/*.yaml 2>/dev/null); do
             file $f | grep ASCII
             [ $? -eq 0 ] && run "cat $f" | grep -v ^# | grep -v ^$
         done

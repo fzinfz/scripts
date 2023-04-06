@@ -18,7 +18,7 @@ print_usage(){
 packages_list(){
 cat <<EOF
 
-    base_sys:     software-properties-common openssh-server tmux bash-completion
+    base_sys:     software-properties-common openssh-server tmux bash-completion rsync
     base_hw:      numactl pciutils lshw sysfsutils
     base_web:     aria2 curl wget
     base_text:    vim git gettext jq  
@@ -28,12 +28,12 @@ cat <<EOF
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
     py:           python3-pip
     net_fs:       cifs-utils nfs-common
-    dev:          gcc build-essential python-dev
+    dev_base:     gcc build-essential python-dev
     dev_mq:       libzmq3-dev
     dev_db:       libmariadbclient-dev-compat 
     bench:        sysbench fio
     VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils libguestfs-tools 
-    docker:       docker.io
+    docker:       docker.io docker-compose
     X:            inxi mc
     X_font:       locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
     firefox:      firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw
@@ -43,6 +43,17 @@ cat <<EOF
 EOF
 }
 
+
+init_vscode(){
+// https://code.visualstudio.com/docs/setup/linux
+apt-get install wget gpg
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+rm -f packages.microsoft.gpg
+apt install apt-transport-https
+apt update
+}
 
 install_vscode_update(){
     if [ ! -f /etc/apt/trusted.gpg.d/microsoft.gpg ]; then
@@ -54,8 +65,8 @@ install_vscode_update(){
 
     repo_update
 }
-install_vscode(){  install_vscode_update; run $pkg_mgmt install -y code ; }
-install_vscodei(){ install_vscode_update; run $pkg_mgmt install -y code-insiders ; }
+install_vscode(){  init_vscode; run $pkg_mgmt install -y code ; }
+install_vscodei(){ init_vscode; run $pkg_mgmt install -y code-insiders ; }
 
 
 detect_cmd(){

@@ -19,8 +19,8 @@ h=$(cat $f | grep routers | grep Host | grep -oP '(?<=`).*(?=`)')
 
 n=$(echo $f | cut -d. -f1)
 
-run "docker compose -f $f -p $n up --remove-orphans -d"
-run "docker compose ls"
+run "docker-compose -f $f -p $n up --remove-orphans -d"
+run "docker-compose ls"
 
 run "docker ps | grep $n"
 
