@@ -1,4 +1,4 @@
-. .\Lib.ps1
+. ..\Lib.ps1
 
 run '
 Get-VM

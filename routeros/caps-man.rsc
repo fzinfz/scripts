@@ -1,8 +1,9 @@
 /caps-man security
 add authentication-types=wpa2-psk encryption=aes-ccm group-encryption=aes-ccm \
     name=WPA2-AES passphrase=00000000
-    
+
 /caps-man configuration
+# set vlan: datapath.vlan-id=10 datapath.vlan-mode=use-tag # `Datapaths` Tab: empty
 add channel.band=2ghz-b/g/n channel.control-channel-width=20mhz \
     channel.extension-channel=XX country=china \
     datapath.client-to-client-forwarding=yes datapath.local-forwarding=yes \
