@@ -34,6 +34,7 @@ cat <<EOF
     bench:        sysbench fio
     VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils libguestfs-tools 
     docker:       docker.io docker-compose
+    i3wm:         inxi i3
     X:            inxi mc
     X_font:       locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
     firefox:      firefox-esr firefox-esr-l10n-zh-cn firefox-esr-l10n-zh-tw

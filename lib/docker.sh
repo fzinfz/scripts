@@ -8,6 +8,11 @@ docker_images(){
 }
 alias di=docker_images
 
+docker_ps_ip(){
+    # https://gist.github.com/ipedrazas/2c93f6e74737d1f8a791?permalink_comment_id=3162467#gistcomment-3162467
+    docker ps -q | xargs -n 1 docker inspect --format '{{ .Name }} {{range .NetworkSettings.Networks}} {{.IPAddress}}{{end}}' | sed 's#^/##';
+}
+
 docker_status(){
     echo_title "docker info"
     docker info 2>/dev/null | grep Proxy
@@ -108,7 +113,7 @@ docker_images_transfer--host(){
 }
 
 docker_rmi_all(){        docker rmi $(docker images -q) ; }
-docker_rmi_all_unused(){ docker image prune ; }
+docker_rmi_all_unused(){ docker container prune ; docker image prune ; }
 
 docker_rmi_all_none() {
     docker images | egrep '<none>' | awk '{print $3}' | xargs --no-run-if-empty docker rmi

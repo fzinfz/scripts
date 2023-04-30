@@ -30,7 +30,7 @@ git_pull_force(){
 
 # branch
 
-git_clone--branch--url(){ git clone -b $1 $2; }
+git_clone_last_commit--branch--url(){ git clone --depths=1 -b $1 $2; }
 
 git_branch_new(){  git checkout -b $1 ; }
 
