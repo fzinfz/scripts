@@ -2,7 +2,7 @@
 
 n=samba ; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
-FOLDER_SAMBA=/share # permission may be changed?
+FOLDER_SAMBA=/data/share/data # permission may be changed?
 
 run "\
 docker run  --restart=unless-stopped --net host --name $n  \

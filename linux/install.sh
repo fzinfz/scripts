@@ -26,14 +26,15 @@ cat <<EOF
     base_fs:      unzip locate ncdu lsof f2fs-tools
     base_perf:    iperf3 sysstat htop iotop    
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
-    py:           python3-pip
-    net_fs:       cifs-utils nfs-common
-    dev_base:     gcc build-essential python-dev
+    hw:           lm-sensors
+    py:           python3-pip    
+    dev_basic:    gcc build-essential python-dev
     dev_mq:       libzmq3-dev
     dev_db:       libmariadbclient-dev-compat 
+    net_fs:       cifs-utils nfs-common
     bench:        sysbench fio
     VT:           libvirt-daemon virt-manager qemu-kvm qemu-utils libguestfs-tools 
-    docker:       docker.io docker-compose
+    docker.io:    docker.io docker-compose
     i3wm:         inxi i3
     X:            inxi mc
     X_font:       locales-all ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy

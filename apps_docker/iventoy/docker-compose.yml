@@ -1,0 +1,10 @@
+version: "3"
+services:
+  ventoy: 
+    image: thedrobe/iventoy-docker
+    network_mode: "host" # works best in host or can foward the required ports 
+    restart: unless-stopped
+    privileged: true # needed for iventoy not to crash on startup
+    stop_signal: SIGINT
+    volumes:
+     - /data/iso:/app/iso
