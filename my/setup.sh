@@ -12,6 +12,7 @@ echo "Asia/Shanghai" > /etc/timezone
 
 echo_title 'setup git'
 git config --global push.default simple
+git config --global pull.ff only
 git config user.name fzinfz
 git config user.email fzinfz@gmail.com
 

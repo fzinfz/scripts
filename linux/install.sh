@@ -26,9 +26,10 @@ cat <<EOF
     base_fs:      unzip locate ncdu lsof f2fs-tools
     base_perf:    iperf3 sysstat htop iotop    
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
-    hw:           lm-sensors
+    hw_basic:     lm-sensors
+    hw_cpu:       linux-cpupower cpufrequtils
     py:           python3-pip    
-    dev_basic:    gcc build-essential python-dev
+    dev_basic:    gcc build-essential python3-dev
     dev_mq:       libzmq3-dev
     dev_db:       libmariadbclient-dev-compat 
     net_fs:       cifs-utils nfs-common
@@ -51,7 +52,7 @@ init_vscode(){
 apt-get install wget gpg
 wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
 install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+sh -c 'echo "deb [arch=amd64,arm64top,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
 rm -f packages.microsoft.gpg
 apt install apt-transport-https
 apt update

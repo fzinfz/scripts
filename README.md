@@ -1,12 +1,10 @@
-# Web Tools in `doc` folder
-Plain Text or HTML Table To Markdown converter: https://html.ferro.pro/md.html
+# clone latest commit
 
-# General linux shell scripts
+    git clone --branch master --depth 1 https://github.com/fzinfz/scripts.git
 
-    . ./linux/init.sh && cd FOLDER && ./SCRIPT_NAME.sh
+# .sh scripts
 
-## Templates
-- Gen README.md: https://github.com/fzinfz/scripts/blob/master/apps_docker/_gen_README.sh
+    . ./linux/init.sh && cd FOLDER && ./SCRIPT_NAME.sh # only support bash
 
 ## install.sh
 

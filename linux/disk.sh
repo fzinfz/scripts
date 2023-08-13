@@ -26,13 +26,6 @@ check_disk(){
     
 }
 
-check_lvm(){
-    run 'pvs -o+pv_used,vg_uuid,UUID'
-    echo_tip 'pvdisplay -v -m'
-    run 'vgs -o+vg_uuid'
-    run 'lvs -o+UUID'
-}
-
 check_ssd(){
 
     for d in $( lsblk -d -o rota,name | grep -P '^ *0' | awk '{print $2}' | grep -v loop ); do
