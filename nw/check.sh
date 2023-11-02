@@ -52,12 +52,20 @@ check_nmcli(){
     fi
 }
 
+check_misc(){
+    run netstat_lntup_ipv4
+
+    echo_tip 'tc qdisc show'
+
+    run "ip addr | grep PROMISC"
+}
+
+check_link_speed(){
+    for nic in `lshw -C network -short | grep ^/0/ | awk '{print $2}'`; do
+        ethtool $nic | grep -P '^Settings|Speed'
+    done
+}
+
 run_if_shell
-
-run netstat_lntup_ipv4
-
-echo_tip 'tc qdisc show'
-
-run "ip addr | grep PROMISC"
 
 ./br.sh

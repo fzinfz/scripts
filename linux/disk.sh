@@ -2,7 +2,7 @@
 
 check_disk(){
 
-    run 'lshw -class storage | grep "product:" -C1'
+    run 'lshw -class storage | grep "product:" -A3 -B1'
 
     run 'lshw -class disk -short'
 

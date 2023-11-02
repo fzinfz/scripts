@@ -19,15 +19,14 @@ packages_list(){
 cat <<EOF
 
     base_sys:     software-properties-common openssh-server tmux bash-completion rsync
-    base_hw:      numactl pciutils lshw sysfsutils
-    base_web:     aria2 curl wget
+    base_nw:      proxychains4 aria2 curl wget
     base_text:    vim git gettext jq  
     base_files:   xarchiver
-    base_fs:      unzip locate ncdu lsof f2fs-tools
+    base_fs:      unzip locate ncdu lsof f2fs-tools parted
     base_perf:    iperf3 sysstat htop iotop    
     base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
-    hw_basic:     lm-sensors
-    hw_cpu:       linux-cpupower cpufrequtils
+    hw_basic:     lshw lm-sensors pciutils sysfsutils ethtool
+    hw_cpu:       linux-cpupower cpufrequtils numactl
     py:           python3-pip    
     dev_basic:    gcc build-essential python3-dev
     dev_mq:       libzmq3-dev
