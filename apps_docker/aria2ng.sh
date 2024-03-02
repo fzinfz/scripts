@@ -4,4 +4,7 @@ docker run -d --restart unless-stopped \
 --name $n \
 -v /data/download:/aria2/data \
 -v aria2_conf:/aria2/conf \
--p 8080:8080 hurlenko/aria2-ariang
+-e ARIA2RPCPORT=8081 \
+-p 8081:8080 hurlenko/aria2-ariang
+
+echo change port on web UI: /#!/settings/ariang
