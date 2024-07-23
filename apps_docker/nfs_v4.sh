@@ -1,6 +1,6 @@
 . ./_pre.sh
 
-NFS_EXPORT=/data
+NFS_EXPORT=/data/share
 
 n=nfs ; docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
