@@ -35,41 +35,43 @@
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="action" value="action1" id="action1"
                            v-model="action">
-                    <label class="form-check-label" for="action1">Split by /<input v-model="action1_sep">/, columns
-                        <input size="5" v-model="action1_limit" @focus="$event.target.select()"></label>
+                    <label class="form-check-label" for="action1">Split by /<input v-model="options.action1.sep">/, columns
+                        <input size="5" v-model="options.action1.limit" @focus="$event.target.select()"></label>
                 </div>
                 <div class="d-flex justify-content-between pt-1">
                     <label>Output separator(Default: Tab): <input v-model="output_sep"></label>
-                    <button id="btn_copy" class="btn btn-info m-1" @click="copy">{{ output_copy }}</button>
+                    <button id="btn_copy" class="btn btn-info m-1" @click="copy">{{ copy_btn_text }}</button>
                 </div>
             </div>
             <div class="form-check my-2">
                 <input class="form-check-input" type="radio" name="action" value="action2" id="action2"
                        v-model="action">
-                <label class="form-check-label" for="action2">Filter lines if /<input v-model="action2_filter">/</label>
+                <label class="form-check-label" for="action2">Filter lines if /<input v-model="options.action2.filter">/</label>
             </div>
             <div class="my-2">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="action" value="action3" id="action3"
                            v-model="action">
-                    <label class="form-check-label" for="action3">Replace /<input v-model="action3_re_pattern">
-                        /<input size="6" v-model="action3_re_flags">
+                    <label class="form-check-label" for="action3">Replace /<input v-model="options.action3.pattern">
+                        /<input size="6" v-model="options.action3.flags">
                         (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#advanced_searching_with_flags"
                             target="_blank">ReFlags</a>)
-                        to <input v-model="action3_target"></label>
+                        to <input v-model="options.action3.target"></label>
                 </div>
-                <div>
-
-                </div>
+            </div>
+            <div class="form-check my-2">
+                <input class="form-check-input" type="radio" name="action" value="action4" id="action4"
+                       v-model="action">
+                <label class="form-check-label" for="action4">Sum all numbers (support thousand separators)</label>
             </div>
         </div>
     </div>
     <div class="my-2">
-        <textarea class="form-control" id="output" ref="output" style="height: 500px">{{ output }}</textarea>
+        <textarea class="form-control" id="output" ref="output" style="height: 500px" readonly>{{ output }}</textarea>
     </div>
 </div>
 <script>
-    const {createApp} = Vue
+    const {createApp} = Vue;
 
     createApp({
         data() {
@@ -77,91 +79,106 @@
                 input: "Input text here, then select an action, and modify RegEx below",
                 action: "action1",
                 output_sep: "\\t",
-                action1_sep: ",",
-                action1_limit: -1,
-                action2_filter: '^\\d',
-                action3_re_pattern: "[、，,]",
-                action3_re_flags: "g",
-                action3_target: "",
-                output: "",
-                output_copy: "Copy Output"
-            }
+                copy_btn_text: "Copy Output",
+                options: {
+                    action1: { sep: ",", limit: -1 },
+                    action2: { filter: "^\\d" },
+                    action3: { pattern: "[、，,]", flags: "g", target: "" },
+                    action4: { }
+                },
+                output: ""
+            };
         },
         mounted() {
-            this.$refs.input.select()
+            this.$refs.input.select();
         },
         watch: {
-            input: {
-                handler(newValue) {
-                    this.getAnswer()
-                },
-                immediate: true // execute on page load
-            },
-            action(newValue, oldValue) {
-                this.getAnswer()
-            },
-            output_sep(newValue, oldValue) {
-                this.getAnswer()
-            },
-            action1_sep(newValue, oldValue) {
-                this.getAnswer()
-            },
-            action1_limit(newValue, oldValue) {
-                this.getAnswer()
-            },
-            action2_filter(newValue, oldValue) {
-                this.getAnswer()
-            },
-            action3_re_pattern(newValue, oldValue) {
-                this.getAnswer()
-            },
-            action3_re_flags(newValue, oldValue) {
-                this.getAnswer()
-            },
-            action3_target(newValue, oldValue) {
-                this.getAnswer()
-            },
+            input: "process",
+            action: "process",
+            output_sep: "process",
+            options: {
+                handler() { this.process(); },
+                deep: true
+            }
         },
         methods: {
-            handle_line(line) { // return new line
-                let output_sep = this.output_sep.replace(/\\t/g, '\t')
+            process() {
+                const lines = this.input.split("\n");
 
-                if (this.action == "action1") {
-                    return line.split(new RegExp(this.action1_sep), this.action1_limit).join(output_sep)
-                } else if (this.action == "action2") {
-                    if (new RegExp(this.action2_filter).test(line)) {
-                        return line
-                    }
-                } else if (this.action == "action3") {
-                    return line.replace(new RegExp(this.action3_re_pattern, this.action3_re_flags), this.action3_target)
-                } else {
-                    return null
+                if (this.action === "action4") {
+                    this.output = this.sumNumbersAllLines(lines);
+                    return;
+                }
+
+                const result = lines
+                    .map(line => this.transformLine(line))
+                    .filter(Boolean)
+                    .join("\n");
+                this.output = result;
+            },
+
+            transformLine(line) {
+                const sep = this.output_sep.replace(/\\t/g, "\t");
+
+                switch (this.action) {
+                    case "action1":
+                        return line.split(new RegExp(this.options.action1.sep), this.options.action1.limit).join(sep);
+
+                    case "action2":
+                        return new RegExp(this.options.action2.filter).test(line) ? line : null;
+
+                    case "action3":
+                        return line.replace(new RegExp(this.options.action3.pattern, this.options.action3.flags), this.options.action3.target);
+
+                    default:
+                        return null;
                 }
             },
-            getAnswer() {
-                let lines = this.input.split("\n");
-                let lines_output = [];
+
+            sumNumbersAllLines(lines) {
+                const regex = /-?[\d,]+(?:\.\d+)?/g;
+                const allMatches = [];
+
                 lines.forEach(line => {
-                    lines_output.push(this.handle_line(line))
+                    let match;
+                    while ((match = regex.exec(line)) !== null) {
+                        allMatches.push(match[0]);
+                    }
                 });
-                let output = lines_output.filter(n => n).join("\n")
-                // console.log(this.action + " getAnswer(): " + output)
-                this.output = output
+
+                if (allMatches.length === 0) return "";
+
+                const cleanMatches = allMatches.map(m => m.replace(/,/g, ""));
+
+                const total = allMatches.reduce((sum, numStr) => {
+                    const cleanNum = parseFloat(numStr.replace(/,/g, ""));
+                    return sum + (isNaN(cleanNum) ? 0 : cleanNum);
+                }, 0);
+
+                const formattedTotal = Number.isInteger(total) ? total.toString() : total.toFixed(2);
+                const resultLines = [`${cleanMatches.join(" + ")}`, `= ${formattedTotal}`];
+
+                if (!Number.isInteger(total)) {
+                    resultLines.push(`≈ ${Math.floor(total)}`);
+                }
+
+                return resultLines.join("\n");
             },
+
             copy() {
-                let output_text = this.$refs.output.value
-                navigator.clipboard.writeText(output_text).then(
+                const text = this.$refs.output.value;
+                navigator.clipboard.writeText(text).then(
                     () => {
-                        this.output_copy = output_text.length + " chars copied"
+                        this.copy_btn_text = `${text.length} chars copied`;
+                        setTimeout(() => { this.copy_btn_text = "Copy Output"; }, 2000);
                     },
                     () => {
-                        const ts = (new Date()).toLocaleString()
-                        console.log(`${ts} : clipboard write failed`)
+                        console.log(`${new Date().toLocaleString()} : clipboard write failed`);
                     }
                 );
             }
         }
-    }).mount('#app')
+    }).mount("#app");
 </script>
 </body>
 </html>
