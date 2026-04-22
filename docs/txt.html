@@ -64,10 +64,15 @@
                        v-model="action">
                 <label class="form-check-label" for="action4">Sum all numbers (support thousand separators)</label>
             </div>
+            <div class="form-check my-2">
+                <input class="form-check-input" type="radio" name="action" value="action5" id="action5"
+                       v-model="action">
+                <label class="form-check-label" for="action5">Reformat Docker command</label>
+            </div>
         </div>
     </div>
     <div class="my-2">
-        <textarea class="form-control" id="output" ref="output" style="height: 500px" readonly>{{ output }}</textarea>
+        <textarea class="form-control" id="output" ref="output" style="height: 500px">{{ output }}</textarea>
     </div>
 </div>
 <script>
@@ -77,14 +82,15 @@
         data() {
             return {
                 input: "Input text here, then select an action, and modify RegEx below",
-                action: "action1",
+                action: "action5",
                 output_sep: "\\t",
                 copy_btn_text: "Copy Output",
                 options: {
                     action1: { sep: ",", limit: -1 },
                     action2: { filter: "^\\d" },
                     action3: { pattern: "[、，,]", flags: "g", target: "" },
-                    action4: { }
+                    action4: { },
+                    action5: { }
                 },
                 output: ""
             };
@@ -107,6 +113,11 @@
 
                 if (this.action === "action4") {
                     this.output = this.sumNumbersAllLines(lines);
+                    return;
+                }
+
+                if (this.action === "action5") {
+                    this.output = lines.map(line => this.reformatDockerCmd(line.trim())).join("\n");
                     return;
                 }
 
@@ -163,6 +174,61 @@
                 }
 
                 return resultLines.join("\n");
+            },
+
+            reformatDockerCmd(cmd) {
+                if (!cmd || !cmd.startsWith("docker ")) return cmd;
+
+                const tokens = [];
+                const regex = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
+                let match;
+                while ((match = regex.exec(cmd)) !== null) {
+                    tokens.push(match[1] !== undefined ? match[1] : match[2] !== undefined ? match[2] : match[0]);
+                }
+
+                if (tokens.length <= 2) return cmd;
+
+                const prefix = tokens.slice(0, 2).join(" ");
+                const args = tokens.slice(2);
+
+                const flagArgs = []; // 无 value 参数
+                const paramArgs = []; // 参数+value 对
+                const remaining = []; // 最后剩余的非参数值（如镜像名）
+
+                let i = 0;
+                while (i < args.length) {
+                    if (args[i].startsWith("-")) {
+                        if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
+                            paramArgs.push(`${args[i]} ${args[i + 1]}`);
+                            i += 2;
+                        } else {
+                            flagArgs.push(args[i]);
+                            i += 1;
+                        }
+                    } else {
+                        remaining.push(args[i]);
+                        i += 1;
+                    }
+                }
+
+                const lines = [];
+                const hasFollowing = paramArgs.length > 0 || remaining.length > 0;
+                if (flagArgs.length > 0) {
+                    lines.push(`${prefix} ${flagArgs.join(" ")}${hasFollowing ? " \\" : ""}`);
+                } else {
+                    lines.push(`${prefix}${hasFollowing ? " \\" : ""}`);
+                }
+
+                paramArgs.forEach((arg, idx) => {
+                    const isLast = idx === paramArgs.length - 1 && remaining.length === 0;
+                    lines.push(isLast ? arg : `${arg} \\`);
+                });
+
+                if (remaining.length > 0) {
+                    lines.push(remaining.join(" "));
+                }
+
+                return lines.join("\n");
             },
 
             copy() {
