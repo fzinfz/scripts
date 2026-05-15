@@ -107,6 +107,24 @@ function Invoke-Step {
     Invoke-Expression $Command
 }
 
+function Invoke-Steps {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]$ScriptBlock
+    )
+
+    begin {
+        Write-Host -ForegroundColor Green "`n[RUN] $ScriptBlock"
+    }
+
+    process {
+        & $ScriptBlock
+    }
+}
+
+
+
 <#
 .SYNOPSIS
     批量执行多行命令（每行一条，忽略空行）
