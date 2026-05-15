@@ -1,13 +1,46 @@
-. .\Lib.ps1
-check_volume
+<#
+.SYNOPSIS
+    可移动磁盘弹出脚本
+.DESCRIPTION
+    列出所有卷，然后弹出所有类型为「可移动磁盘」（DriveType=2）的卷。
+.NOTES
+    重构自: eject_removable.ps1
+    参考:
+    - DriveType: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394515(v=vs.85)
+    - Shell Namespace CLSID: https://learn.microsoft.com/en-us/windows/win32/api/shldisp/ne-shldisp-shellspecialfolderconstants
+.WARNING
+    $drive.InvokeVerb("Eject") 已注释，请取消注释以实际执行弹出操作。
+#>
 
-# https://learn.microsoft.com/en-us/windows/win32/api/shldisp/ne-shldisp-shellspecialfolderconstants
-filter eject_volume() {
-    $drive = (New-Object -comObject Shell.Application).Namespace(0x11).ParseName($_)
-    if($drive){
-        Write-Host -ForegroundColor Red "`nEjecting: $_"
-        # $drive.InvokeVerb("Eject")
+. $PSScriptRoot\disk.ps1
+
+<#
+.SYNOPSIS
+    弹出指定驱动器盘符
+.PARAMETER DriveName
+    驱动器名称，例如 'E:\'
+#>
+function Invoke-EjectVolume {
+    param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]$DriveName
+    )
+    process {
+        $shell = New-Object -ComObject Shell.Application
+        # 0x11 = CLSID "This PC" NameSpace
+        $drive = $shell.Namespace(0x11).ParseName($DriveName)
+        if ($drive) {
+            Write-Host -ForegroundColor Red "`n弹出: $DriveName"
+            $drive.InvokeVerb('Eject')
+        }
+        else {
+            Write-Warn "未找到驱动器: $DriveName"
+        }
     }
 }
 
-gwmi win32_volume | ? { $_.DriveType -eq '2'} | select -ExpandPropert Name | eject_volume
+Write-Step '弹出所有可移动磁盘（DriveType=2）'
+Get-WmiObject Win32_Volume |
+    Where-Object { $_.DriveType -eq 2 } |
+    Select-Object -ExpandProperty Name |
+    Invoke-EjectVolume
