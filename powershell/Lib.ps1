@@ -129,6 +129,21 @@ function Invoke-StepWithConfirm {
     Invoke-Steps { Invoke-Expression $Command }
 }
 
+<#
+.SYNOPSIS
+    提示确认后再执行脚本块
+.PARAMETER ScriptBlock
+    要执行的脚本块
+#>
+function Invoke-StepsWithConfirm {
+    param(
+        [Parameter(Mandatory = $true)]
+        [ScriptBlock]$ScriptBlock
+    )
+    Read-Host -Prompt "`nPress Enter to run: $ScriptBlock"
+    Invoke-Steps $ScriptBlock
+}
+
 # ─────────────────────────────────────────────
 #  参数校验
 # ─────────────────────────────────────────────
