@@ -20,7 +20,7 @@
 
 # ─── 1. 可选功能 ─────────────────────────────
 Write-Step '启用 Telnet 客户端'
-Invoke-Step 'Enable-WindowsOptionalFeature -Online -FeatureName TelnetClient'
+Invoke-Steps { Enable-WindowsOptionalFeature -Online -FeatureName TelnetClient }
 
 # ─── 2. 部署 Profile ─────────────────────────
 Write-Step '部署 PowerShell Profile'

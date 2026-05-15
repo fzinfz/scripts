@@ -9,10 +9,10 @@ Get-NetIPInterface -AddressFamily IPv4 |
     Format-Table -AutoSize
 
 Write-Step 'IPv4 地址列表'
-Invoke-Step 'Get-NetIPAddress -AddressFamily IPv4 | Sort-Object ifIndex |Format-Table -AutoSize'
+Invoke-Steps { Get-NetIPAddress -AddressFamily IPv4 | Sort-Object ifIndex | Format-Table -AutoSize }
 
 Write-Step '网卡列表'
-Invoke-Step 'Get-NetAdapter | Sort-Object Name | Format-Table -AutoSize'
+Invoke-Steps { Get-NetAdapter | Sort-Object Name | Format-Table -AutoSize }
 
 Write-Step '网卡电源管理'
-Invoke-Step 'Get-NetAdapterPowerManagement -Name "*" | Select-Object DeviceSleepOnDisconnect, WakeOnMagicPacket, Name | Sort-Object Name | Format-Table -AutoSize'
+Invoke-Steps { Get-NetAdapterPowerManagement -Name '*' | Select-Object DeviceSleepOnDisconnect, WakeOnMagicPacket, Name | Sort-Object Name | Format-Table -AutoSize }

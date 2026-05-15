@@ -10,6 +10,6 @@
 . $PSScriptRoot\..\Lib.ps1
 
 Write-Step '已启用的非 Allow 防火墙规则'
-Invoke-Step 'Get-NetFirewallRule -Enabled True | Where-Object { $_.Action -ne "Allow" } | Format-Table -AutoSize'
+Invoke-Steps { Get-NetFirewallRule -Enabled True | Where-Object { $_.Action -ne 'Allow' } | Format-Table -AutoSize }
 
-Invoke-Step 'netsh advfirewall show allprofiles state'
+Invoke-Steps { netsh advfirewall show allprofiles state }

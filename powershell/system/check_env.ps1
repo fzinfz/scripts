@@ -24,12 +24,12 @@ Get-ComputerInfo -Property Windows*, OsVersion, OsArchitecture, HyperVisorPresen
 
 # ─── WMI 快速信息 ─────────────────────────────
 Write-Step 'WMI 快速信息'
-Invoke-Steps @'
-(Get-WmiObject Win32_OperatingSystem).Caption
-Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, MaxClockSpeed
-$PROFILE | Format-List -Force
-$PSVersionTable
-'@
+Invoke-Steps {
+    (Get-WmiObject Win32_OperatingSystem).Caption
+    Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, MaxClockSpeed
+    $PROFILE | Format-List -Force
+    $PSVersionTable
+}
 
 # ─── PATH 环境变量 ────────────────────────────
 Write-Step 'PATH 环境变量（所有作用域）'

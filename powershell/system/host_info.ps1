@@ -10,7 +10,7 @@
 . $PSScriptRoot\..\Lib.ps1
 
 Write-Step '主机基本信息'
-Invoke-Steps @'
+Invoke-Steps {
 hostname
 Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Select-Object InterfaceAlias, IPAddress, ValidLifetime | Format-Table -AutoSize
-'@
+}

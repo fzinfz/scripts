@@ -8,7 +8,7 @@
     规范：
     - 函数命名使用 动词-名词 (Verb-Noun) Pascal 式，或 snake_case 辅助函数
     - 日志函数：Write-Info / Write-Tip / Write-Step / Write-Warn
-    - 命令执行：Invoke-Step（单条）/ Invoke-Steps（多行文本批量执行）
+    - 命令执行：Invoke-Steps（脚本块执行，打印命令本身）
     - 参数校验：Assert-Param
     - 颜色约定：Green=成功/执行, Yellow=提示/警告, Red=错误, Cyan=标题/信息
 #>
@@ -94,19 +94,10 @@ function Write-Warn {
 
 <#
 .SYNOPSIS
-    执行单条命令并打印命令本身（绿色）
-.PARAMETER Command
-    要执行的命令字符串
+    执行命令并打印命令本身（绿色）
+.PARAMETER ScriptBlock
+    要执行的命令脚本块
 #>
-function Invoke-Step {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Command
-    )
-    Write-Host -ForegroundColor Green "`n[RUN] $Command"
-    Invoke-Expression $Command
-}
-
 function Invoke-Steps {
     [CmdletBinding()]
     param(
@@ -123,24 +114,6 @@ function Invoke-Steps {
     }
 }
 
-
-
-<#
-.SYNOPSIS
-    批量执行多行命令（每行一条，忽略空行）
-.PARAMETER Commands
-    多行命令字符串，可用 here-string 传入
-#>
-function Invoke-Steps {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$Commands
-    )
-    $Commands.Split([Environment]::NewLine) |
-        Where-Object { $_.Trim() -ne '' } |
-        ForEach-Object { Invoke-Step $_ }
-}
-
 <#
 .SYNOPSIS
     提示确认后再执行命令
@@ -153,7 +126,7 @@ function Invoke-StepWithConfirm {
         [string]$Command
     )
     Read-Host -Prompt "`nPress Enter to run: $Command"
-    Invoke-Step $Command
+    Invoke-Steps { Invoke-Expression $Command }
 }
 
 # ─────────────────────────────────────────────

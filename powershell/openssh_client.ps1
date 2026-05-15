@@ -14,11 +14,11 @@
 . $PSScriptRoot\Lib.ps1
 
 Write-Step 'ssh-agent 服务配置'
-Invoke-Steps @'
-Get-Service ssh-agent | Set-Service -StartupType Automatic
-Start-Service ssh-agent
-Get-Service ssh-agent
-'@
+Invoke-Steps {
+    Get-Service ssh-agent | Set-Service -StartupType Automatic
+    Start-Service ssh-agent
+    Get-Service ssh-agent
+}
 
 Write-Step '~/.ssh 密钥列表'
 Get-ChildItem -Path "$env:USERPROFILE\.ssh" -ErrorAction SilentlyContinue |

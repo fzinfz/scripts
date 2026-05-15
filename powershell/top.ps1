@@ -16,7 +16,7 @@
 
 # ─── CPU ──────────────────────────────────────
 Write-Step 'CPU 负载'
-Invoke-Step 'Get-WmiObject Win32_Processor | Select-Object Name, LoadPercentage | Format-Table -AutoSize'
+Invoke-Steps { Get-WmiObject Win32_Processor | Select-Object Name, LoadPercentage | Format-Table -AutoSize }
 
 Write-Step 'CPU 占用排行（Top 20，>1%）'
 Get-Counter '\Process(*)\% Processor Time' |
@@ -31,7 +31,7 @@ Get-Counter '\Process(*)\% Processor Time' |
 
 # ─── 内存 ─────────────────────────────────────
 Write-Step '可用内存'
-Invoke-Step 'Get-Counter "\Memory\Available MBytes" | Format-Table'
+Invoke-Steps { Get-Counter '\Memory\Available MBytes' | Format-Table }
 
 Write-Step '内存占用排行（Top 10，同名进程合并）'
 Get-Process |

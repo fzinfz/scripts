@@ -25,7 +25,7 @@ Assert-Param -Value $selectedIfIndex -Name 'ifIndex'
 # ─── 重置 RouteMetric 为最小值 ────────────────
 $routeMetricMin = (Get-DefaultRouteMetric | Measure-Object -Minimum).Minimum
 Write-Step "将所有默认路由的 RouteMetric 重置为 $routeMetricMin"
-Invoke-Step "Set-NetRoute -DestinationPrefix '0.0.0.0/0' -RouteMetric $routeMetricMin"
+Invoke-Steps { Set-NetRoute -DestinationPrefix '0.0.0.0/0' -RouteMetric $routeMetricMin }
 
 # ─── 调整 InterfaceMetric ─────────────────────
 $ifMetricMax = (Get-DefaultRoute |
@@ -33,10 +33,10 @@ $ifMetricMax = (Get-DefaultRoute |
     Measure-Object -Maximum).Maximum
 
 Write-Step "其余接口 InterfaceMetric 设为 $ifMetricMax（降低优先级）"
-Invoke-Step "Set-NetIPInterface -InterfaceMetric $ifMetricMax"
+Invoke-Steps { Set-NetIPInterface -InterfaceMetric $ifMetricMax }
 
 Write-Step "接口 $selectedIfIndex 的 InterfaceMetric 设为 $($ifMetricMax - 1)（提升优先级）"
-Invoke-Step "Set-NetIPInterface -InterfaceIndex $selectedIfIndex -InterfaceMetric $($ifMetricMax - 1)"
+Invoke-Steps { Set-NetIPInterface -InterfaceIndex $selectedIfIndex -InterfaceMetric $($ifMetricMax - 1) }
 
 # ─── 验证结果 ─────────────────────────────────
 Write-Step '调整后默认路由'

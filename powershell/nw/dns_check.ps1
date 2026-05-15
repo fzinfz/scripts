@@ -11,8 +11,8 @@
 . $PSScriptRoot\..\Lib.ps1
 
 Write-Step 'DNS 服务器配置'
-Invoke-Step 'Get-DnsClientServerAddress | Format-Table -AutoSize'
+Invoke-Steps { Get-DnsClientServerAddress | Format-Table -AutoSize }
 
 Write-Step 'DNS 缓存搜索'
 $keyword = Read-Host -Prompt 'Get-DnsClientCache | findstr # Input Keyword'
-Invoke-Step  "Get-DnsClientCache | findstr $keyword"
+Invoke-Steps { Get-DnsClientCache | findstr $keyword }

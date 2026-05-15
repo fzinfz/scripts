@@ -22,4 +22,4 @@ Write-Tip 'VmHostAssignableDevice 命令:'
 (Get-Command).Where{ $_.Name -like '*VmHostAssignableDevice*' } | Format-Table -AutoSize
 
 Write-Step 'Hyper-V 模块命令'
-Invoke-Step 'Get-Command -Module Hyper-V | Format-Table -AutoSize'
+Invoke-Steps { Get-Command -Module Hyper-V | Format-Table -AutoSize }

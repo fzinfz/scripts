@@ -21,6 +21,6 @@ Get-NetTCPConnection -State Listen |
     Format-Table -AutoSize
 
 Write-Step '动态端口范围'
-Invoke-Step 'netsh int ipv4 show dynamicportrange tcp'
+Invoke-Steps { netsh int ipv4 show dynamicportrange tcp }
 
 Write-Tip 'netsh int ipv4 set dynamicport tcp start=40000 num=25536'

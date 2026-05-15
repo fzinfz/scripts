@@ -19,10 +19,10 @@
 Write-Warn '此操作将重置网络协议栈，执行后可能需要重启！'
 Read-Host -Prompt '按 Enter 继续，Ctrl+C 取消'
 
-Invoke-Steps @'
-netsh winsock reset
-netsh int ip reset
-netcfg -d
-'@
+Invoke-Steps {
+    netsh winsock reset
+    netsh int ip reset
+    netcfg -d
+}
 
 Write-Tip '操作完成，建议重启系统以使更改生效。'

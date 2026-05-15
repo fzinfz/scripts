@@ -72,11 +72,11 @@ else {
 
 # ─── sshd 服务 ────────────────────────────────
 Write-Step 'sshd 服务配置'
-Invoke-Steps @'
-Get-Service -Name sshd | Set-Service -StartupType Automatic
-Start-Service sshd
-Get-Service -Name sshd
-'@
+Invoke-Steps {
+    Get-Service -Name sshd | Set-Service -StartupType Automatic
+    Start-Service sshd
+    Get-Service -Name sshd
+}
 
 # ─── authorized_keys 检查 ─────────────────────
 Write-Step '公钥文件检查'
@@ -90,7 +90,7 @@ if (-not (Test-Path $userAuthKeys)) {
 
 if (Test-Path $adminAuthKeys) {
     Write-Step '修复 administrators_authorized_keys 权限'
-    Invoke-Step "icacls.exe `"$adminAuthKeys`" /inheritance:r /grant `"Administrators:F`" /grant `"SYSTEM:F`""
+    Invoke-Steps { icacls.exe "$adminAuthKeys" /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F" }
 }
 else {
     Write-Tip "如需管理员 SSH 登录，请创建: $adminAuthKeys"
@@ -104,8 +104,8 @@ Get-ChildItem -Path "$env:USERPROFILE\.ssh", 'C:\ProgramData\ssh' -ErrorAction S
 
 # ─── 重启并查看事件 ───────────────────────────
 Write-Step '重启 sshd 并查看最新事件'
-Invoke-Steps @'
-Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Sort-Object ifIndex | Format-Table -AutoSize
-Restart-Service sshd
-Get-WinEvent OpenSSH* | Select-Object -First 10 | Format-Table -AutoSize
-'@
+Invoke-Steps {
+    Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Sort-Object ifIndex | Format-Table -AutoSize
+    Restart-Service sshd
+    Get-WinEvent OpenSSH* | Select-Object -First 10 | Format-Table -AutoSize
+}

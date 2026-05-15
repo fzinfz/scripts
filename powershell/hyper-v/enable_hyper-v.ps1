@@ -13,9 +13,9 @@
 . $PSScriptRoot\..\Lib.ps1
 
 Write-Step '启用 Hyper-V（PowerShell 方式）'
-Invoke-Step 'Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All'
+Invoke-Steps { Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All }
 
 Write-Step '启用 Hyper-V（DISM 方式）'
-Invoke-Step 'DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V'
+Invoke-Steps { DISM /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V }
 
 Write-Tip '启用完成后需要重启系统。'

@@ -36,15 +36,13 @@ function Get-WanIp {
 }
 
 Write-Step '默认路由'
-Invoke-Steps @'
-Get-NetRoute -DestinationPrefix '0.0.0.0/0' | Format-Table -AutoSize
-'@
+Invoke-Steps { Get-NetRoute -DestinationPrefix '0.0.0.0/0' | Format-Table -AutoSize }
 
 $wanip = Get-WanIp
 
 if ($null -ne $wanip) {
     Write-Tip "Test-NetConnection -TraceRoute $wanip | select InterfaceAlias, InterfaceIndex, SourceAddress, TraceRoute"
-    Invoke-Step "tracert $wanip"
+    Invoke-Steps { tracert $wanip }
 }
 else {
     Write-Warn '无法获取 WAN IP 地址，跳过 TraceRoute 步骤'

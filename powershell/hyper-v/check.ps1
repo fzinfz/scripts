@@ -19,11 +19,11 @@
 
 # ─── VM 基本信息 ──────────────────────────────
 Write-Step 'Hyper-V 虚拟机与交换机'
-Invoke-Steps @'
-Get-VM | Format-Table -AutoSize
-Get-VMSwitch | Format-Table -AutoSize
-Get-VMHostAssignableDevice | Format-Table -AutoSize
-'@
+Invoke-Steps {
+    Get-VM | Format-Table -AutoSize
+    Get-VMSwitch | Format-Table -AutoSize
+    Get-VMHostAssignableDevice | Format-Table -AutoSize
+}
 
 # ─── 非 Running VM 提示 ────────────────────────
 Get-VM | Where-Object { $_.State -ne 'Running' } | ForEach-Object {
