@@ -1,11 +1,25 @@
-. ..\Lib.ps1
+<#
+.SYNOPSIS
+    列出 Hyper-V 及 PnP 相关 PowerShell 命令
+.DESCRIPTION
+    - 列出 PnpDevice 模块命令
+    - 搜索 VMAssignableDevice 相关命令
+    - 搜索 VmHostAssignableDevice 相关命令
+    - 列出 Hyper-V 模块所有命令
+.NOTES
+    重构自: hyper-v\get_cmds.ps1
+#>
 
-Get-Command -Module PnpDevice
+. $PSScriptRoot\..\Lib.ps1
 
-tip Vm...
-(Get-Command).Where{ $_.Name -like "*VMAssignableDevice*" }
+Write-Step 'PnpDevice 模块命令'
+Get-Command -Module PnpDevice | Format-Table -AutoSize
 
-tip VmHost...
-(Get-Command).Where{ $_.Name -like "*VmHostAssignableDevice*" }
+Write-Tip 'VMAssignableDevice 命令:'
+(Get-Command).Where{ $_.Name -like '*VMAssignableDevice*' } | Format-Table -AutoSize
 
-tip "Get-Command -Module Hyper-V"
+Write-Tip 'VmHostAssignableDevice 命令:'
+(Get-Command).Where{ $_.Name -like '*VmHostAssignableDevice*' } | Format-Table -AutoSize
+
+Write-Step 'Hyper-V 模块命令'
+Invoke-Step 'Get-Command -Module Hyper-V | Format-Table -AutoSize'
