@@ -106,7 +106,18 @@ function Invoke-Steps {
     )
 
     begin {
-        Write-Host -ForegroundColor Green "`n[RUN] $ScriptBlock"
+        $expanded = $ScriptBlock.ToString()
+        # 展开脚本块中的 $variable 为当前作用域的实际值
+        $expanded = [regex]::Replace($expanded, '\$(\w+)', {
+            param($match)
+            $varName = $match.Groups[1].Value
+            $varValue = Get-Variable -Name $varName -ValueOnly -ErrorAction SilentlyContinue
+            if ($null -ne $varValue) {
+                return $varValue.ToString()
+            }
+            return $match.Value
+        })
+        Write-Host -ForegroundColor Green "`n[RUN] $expanded"
     }
 
     process {

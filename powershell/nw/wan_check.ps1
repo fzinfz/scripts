@@ -24,13 +24,12 @@ function Get-WanIp {
                         Select-Object -ExpandProperty Matches).Value
         }
         default {
-            $site = 'http://ipinfo.io'
-            $raw  = (Invoke-WebRequest $site -UseBasicParsing).Content
-            $ip   = ($raw | ConvertFrom-Json).ip
+            $site = 'http://ipinfo.io/json'
+            $ip   = (Invoke-RestMethod -Uri $site).ip
         }
     }
 
-    Write-Info "WAN IP from $site : $raw"
+    Write-Info "WAN IP from $site"
     if ($ip -match $Script:pattern_ip) { return $ip }
     return $null
 }
