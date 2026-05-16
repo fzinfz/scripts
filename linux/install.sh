@@ -18,13 +18,13 @@ print_usage(){
 packages_list(){
 cat <<EOF
 
-    base_sys:     software-properties-common openssh-server tmux bash-completion rsync
+    base_sys:     openssh-server tmux bash-completion rsync
     base_nw:      proxychains4 aria2 curl wget
     base_text:    vim git gettext jq  
     base_files:   xarchiver
     base_fs:      unzip locate ncdu lsof f2fs-tools parted
     base_perf:    iperf3 sysstat htop iotop    
-    base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop dnsutils tcpdump mtr nmap nethogs traceroute
+    base_net:     nmon net-tools bridge-utils bmon iputils-ping nload iftop bind9-dnsutils tcpdump mtr nmap nethogs traceroute
     bash:         bash-completion
     hw_basic:     lshw lm-sensors pciutils sysfsutils ethtool
     hw_cpu:       linux-cpupower cpufrequtils numactl
