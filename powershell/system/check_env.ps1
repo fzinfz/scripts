@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     系统环境信息检查脚本
 .DESCRIPTION

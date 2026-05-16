@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     环境变量 PATH 管理模块
 .DESCRIPTION

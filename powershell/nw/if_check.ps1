@@ -1,4 +1,4 @@
-. $PSScriptRoot\..\Lib.ps1
+﻿. $PSScriptRoot\..\Lib.ps1
 
 # ─── 接口与地址 ───────────────────────────────
 Write-Step '网络接口（IPv4，排除 Loopback）'

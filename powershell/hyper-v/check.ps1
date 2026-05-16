@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Hyper-V 虚拟机及 DDA 设备状态检查
 .DESCRIPTION

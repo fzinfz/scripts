@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     DNS 查询与缓存检索脚本
 .DESCRIPTION

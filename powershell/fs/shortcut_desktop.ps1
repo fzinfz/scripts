@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     桌面快捷方式批量创建工具
 .DESCRIPTION

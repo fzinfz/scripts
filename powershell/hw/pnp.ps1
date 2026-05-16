@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     PnP 设备查询与管理工具
 .DESCRIPTION

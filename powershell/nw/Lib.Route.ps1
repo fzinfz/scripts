@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     网络路由工具库
 .DESCRIPTION

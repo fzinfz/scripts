@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     # seems not working well on Windows, switched to linux ifuse
     iPad MTP 文件管理工具（复制 / 删除模式） 

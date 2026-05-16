@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     VS Code Remote-SSH 密钥文件权限检查与修复
 .DESCRIPTION

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     交互式路由指标调整脚本
 .DESCRIPTION

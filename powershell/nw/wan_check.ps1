@@ -1,4 +1,4 @@
-. $PSScriptRoot\..\Lib.ps1
+﻿. $PSScriptRoot\..\Lib.ps1
 
 # ─── WAN IP 查询 ──────────────────────────────
 

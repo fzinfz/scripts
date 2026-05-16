@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     系统环境初始化与配置脚本
 .DESCRIPTION

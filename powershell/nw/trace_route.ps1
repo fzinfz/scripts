@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     交互式 TraceRoute 工具
 .DESCRIPTION

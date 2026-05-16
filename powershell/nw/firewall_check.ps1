@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     防火墙规则查询脚本
 .DESCRIPTION

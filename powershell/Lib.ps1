@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     PowerShell 公共工具库 - 2026 版
 .DESCRIPTION

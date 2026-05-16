@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     网络协议栈重置脚本
 .DESCRIPTION

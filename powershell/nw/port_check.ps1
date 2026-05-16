@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     TCP 监听端口查询脚本
 .DESCRIPTION

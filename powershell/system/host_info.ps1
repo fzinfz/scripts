@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     主机基本信息查询
 .DESCRIPTION

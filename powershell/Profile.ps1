@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     PowerShell Profile 初始化脚本
 .DESCRIPTION

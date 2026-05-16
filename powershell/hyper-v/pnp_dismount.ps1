@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     将 PnP 设备从宿主机卸载并分配给 Hyper-V VM（DDA）
 .DESCRIPTION

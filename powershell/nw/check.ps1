@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     批量执行网络检查脚本
 .DESCRIPTION

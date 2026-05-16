@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     启用 Hyper-V 功能
 .DESCRIPTION
