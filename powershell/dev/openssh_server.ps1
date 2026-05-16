@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     OpenSSH 服务端安装与配置脚本
 .DESCRIPTION
@@ -17,7 +17,7 @@
 
 #Requires -RunAsAdministrator
 
-. $PSScriptRoot\Lib.ps1
+. $PSScriptRoot\..\Lib.ps1
 
 # ─── 前置检查 ─────────────────────────────────
 Write-Step '前置检查'

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     磁盘与存储信息查询脚本
 .DESCRIPTION
@@ -12,7 +12,7 @@
     重构自: disk.ps1
 #>
 
-. $PSScriptRoot\Lib.ps1
+. $PSScriptRoot\..\Lib.ps1
 
 Write-Step '磁盘与存储信息'
 Invoke-Steps {

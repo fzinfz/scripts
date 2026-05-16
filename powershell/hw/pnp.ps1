@@ -9,7 +9,7 @@
     支持的设备类别: Keyboard, Mouse, Bluetooth, USB, 等所有 PnP 类别
 #>
 
-. $PSScriptRoot\Lib.ps1
+. $PSScriptRoot\..\Lib.ps1
 
 <#
 .SYNOPSIS

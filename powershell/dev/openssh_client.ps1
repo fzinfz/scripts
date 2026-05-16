@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     OpenSSH 客户端配置与 ssh-agent 管理
 .DESCRIPTION
@@ -11,7 +11,7 @@
     提示: Profile.ps1 已处理 ssh-add 自动加载
 #>
 
-. $PSScriptRoot\Lib.ps1
+. $PSScriptRoot\..\Lib.ps1
 
 Write-Step 'ssh-agent 服务配置'
 Invoke-Steps {

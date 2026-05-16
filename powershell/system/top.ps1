@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     CPU 与内存实时占用监控脚本
 .DESCRIPTION
@@ -12,7 +12,7 @@
     参考: https://stackoverflow.com/a/64080148
 #>
 
-. $PSScriptRoot\Lib.ps1
+. $PSScriptRoot\..\Lib.ps1
 
 # ─── CPU ──────────────────────────────────────
 Write-Step 'CPU 负载'
