@@ -1,4 +1,4 @@
-. ./_pre.sh
+. ../linux/init.sh
 . ../lib/docker.sh
 
 echo_title 'systemctl enable'
