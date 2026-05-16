@@ -9,12 +9,17 @@
         cat /etc/openwrt_release 2>/dev/null ||
         cat /etc/os-release
       changed_when: false
-      register: openwrt_version
+      register: result
 
-    - name: Display version info
+    - name: Clean output
+      ansible.builtin.set_fact:
+        result: '{{ result.stdout_lines | map("regex_replace", "[\t\"'']", "") | list }}'
+
+    - name: Display output
       ansible.builtin.debug:
-        var: openwrt_version.stdout_lines
+        var: result
 
+   
 - name: Show wireless SSID
   hosts: wireless
   gather_facts: false
@@ -22,8 +27,13 @@
     - name: Run wireless_show_ssid.sh
       ansible.builtin.script: ../../openwrt/uci/wireless_show_ssid.sh # run.sh will convert to raw
       changed_when: false
-      register: command_result
+      register: result
 
-    - name: Display SSID info
+    - name: Clean output
+      ansible.builtin.set_fact:
+        result: '{{ result.stdout_lines | map("regex_replace", "[\t\"'']", "") | list }}'
+
+    - name: Display output
       ansible.builtin.debug:
-        var: command_result.stdout_lines  
+        var: result
+

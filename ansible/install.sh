@@ -5,3 +5,4 @@ else
     uv tool install ansible-core --with ansible
 fi
 ansible --version
+ansible-galaxy collection list | grep community.general

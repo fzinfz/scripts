@@ -1,5 +1,7 @@
 dir_inv="/data/conf/ansible/inv"
 
+export ANSIBLE_STDOUT_CALLBACK=yaml
+
 # Scan *.yaml files in current directory
 mapfile -t playbooks < <(ls -1 *.yaml 2>/dev/null)
 if [[ ${#playbooks[@]} -eq 0 ]]; then
@@ -25,6 +27,12 @@ selected="${playbooks[$((choice - 1))]}"
 base="${selected%.yaml}"
 path_inv="${dir_inv}/${base}.ini"
 
+log_folder=/tmp/ansible
+mkdir -p "$log_folder"
+rm -f $log_folder/*.log # clear old logs
+timestamp=$(date +%Y%m%d_%H%M%S)
+export ANSIBLE_LOG_PATH="${log_folder}/${base}_${timestamp}.log"
+
 if [[ ! -f "$path_inv" ]]; then
     echo "Error: inventory file not found: ${path_inv}" >&2
     exit 1
@@ -33,7 +41,7 @@ fi
 echo ""
 
 if [[ "$selected" == "routers.yaml" ]]; then
-    raw_playbook="/tmp/routers.raw.yaml"
+    raw_playbook="/tmp/ansible/routers.raw.yaml"
     script_file="/data/scripts/openwrt/uci/wireless_show_ssid.sh"
     awk '
         /ansible\.builtin\.script/ {
