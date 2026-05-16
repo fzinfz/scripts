@@ -31,5 +31,24 @@ if [[ ! -f "$path_inv" ]]; then
 fi
 
 echo ""
-echo "Running: ansible-playbook -i ${path_inv} ${selected}"
-ansible-playbook -i "$path_inv" "$selected"
+
+if [[ "$selected" == "routers.yaml" ]]; then
+    raw_playbook="/tmp/routers.raw.yaml"
+    script_file="/data/scripts/openwrt/uci/wireless_show_ssid.sh"
+    awk '
+        /ansible\.builtin\.script/ {
+            print "      ansible.builtin.raw: |"
+            while ((getline line < script_file) > 0) {
+                print "        " line
+            }
+            close(script_file)
+            next
+        }
+        { print }
+    ' script_file="$script_file" "$selected" > "$raw_playbook"
+    echo "Running: ansible-playbook -i ${path_inv} ${raw_playbook}"
+    ansible-playbook -i "$path_inv" "$raw_playbook"
+else
+    echo "Running: ansible-playbook -i ${path_inv} ${selected}"
+    ansible-playbook -i "$path_inv" "$selected"
+fi

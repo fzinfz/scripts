@@ -14,3 +14,16 @@
     - name: Display version info
       ansible.builtin.debug:
         var: openwrt_version.stdout_lines
+
+- name: Show wireless SSID
+  hosts: wireless
+  gather_facts: false
+  tasks:
+    - name: Run wireless_show_ssid.sh
+      ansible.builtin.script: ../../openwrt/uci/wireless_show_ssid.sh # run.sh will convert to raw
+      changed_when: false
+      register: command_result
+
+    - name: Display SSID info
+      ansible.builtin.debug:
+        var: command_result.stdout_lines  
