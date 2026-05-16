@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # encoding.ps1  —  Show and change PowerShell encoding settings
 # Usage:
 #   . .\encoding.ps1          # dot-source to persist in current session

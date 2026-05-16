@@ -1,15 +1,15 @@
-﻿<#
+<#
 .SYNOPSIS
-    主机基本信息查询
+    Host basic info query
 .DESCRIPTION
-    输出主机名及 IPv4 DHCP 地址列表
+    Output hostname and IPv4 DHCP address list
 .NOTES
-    重构自: host_info.ps1
+    Refactored from: host_info.ps1
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-Write-Step '主机基本信息'
+Write-Step 'Host Basic Info'
 Invoke-Steps {
 hostname
 Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp | Select-Object InterfaceAlias, IPAddress, ValidLifetime | Format-Table -AutoSize

@@ -1,11 +1,11 @@
-﻿<#
+<#
 .SYNOPSIS
-    交互式 TraceRoute 工具
+    Interactive TraceRoute tool
 .DESCRIPTION
-    提示用户输入目标主机，然后执行 Test-NetConnection -TraceRoute
+    Prompt user to enter target host, then execute Test-NetConnection -TraceRoute
 .NOTES
-    重构自: nw\trace_route.ps1
+    Refactored from: nw\trace_route.ps1
 #>
 
-$dest = Read-Host -Prompt 'Test-NetConnection -TraceRoute <目标主机或 IP>'
+$dest = Read-Host -Prompt 'Test-NetConnection -TraceRoute <Target Host or IP>'
 Test-NetConnection -TraceRoute $dest

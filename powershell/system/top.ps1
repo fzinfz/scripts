@@ -1,24 +1,24 @@
-﻿<#
+<#
 .SYNOPSIS
-    CPU 与内存实时占用监控脚本
+    CPU and memory real-time usage monitoring script
 .DESCRIPTION
-    输出：
-    - CPU 负载百分比
-    - CPU 占用前 20 进程（>1%）
-    - 可用内存（MB）
-    - 内存占用前 10 进程（按工作集合并同名进程）
+    Output:
+    - CPU load percentage
+    - Top 20 CPU-consuming processes (>1%)
+    - Available memory (MB)
+    - Top 10 memory-consuming processes (merge same-name processes by working set)
 .NOTES
-    重构自: top.ps1
-    参考: https://stackoverflow.com/a/64080148
+    Refactored from: top.ps1
+    Reference: https://stackoverflow.com/a/64080148
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-# ─── CPU ──────────────────────────────────────
-Write-Step 'CPU 负载'
+# --- CPU --------------------------------------------------------------------
+Write-Step 'CPU Load'
 Invoke-Steps { Get-WmiObject Win32_Processor | Select-Object Name, LoadPercentage | Format-Table -AutoSize }
 
-Write-Step 'CPU 占用排行（Top 20，>1%）'
+Write-Step 'CPU Usage Ranking (Top 20, >1%)'
 Get-Counter '\Process(*)\% Processor Time' |
     Select-Object -ExpandProperty CounterSamples |
     Select-Object -Property InstanceName, CookedValue |
@@ -29,11 +29,11 @@ Get-Counter '\Process(*)\% Processor Time' |
         @{ L = 'CPU%'; E = { ($_.CookedValue / 100).ToString('P') } } `
         -AutoSize
 
-# ─── 内存 ─────────────────────────────────────
-Write-Step '可用内存'
+# --- Memory -----------------------------------------------------------------
+Write-Step 'Available Memory'
 Invoke-Steps { Get-Counter '\Memory\Available MBytes' | Format-Table }
 
-Write-Step '内存占用排行（Top 10，同名进程合并）'
+Write-Step 'Memory Usage Ranking (Top 10, merge same-name processes)'
 Get-Process |
     Group-Object -Property Name -NoElement |
     Where-Object { $_.Count -ge 1 } |

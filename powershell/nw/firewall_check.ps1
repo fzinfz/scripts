@@ -1,15 +1,15 @@
-﻿<#
+<#
 .SYNOPSIS
-    防火墙规则查询脚本
+    Firewall rule query script
 .DESCRIPTION
-    列出所有已启用且动作非 Allow 的防火墙规则
+    List all enabled firewall rules with action not Allow
 .NOTES
-    重构自: nw\firewall.ps1
+    Refactored from: nw\firewall.ps1
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-Write-Step '已启用的非 Allow 防火墙规则'
+Write-Step 'Enabled Non-Allow Firewall Rules'
 Invoke-Steps { Get-NetFirewallRule -Enabled True | Where-Object { $_.Action -ne 'Allow' } | Format-Table -AutoSize }
 
 Invoke-Steps { netsh advfirewall show allprofiles state }

@@ -1,24 +1,24 @@
-﻿<#
+<#
 .SYNOPSIS
-    VS Code Remote-SSH 密钥文件权限检查与修复
+    VS Code Remote-SSH Key File Permission Check & Fix
 .DESCRIPTION
-    1. 读取 VS Code Remote-SSH 扩展的 SSH 配置文件
-    2. 提取所有 IdentityFile 路径并去重
-    3. 检查每个密钥文件的权限
-    4. 修复不符合要求的权限（仅当前用户可访问）
+    1. Read VS Code Remote-SSH extension's SSH config file
+    2. Extract all IdentityFile paths and deduplicate
+    3. Check permissions for each key file
+    4. Fix non-compliant permissions (allow only current user access)
 .NOTES
-    Remote-SSH 扩展默认使用 ~/.ssh/config，也可通过 VS Code 设置 remote.SSH.configFile 指定其他路径
-    修复权限时会将继承权限移除，仅保留当前用户 (NT AUTHORITY\SYSTEM + 当前用户) 的访问权限
-    参考: https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement
+    Remote-SSH extension defaults to ~/.ssh/config, or use the path specified in VS Code setting remote.SSH.configFile
+    When fixing permissions, inherited permissions are removed; only the current user + NT AUTHORITY\SYSTEM retain access
+    Reference: https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-# ─── 1. 定位 SSH 配置文件 ─────────────────────
+# ── 1. Locate SSH config file ────────────────────
 
 $sshConfigPaths = @()
 
-# 1.1 VS Code Remote-SSH 设置中的自定义配置路径
+# 1.1 Custom config path from VS Code Remote-SSH settings
 $vscodeSettingsPaths = @(
     "$env:APPDATA\Code\User\settings.json",
     "$env:APPDATA\Code - Insiders\User\settings.json",
@@ -35,37 +35,37 @@ foreach ($settingsPath in $vscodeSettingsPaths) {
                 $resolved = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($customConfig)
                 if (Test-Path $resolved) {
                     $sshConfigPaths += $resolved
-                    Write-Info "VS Code 设置中的 SSH 配置: $resolved"
+                    Write-Info "SSH config from VS Code settings: $resolved"
                 }
             }
         }
         catch {
-            Write-Warn "读取 VS Code 设置失败: $settingsPath"
+            Write-Warn "Failed to read VS Code settings: $settingsPath"
         }
     }
 }
 
-# 1.2 默认 SSH 配置文件
+# 1.2 Default SSH config file
 $defaultSshConfig = "$env:USERPROFILE\.ssh\config"
 if (Test-Path $defaultSshConfig) {
     $sshConfigPaths += $defaultSshConfig
-    Write-Info "默认 SSH 配置: $defaultSshConfig"
+    Write-Info "Default SSH config: $defaultSshConfig"
 }
 
-# 去重配置路径
+# Deduplicate config paths
 $sshConfigPaths = @($sshConfigPaths | Select-Object -Unique)
 
 if (@($sshConfigPaths).Count -eq 0) {
-    Write-Warn "未找到任何 SSH 配置文件"
+    Write-Warn "No SSH config file found"
     return
 }
 
-# ─── 2. 解析 IdentityFile ─────────────────────
+# ── 2. Parse IdentityFile ────────────────────
 
 $identityFiles = @()
 
 foreach ($configPath in $sshConfigPaths) {
-    Write-Step "解析: $configPath"
+    Write-Step "Parsing: $configPath"
 
     $lines = Get-Content $configPath -ErrorAction SilentlyContinue
     if ($null -eq $lines) { continue }
@@ -73,34 +73,34 @@ foreach ($configPath in $sshConfigPaths) {
     foreach ($line in $lines) {
         $trimmed = $line.Trim()
 
-        # 跳过空行和注释
+        # Skip empty lines and comments
         if ([string]::IsNullOrWhiteSpace($trimmed) -or $trimmed.StartsWith('#')) {
             continue
         }
 
-        # 匹配 IdentityFile 指令（忽略大小写）
+        # Match IdentityFile directive (case-insensitive)
         if ($trimmed -imatch '^IdentityFile\s+(.+)$') {
             $filePath = $matches[1].Trim().Trim('"').Trim("'")
 
-            # 展开 ~ 为用户目录
-            if ($filePath.StartsWith('~/') -or $filePath.StartsWith('~\')) {
+            # Expand ~ to user home
+            if ($filePath.StartsWith('~/') -or $filePath.StartsWith('~')) {
                 $filePath = $filePath.Replace('~', $env:USERPROFILE)
             }
 
-            # 解析相对路径（相对于 .ssh 目录）
+            # Resolve relative path (relative to .ssh dir)
             if (-not [System.IO.Path]::IsPathRooted($filePath)) {
                 $filePath = Join-Path "$env:USERPROFILE\.ssh" $filePath
             }
 
-            # 展开环境变量
+            # Expand environment variables
             $filePath = [Environment]::ExpandEnvironmentVariables($filePath)
 
-            # 规范化路径
+            # Normalize path
             try {
                 $filePath = (Resolve-Path $filePath -ErrorAction SilentlyContinue).Path
             }
             catch {
-                # 文件不存在，保留原路径用于后续提示
+                # File does not exist, keep original path for later warning
             }
 
             $identityFiles += $filePath
@@ -108,62 +108,62 @@ foreach ($configPath in $sshConfigPaths) {
     }
 }
 
-# 去重
+# Deduplicate
 $uniqueIdentityFiles = $identityFiles | Select-Object -Unique
 
 if (@($uniqueIdentityFiles).Count -eq 0) {
-    Write-Warn "未在配置文件中找到 IdentityFile 条目"
+    Write-Warn "No IdentityFile entries found in config files"
     return
 }
 
-Write-Step "发现 $(@($uniqueIdentityFiles).Count) 个唯一 IdentityFile"
+Write-Step "Found $(@($uniqueIdentityFiles).Count) unique IdentityFile(s)"
 
-# ─── 3. 检查并修复权限 ────────────────────────
+# ── 3. Check and fix permissions ────────────────────
 
 $currentUser = "$env:USERDOMAIN\$env:USERNAME"
 $systemUser = 'NT AUTHORITY\SYSTEM'
 
 foreach ($keyPath in $uniqueIdentityFiles) {
     Write-Host "`n----------------------------------------"
-    Write-Host "密钥文件: $keyPath"
+    Write-Host "Key file: $keyPath"
 
     if (-not (Test-Path $keyPath)) {
-        Write-Warn "文件不存在: $keyPath"
+        Write-Warn "File not found: $keyPath"
         continue
     }
 
-    # 获取当前 ACL
+    # Get current ACL
     $acl = Get-Acl $keyPath
     $needsFix = $false
 
-    Write-Host "当前权限:"
+    Write-Host "Current permissions:"
     foreach ($ace in $acl.Access) {
         $identity = $ace.IdentityReference.Value
         $rights = $ace.FileSystemRights
         $isInherited = $ace.IsInherited
-        $inheritStr = if ($isInherited) { ' [继承]' } else { '' }
+        $inheritStr = if ($isInherited) { ' [Inherited]' } else { '' }
         Write-Host "  - $identity : $rights$inheritStr"
 
-        # 检查是否需要修复
-        # 只允许当前用户和 SYSTEM 访问
+        # Check if fix is needed
+        # Only allow current user and SYSTEM
         $allowed = @($currentUser, $systemUser, 'BUILTIN\Administrators')
         if ($allowed -notcontains $identity -and $identity -ne 'NT AUTHORITY\SYSTEM') {
             $needsFix = $true
         }
 
-        # 如果 Everyone 或 Users 有权限，也需要修复
+        # If Everyone or Users have permissions, also needs fix
         if ($identity -match 'Everyone|Users|Authenticated Users') {
             $needsFix = $true
         }
     }
 
     if ($needsFix) {
-        Write-Warn "权限过于宽松，需要修复"
+        Write-Warn "Permissions too loose, need to fix"
 
-        # 创建新 ACL
+        # Create new ACL
         $newAcl = New-Object System.Security.AccessControl.FileSecurity
 
-        # 添加当前用户权限
+        # Add current user permission
         $userRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
             $currentUser,
             [System.Security.AccessControl.FileSystemRights]::FullControl,
@@ -173,7 +173,7 @@ foreach ($keyPath in $uniqueIdentityFiles) {
         )
         $newAcl.SetAccessRule($userRule)
 
-        # 添加 SYSTEM 权限（某些场景需要）
+        # Add SYSTEM permission (needed in some scenarios)
         $systemRule = New-Object System.Security.AccessControl.FileSystemAccessRule(
             $systemUser,
             [System.Security.AccessControl.FileSystemRights]::FullControl,
@@ -183,18 +183,18 @@ foreach ($keyPath in $uniqueIdentityFiles) {
         )
         $newAcl.SetAccessRule($systemRule)
 
-        # 应用 ACL
+        # Apply ACL
         try {
             Set-Acl $keyPath $newAcl
-            Write-Host -ForegroundColor Green "权限已修复: $keyPath"
+            Write-Host -ForegroundColor Green "Permissions fixed: $keyPath"
         }
         catch {
-            Write-Warn "权限修复失败: $_"
+            Write-Warn "Permission fix failed: $_"
         }
     }
     else {
-        Write-Host -ForegroundColor Green "权限正常"
+        Write-Host -ForegroundColor Green "Permissions OK"
     }
 }
 
-Write-Step '权限检查完成'
+Write-Step 'Permission check complete'

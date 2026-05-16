@@ -1,18 +1,18 @@
-﻿<#
+<#
 .SYNOPSIS
-    DNS 查询与缓存检索脚本
+    DNS query and cache lookup script
 .DESCRIPTION
-    - 显示当前 DNS 服务器配置
-    - 交互式搜索本地 DNS 缓存
+    - Display current DNS server configuration
+    - Interactive search of local DNS cache
 .NOTES
-    重构自: nw\dns_check.ps1
+    Refactored from: nw\dns_check.ps1
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-Write-Step 'DNS 服务器配置'
+Write-Step 'DNS Server Configuration'
 Invoke-Steps { Get-DnsClientServerAddress | Format-Table -AutoSize }
 
-Write-Step 'DNS 缓存搜索'
+Write-Step 'DNS Cache Search'
 $keyword = Read-Host -Prompt 'Get-DnsClientCache | findstr # Input Keyword'
 Invoke-Steps { Get-DnsClientCache | findstr $keyword }

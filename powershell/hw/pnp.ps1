@@ -1,21 +1,21 @@
-﻿<#
+<#
 .SYNOPSIS
-    PnP 设备查询与管理工具
+    PnP Device Query and Management Tool
 .DESCRIPTION
-    列出指定设备类别中状态为 OK 的 PnP 设备，
-    并输出禁用设备的命令示例。
+    Lists PnP devices with status OK in specified device classes,
+    and outputs command examples for disabling devices.
 .NOTES
-    重构自: pnp.ps1
-    支持的设备类别: Keyboard, Mouse, Bluetooth, USB, 等所有 PnP 类别
+    Refactored from: pnp.ps1
+    Supported device classes: Keyboard, Mouse, Bluetooth, USB, and all other PnP classes
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
 <#
 .SYNOPSIS
-    列出指定类别中 Status=OK 的 PnP 设备
+    List PnP devices with Status=OK in specified classes
 .PARAMETER Classes
-    设备类别名称数组，例如 @('Keyboard', 'Mouse')
+    Array of device class names, e.g. @('Keyboard', 'Mouse')
 #>
 function Show-PnpDevices {
     param(
@@ -24,7 +24,7 @@ function Show-PnpDevices {
     )
 
     foreach ($class in $Classes) {
-        Write-Step "PnP 设备 - $class"
+        Write-Step "PnP Device - $class"
         Get-PnpDevice -Class $class -ErrorAction SilentlyContinue |
             Where-Object { $_.Status -eq 'OK' } |
             Sort-Object InstanceId |
@@ -37,7 +37,7 @@ function Show-PnpDevices {
 Show-PnpDevices -Classes @('Keyboard', 'Mouse', 'Bluetooth', 'USB')
 
 Write-Tip @'
-禁用指定设备示例:
-    $device = Get-PnpDevice -Class Keyboard | Where-Object { $_.Name -like '*<关键词>*' }
+Example to disable a specific device:
+    $device = Get-PnpDevice -Class Keyboard | Where-Object { $_.Name -like '*<keyword>*' }
     Disable-PnpDevice -InstanceId $device.InstanceId -Confirm:$false
 '@

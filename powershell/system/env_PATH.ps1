@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Export or import PATH environment variable entries.
 

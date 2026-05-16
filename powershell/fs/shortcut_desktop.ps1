@@ -1,40 +1,40 @@
-﻿<#
+<#
 .SYNOPSIS
-    桌面快捷方式批量创建工具
+    Desktop Shortcut Batch Creation Tool
 .DESCRIPTION
-    为 $ExeFiles 数组中列出的可执行文件，在桌面创建 .lnk 快捷方式。
-    - 文件不存在则跳过并输出警告
-    - 快捷方式名称取文件名（不含扩展名）
-    - 图标使用可执行文件自身图标
+    Creates .lnk shortcuts on the desktop for executable files listed in $ExeFiles array.
+    - Skips and prints a warning if the file does not exist.
+    - Shortcut name is derived from the file name (without extension).
+    - Icon is taken from the executable file itself.
 .NOTES
-    重构自: my\shortcut_desktop.ps1
-    使用方式: 修改 $ExeFiles 数组后直接运行
+    Refactored from: my\shortcut_desktop.ps1
+    Usage: Modify the $ExeFiles array and run directly.
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# ─────────────────────────────────────────────
-#  配置区 — 按需修改
-# ─────────────────────────────────────────────
+# ────────────────────────────────────────────
+#  Config — modify as needed
+# ────────────────────────────────────────────
 
 $ExeFiles = @(
-    # 在此添加要创建快捷方式的可执行文件完整路径，示例：
+    # Add full paths of executables to create shortcuts for, e.g.:
     # 'C:\Program Files\Google\Chrome\Application\chrome.exe'
     # 'C:\Windows\System32\notepad.exe'
     # 'C:\Windows\System32\calc.exe'
 )
 
-# ─────────────────────────────────────────────
-#  主流程
-# ─────────────────────────────────────────────
+# ────────────────────────────────────────────
+#  Main Flow
+# ────────────────────────────────────────────
 
 $desktopPath  = [Environment]::GetFolderPath('Desktop')
 $shell        = New-Object -ComObject WScript.Shell
 $createdCount = 0
 $skippedCount = 0
 
-Write-Host "桌面路径: $desktopPath" -ForegroundColor Cyan
+Write-Host "Desktop path: $desktopPath" -ForegroundColor Cyan
 
 foreach ($exePath in $ExeFiles) {
     if (Test-Path -Path $exePath) {
@@ -51,10 +51,10 @@ foreach ($exePath in $ExeFiles) {
         $createdCount++
     }
     else {
-        Write-Warning "文件不存在: $exePath"
+        Write-Warning "File not found: $exePath"
         $skippedCount++
     }
 }
 
 Write-Host ''
-Write-Host "完成。创建: $createdCount  跳过: $skippedCount" -ForegroundColor Cyan
+Write-Host "Done. Created: $createdCount   Skipped: $skippedCount" -ForegroundColor Cyan

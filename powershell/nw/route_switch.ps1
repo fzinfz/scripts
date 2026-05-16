@@ -1,43 +1,43 @@
-﻿<#
+<#
 .SYNOPSIS
-    交互式路由指标调整脚本
+    Interactive route metric adjustment script
 .DESCRIPTION
-    1. 显示当前默认路由（0.0.0.0/0）
-    2. 让用户选择目标接口 ifIndex
-    3. 将该接口的 InterfaceMetric 设为当前最大值 - 1（提升优先级），
-       其余接口 InterfaceMetric 设为当前最大值（降低优先级）
-    4. RouteMetric 统一重置为当前最小值
+    1. Display current default routes (0.0.0.0/0)
+    2. Let user select target interface ifIndex
+    3. Set this interface''s InterfaceMetric to current max - 1 (raise priority),
+       set other interfaces'' InterfaceMetric to current max (lower priority)
+    4. Reset RouteMetric uniformly to current minimum
 .NOTES
-    重构自: nw\route_switch.ps1
+    Refactored from: nw\route_switch.ps1
 #>
 
 . $PSScriptRoot\Lib.Route.ps1
 
-# ─── 显示当前默认路由 ──────────────────────────
-Write-Step '当前默认路由'
+# --- Display current default routes -----------------------------------------
+Write-Step 'Current Default Routes'
 Get-DefaultRoute | Format-Table -AutoSize
 
-# ─── 用户选择接口 ─────────────────────────────
-$selectedIfIndex = Read-Host -Prompt "`n请输入要提升优先级的接口 ifIndex"
+# --- User selects interface -------------------------------------------------
+$selectedIfIndex = Read-Host -Prompt "`nEnter the ifIndex of the interface to raise priority"
 Assert-Param -Value $selectedIfIndex -Name 'ifIndex'
 [int]$selectedIfIndex = $selectedIfIndex
 
-# ─── 重置 RouteMetric 为最小值 ────────────────
+# --- Reset RouteMetric to minimum -------------------------------------------
 $routeMetricMin = (Get-DefaultRouteMetric | Measure-Object -Minimum).Minimum
-Write-Step "将所有默认路由的 RouteMetric 重置为 $routeMetricMin"
+Write-Step "Reset all default routes' RouteMetric to $routeMetricMin"
 Invoke-Steps { Set-NetRoute -DestinationPrefix '0.0.0.0/0' -RouteMetric $routeMetricMin }
 
-# ─── 调整 InterfaceMetric ─────────────────────
+# --- Adjust InterfaceMetric -------------------------------------------------
 $ifMetricMax = (Get-DefaultRoute |
     ForEach-Object { $_.InterfaceMetric } |
     Measure-Object -Maximum).Maximum
 
-Write-Step "其余接口 InterfaceMetric 设为 $ifMetricMax（降低优先级）"
+Write-Step "Set other interfaces' InterfaceMetric to $ifMetricMax (lower priority)"
 Invoke-Steps { Set-NetIPInterface -InterfaceMetric $ifMetricMax }
 
-Write-Step "接口 $selectedIfIndex 的 InterfaceMetric 设为 $($ifMetricMax - 1)（提升优先级）"
+Write-Step "Set interface $selectedIfIndex InterfaceMetric to $($ifMetricMax - 1) (raise priority)"
 Invoke-Steps { Set-NetIPInterface -InterfaceIndex $selectedIfIndex -InterfaceMetric $($ifMetricMax - 1) }
 
-# ─── 验证结果 ─────────────────────────────────
-Write-Step '调整后默认路由'
+# --- Verify results ---------------------------------------------------------
+Write-Step 'Adjusted Default Routes'
 Get-DefaultRoute | Format-Table -AutoSize

@@ -1,28 +1,28 @@
-﻿<#
+<#
 .SYNOPSIS
-    将 PnP 设备从宿主机卸载并分配给 Hyper-V VM（DDA）
+    Dismount PnP Device from Host and Assign to Hyper-V VM (DDA)
 .DESCRIPTION
-    1. 通过关键词搜索 PnP 设备
-    2. 若找到唯一匹配，禁用该设备
-    3. 获取设备 LocationPath
-    4. 执行 Dismount-VmHostAssignableDevice
+    1. Search PnP device by keyword
+    2. If exactly one match is found, disable the device
+    3. Get device LocationPath
+    4. Execute Dismount-VmHostAssignableDevice
 .NOTES
-    重构自: hyper-v\pnp_dismount.ps1
-    需要以管理员身份运行
-    参考: https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/deploy/deploying-graphics-devices-using-dda#example
+    Refactored from: hyper-v\pnp_dismount.ps1
+    Requires running as administrator
+    Reference: https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/deploy/deploying-graphics-devices-using-dda#example
 #>
 
 #Requires -RunAsAdministrator
 
 . $PSScriptRoot\..\Lib.ps1
 
-# ─── 搜索设备 ─────────────────────────────────
+# --- Search Device --------------------------------
 
 <#
 .SYNOPSIS
-    按 FriendlyName 模糊搜索 PnP 设备
+    Fuzzy search PnP devices by FriendlyName
 .PARAMETER Keyword
-    搜索关键词
+    Search keyword
 #>
 function Search-PnpByKeyword {
     param(
@@ -32,7 +32,7 @@ function Search-PnpByKeyword {
     (Get-PnpDevice).Where{ $_.FriendlyName -like "*$Keyword*" }
 }
 
-$keyword = Read-Host -Prompt 'PnP 设备 FriendlyName 关键词'
+$keyword = Read-Host -Prompt 'PnP device FriendlyName keyword'
 Assert-Param -Value $keyword -Name 'keyword'
 
 $devices = Search-PnpByKeyword -Keyword $keyword
@@ -41,25 +41,25 @@ $devices | Format-List
 
 $count = ($devices | Measure-Object).Count
 if ($count -ne 1) {
-    Write-Warn "找到 $count 个匹配设备，需唯一匹配才能继续。"
+    Write-Warn "Found $count matching devices; exactly one match is required to continue."
     exit 1
 }
 
-# ─── 禁用设备 ─────────────────────────────────
+# --- Disable Device --------------------------------
 $dev    = $devices
 $devId  = $dev.InstanceId
 
 if ($dev.Status -eq 'OK') {
-    Write-Step "禁用设备: $devId"
+    Write-Step "Disabling device: $devId"
     Write-Tip "Disable-PnpDevice -InstanceId $devId"
     Disable-PnpDevice -InstanceId $devId -Confirm:$false
 }
 
-# ─── 获取 LocationPath 并卸载 ─────────────────
+# --- Get LocationPath and Dismount ----------------
 $locationPath = (Get-PnpDeviceProperty `
     -KeyName DEVPKEY_Device_LocationPaths `
     -InstanceId $devId).Data[0]
 
-Write-Step "Dismount 设备: $locationPath"
+Write-Step "Dismounting device: $locationPath"
 Write-Tip "Dismount-VmHostAssignableDevice -LocationPath $locationPath -Force -Verbose"
 Dismount-VmHostAssignableDevice -LocationPath $locationPath -Force -Verbose

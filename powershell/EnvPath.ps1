@@ -1,23 +1,23 @@
-﻿<#
+<#
 .SYNOPSIS
-    环境变量 PATH 管理模块
+    Environment Variable PATH Management Module
 .DESCRIPTION
-    提供查看和追加 PATH 环境变量的工具函数。
-    支持 Process / User / Machine 三个作用域。
+    Provides utility functions to view and append PATH environment variables.
+    Supports Process / User / Machine scopes.
 .NOTES
-    重构自: EnvPath.lib.ps1
-    规范:
-    - 函数命名 Verb-Noun, Pascal Case
-    - 参数有类型声明和 Mandatory 标注
-    - 操作前验证路径是否存在
+    Refactored from: EnvPath.lib.ps1
+    Conventions:
+    - Function names use Verb-Noun, Pascal Case
+    - Parameters have type declarations and Mandatory annotations
+    - Verifies path existence before operation
 #>
 
 <#
 .SYNOPSIS
-    显示所有作用域下的 PATH 环境变量条目
+    Displays PATH environment variable entries across all scopes
 .DESCRIPTION
-    分别输出 Machine / User / Process 三个 EnvironmentVariableTarget 下的 PATH，
-    每个作用域按字母排序。
+    Outputs PATH for each EnvironmentVariableTarget (Machine / User / Process),
+    sorted alphabetically per scope.
 #>
 function Show-EnvPath {
     foreach ($target in [System.EnvironmentVariableTarget].GetEnumNames()) {
@@ -30,14 +30,14 @@ function Show-EnvPath {
 
 <#
 .SYNOPSIS
-    将路径追加到指定作用域及 Process 的 PATH 中
+    Appends a path to the specified scope and Process PATH
 .DESCRIPTION
-    若路径存在且尚未包含在 PATH 中，则将其追加到 $EnvVarTarget 和 Process 两个
-    EnvironmentVariableTarget 的 PATH 里。
+    If the path exists and is not already in PATH, appends it to both
+    $EnvVarTarget and Process EnvironmentVariableTarget PATH.
 .PARAMETER EnvVarTarget
-    目标作用域名称，可选 Machine / User / Process
+    Target scope name: Machine / User / Process
 .PARAMETER Path
-    要追加的目录路径（绝对路径）
+    The directory path to append (absolute path)
 .EXAMPLE
     Add-EnvPath -EnvVarTarget User -Path 'D:\sdk\flutter\bin'
 #>
@@ -52,11 +52,11 @@ function Add-EnvPath {
     )
 
     if (-not (Test-Path -Path $Path)) {
-        Write-Warning "路径不存在，跳过: $Path"
+        Write-Warning "Path does not exist, skipping: $Path"
         return
     }
 
-    # 同时更新 $EnvVarTarget 和 Process 两个作用域
+    # Update both $EnvVarTarget and Process scopes
     $EnvVarTarget, [System.EnvironmentVariableTarget]::Process | ForEach-Object {
         $pathList = [Environment]::GetEnvironmentVariable('Path', $_) -split ';'
         if ($pathList -notcontains $Path) {

@@ -1,16 +1,16 @@
-﻿<#
+<#
 .SYNOPSIS
-    TCP 监听端口查询脚本
+    TCP listening port query script
 .DESCRIPTION
-    列出处于 Listen 状态的 TCP 连接及所属进程名，
-    并显示动态端口范围提示。
+    List TCP connections in Listen state and their process names,
+    and show dynamic port range hint.
 .NOTES
-    重构自: nw\ports.ps1
+    Refactored from: nw\ports.ps1
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-Write-Step 'TCP 监听端口 (Listen)'
+Write-Step 'TCP Listening Ports (Listen)'
 Get-NetTCPConnection -State Listen |
     Sort-Object LocalPort |
     Select-Object -Property State, LocalAddress, LocalPort,
@@ -20,7 +20,7 @@ Get-NetTCPConnection -State Listen |
         } |
     Format-Table -AutoSize
 
-Write-Step '动态端口范围'
+Write-Step 'Dynamic Port Range'
 Invoke-Steps { netsh int ipv4 show dynamicportrange tcp }
 
 Write-Tip 'netsh int ipv4 set dynamicport tcp start=40000 num=25536'

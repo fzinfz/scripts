@@ -1,20 +1,20 @@
-﻿<#
+<#
 .SYNOPSIS
-    磁盘与存储信息查询脚本
+    Disk and Storage Information Query Script
 .DESCRIPTION
-    依次输出：
+    Outputs in order:
     - StorageNode
-    - 物理磁盘（Disk）
-    - 文件系统驱动器（FileSystem PSDrive）
-    - 卷信息（Volume）
-    - Win32_Volume（含 DriveType）
+    - Physical Disks (Disk)
+    - File System Drives (FileSystem PSDrive)
+    - Volume Information (Volume)
+    - Win32_Volume (including DriveType)
 .NOTES
-    重构自: disk.ps1
+    Refactored from: disk.ps1
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 
-Write-Step '磁盘与存储信息'
+Write-Step 'Disk and Storage Information'
 Invoke-Steps {
     Get-StorageNode | Format-Table -AutoSize
     Get-Disk | Format-Table -AutoSize
@@ -22,5 +22,5 @@ Invoke-Steps {
     Get-Volume | Format-Table -AutoSize
 }
 
-Write-Step '卷类型明细'
+Write-Step 'Volume Type Details'
 Show-Volumes

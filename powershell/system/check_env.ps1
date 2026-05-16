@@ -1,29 +1,29 @@
-﻿<#
+<#
 .SYNOPSIS
-    系统环境信息检查脚本
+    System environment info check script
 .DESCRIPTION
-    输出以下信息：
-    - Windows 版本与架构
-    - WMI 系统信息（OS、CPU）
-    - PowerShell Profile 路径
+    Output the following info:
+    - Windows version and architecture
+    - WMI system info (OS, CPU)
+    - PowerShell Profile path
     - PSVersion
-    - PATH 环境变量（所有作用域）
-    - .NET Framework 版本
+    - PATH environment variable (all scopes)
+    - .NET Framework version
 .NOTES
-    重构自: check_env.ps1
+    Refactored from: check_env.ps1
 #>
 
 . $PSScriptRoot\..\Lib.ps1
 . $PSScriptRoot\..\EnvPath.ps1
 
-# ─── Windows 基本信息 ─────────────────────────
-Write-Step 'Windows 基本信息'
+# --- Windows Basic Info -----------------------------------------------------
+Write-Step 'Windows Basic Info'
 Get-ComputerInfo -Property Windows*, OsVersion, OsArchitecture, HyperVisorPresent |
     Select-Object -Property * -ExcludeProperty *Registered* |
     Format-List
 
-# ─── WMI 快速信息 ─────────────────────────────
-Write-Step 'WMI 快速信息'
+# --- WMI Quick Info ---------------------------------------------------------
+Write-Step 'WMI Quick Info'
 Invoke-Steps {
     (Get-WmiObject Win32_OperatingSystem).Caption
     Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores, MaxClockSpeed
@@ -31,12 +31,12 @@ Invoke-Steps {
     $PSVersionTable
 }
 
-# ─── PATH 环境变量 ────────────────────────────
-Write-Step 'PATH 环境变量（所有作用域）'
+# --- PATH Environment Variable (All Scopes) ---------------------------------
+Write-Step 'PATH Environment Variable (All Scopes)'
 Show-EnvPath
 
-# ─── .NET Framework ───────────────────────────
-Write-Step '.NET Framework 版本'
+# --- .NET Framework ---------------------------------------------------------
+Write-Step '.NET Framework Version'
 Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse |
     Get-ItemProperty -Name version -ErrorAction SilentlyContinue |
     Where-Object { $_.PSChildName -match '^(?!S)\p{L}' } |

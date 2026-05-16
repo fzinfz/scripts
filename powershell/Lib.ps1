@@ -1,42 +1,42 @@
-﻿<#
+<#
 .SYNOPSIS
-    PowerShell 公共工具库 - 2026 版
+    PowerShell Common Utility Library - 2026 Edition
 .DESCRIPTION
-    提供统一的日志输出、命令执行、交互辅助等核心功能。
-    所有功能脚本通过 . .\Lib.ps1 或 . $PSScriptRoot\..\Lib.ps1 引入。
+    Provides unified logging output, command execution, interactive helpers, and other core functions.
+    All feature scripts import this via . .\Lib.ps1 or . $PSScriptRoot\..\Lib.ps1.
 .NOTES
-    规范：
-    - 函数命名使用 动词-名词 (Verb-Noun) Pascal 式，或 snake_case 辅助函数
-    - 日志函数：Write-Info / Write-Tip / Write-Step / Write-Warn
-    - 命令执行：Invoke-Steps（脚本块执行，打印命令本身）
-    - 参数校验：Assert-Param
-    - 颜色约定：Green=成功/执行, Yellow=提示/警告, Red=错误, Cyan=标题/信息
+    Conventions:
+    - Function names use Verb-Noun PascalCase, or snake_case for helper functions
+    - Logging functions: Write-Info / Write-Tip / Write-Step / Write-Warn
+    - Command execution: Invoke-Steps (executes script blocks and prints the command itself)
+    - Parameter validation: Assert-Param
+    - Color conventions: Green=success/execution, Yellow=tip/warning, Red=error, Cyan=title/info
 #>
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # ─────────────────────────────────────────────
-#  版本信息
+#  Version Info
 # ─────────────────────────────────────────────
 
 $PSVersionTable | Format-Table
 
 # ─────────────────────────────────────────────
-#  正则常量
+#  Regex Constants
 # ─────────────────────────────────────────────
 
 $Script:pattern_ip = '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
 
 # ─────────────────────────────────────────────
-#  日志输出
+#  Logging Output
 # ─────────────────────────────────────────────
 
 <#
 .SYNOPSIS
-    输出绿色步骤标题
+    Outputs a green step heading
 .PARAMETER Message
-    步骤说明文字
+    Step description text
 #>
 function Write-Step {
     param(
@@ -48,9 +48,9 @@ function Write-Step {
 
 <#
 .SYNOPSIS
-    输出黄色提示信息
+    Outputs a yellow tip message
 .PARAMETER Message
-    提示文字
+    Tip text
 #>
 function Write-Tip {
     param(
@@ -62,9 +62,9 @@ function Write-Tip {
 
 <#
 .SYNOPSIS
-    输出蓝色普通信息
+    Outputs a blue informational message
 .PARAMETER Message
-    信息文字
+    Info text
 #>
 function Write-Info {
     param(
@@ -76,9 +76,9 @@ function Write-Info {
 
 <#
 .SYNOPSIS
-    输出红色警告/错误
+    Outputs a red warning/error
 .PARAMETER Message
-    警告文字
+    Warning text
 #>
 function Write-Warn {
     param(
@@ -89,14 +89,14 @@ function Write-Warn {
 }
 
 # ─────────────────────────────────────────────
-#  命令执行
+#  Command Execution
 # ─────────────────────────────────────────────
 
 <#
 .SYNOPSIS
-    执行命令并打印命令本身（绿色）
+    Executes a command and prints the command itself (in green)
 .PARAMETER ScriptBlock
-    要执行的命令脚本块
+    The script block to execute
 #>
 function Invoke-Steps {
     [CmdletBinding()]
@@ -107,7 +107,7 @@ function Invoke-Steps {
 
     begin {
         $expanded = $ScriptBlock.ToString()
-        # 展开脚本块中的 $variable 为当前作用域的实际值
+        # Expand $variable references in the script block to their actual values in the current scope
         $expanded = [regex]::Replace($expanded, '\$(\w+)', {
             param($match)
             $varName = $match.Groups[1].Value
@@ -127,9 +127,9 @@ function Invoke-Steps {
 
 <#
 .SYNOPSIS
-    提示确认后再执行命令
+    Prompts for confirmation before executing a command
 .PARAMETER Command
-    要执行的命令字符串
+    The command string to execute
 #>
 function Invoke-StepWithConfirm {
     param(
@@ -142,9 +142,9 @@ function Invoke-StepWithConfirm {
 
 <#
 .SYNOPSIS
-    提示确认后再执行脚本块
+    Prompts for confirmation before executing a script block
 .PARAMETER ScriptBlock
-    要执行的脚本块
+    The script block to execute
 #>
 function Invoke-StepsWithConfirm {
     param(
@@ -156,16 +156,16 @@ function Invoke-StepsWithConfirm {
 }
 
 # ─────────────────────────────────────────────
-#  参数校验
+#  Parameter Validation
 # ─────────────────────────────────────────────
 
 <#
 .SYNOPSIS
-    断言参数不为空，否则抛出异常
+    Asserts that a parameter is not empty/null, otherwise throws an exception
 .PARAMETER Value
-    要检查的值
+    The value to check
 .PARAMETER Name
-    参数名称（用于错误提示）
+    The parameter name (used in the error message)
 #>
 function Assert-Param {
     param(
@@ -177,32 +177,32 @@ function Assert-Param {
         [string]$Name
     )
     if ([string]::IsNullOrWhiteSpace($Value)) {
-        throw "必填参数 '$Name' 不能为空"
+        throw "Required parameter '$Name' cannot be empty"
     }
 }
 
 # ─────────────────────────────────────────────
-#  管道过滤器
+#  Pipeline Filters
 # ─────────────────────────────────────────────
 
 <#
 .SYNOPSIS
-    过滤器：将多行字符串按行拆分，去除空行
+    Filter: splits a multi-line string by lines and removes empty lines
 #>
 filter Split-Lines {
     $_.Split([Environment]::NewLine) | Where-Object { $_.Trim() -ne '' }
 }
 
 # ─────────────────────────────────────────────
-#  存储辅助
+#  Storage Helpers
 # ─────────────────────────────────────────────
 
 <#
 .SYNOPSIS
-    列出所有卷及类型
+    Lists all volumes and their types
 .NOTES
-    DriveType: 2=可移动, 3=本地磁盘
-    参考: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394515(v=vs.85)
+    DriveType: 2=Removable, 3=Local Disk
+    Ref: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394515(v=vs.85)
 #>
 function Show-Volumes {
     Get-WmiObject -Class Win32_Volume |

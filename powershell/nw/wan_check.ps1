@@ -1,14 +1,14 @@
-﻿. $PSScriptRoot\..\Lib.ps1
+. $PSScriptRoot\..\Lib.ps1
 
-# ─── WAN IP 查询 ──────────────────────────────
+# --- WAN IP Query -----------------------------------------------------------
 
 <#
 .SYNOPSIS
-    查询当前 WAN IP 地址
+    Query current WAN IP address
 .PARAMETER SiteIndex
-    0（默认）= ipinfo.io; 1 = ifconfig.me
+    0 (default) = ipinfo.io; 1 = ifconfig.me
 .OUTPUTS
-    [string] WAN IP 地址，若获取失败返回 $null
+    [string] WAN IP address, returns $null if failed
 #>
 function Get-WanIp {
     param(
@@ -34,7 +34,7 @@ function Get-WanIp {
     return $null
 }
 
-Write-Step '默认路由'
+Write-Step 'Default Routes'
 Invoke-Steps { Get-NetRoute -DestinationPrefix '0.0.0.0/0' | Format-Table -AutoSize }
 
 $wanip = Get-WanIp
@@ -44,5 +44,5 @@ if ($null -ne $wanip) {
     Invoke-Steps { tracert $wanip }
 }
 else {
-    Write-Warn '无法获取 WAN IP 地址，跳过 TraceRoute 步骤'
+    Write-Warn 'Failed to get WAN IP address. Skipping TraceRoute step.'
 }
