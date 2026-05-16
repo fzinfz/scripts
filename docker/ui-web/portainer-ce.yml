@@ -1,0 +1,21 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+volumes:
+  portainer_data:
+
+
+# README
+# 9443: The default HTTPS port used to access the Portainer web UI securely (URL: https://<your-ip>:9443).
+# 9000: The legacy HTTP port used to access the Portainer web UI without SSL.
+# 8000: A TCP tunnel server port required only if you use Portainer Edge compute features to manage remote Edge agents.
