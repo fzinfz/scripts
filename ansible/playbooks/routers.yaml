@@ -1,0 +1,16 @@
+---
+- name: Check OpenWrt version of routers
+  hosts: routers
+  gather_facts: false
+  tasks:
+    - name: Retrieve OpenWrt system board info
+      ansible.builtin.raw: >
+        ubus call system board 2>/dev/null ||
+        cat /etc/openwrt_release 2>/dev/null ||
+        cat /etc/os-release
+      changed_when: false
+      register: openwrt_version
+
+    - name: Display version info
+      ansible.builtin.debug:
+        var: openwrt_version.stdout_lines

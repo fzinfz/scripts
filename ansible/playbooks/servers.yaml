@@ -1,0 +1,11 @@
+---
+- name: Check server OS version
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Display OS version info
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ inventory_hostname }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Kernel: {{ ansible_kernel }}"
