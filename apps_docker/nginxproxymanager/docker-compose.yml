@@ -1,0 +1,15 @@
+# https://github.com/NginxProxyManager/nginx-proxy-manager
+
+version: '3.8'
+services:
+  nginxproxymanager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - /data/docker_data/nginx-proxy-manager-data:/data
+      - /data/docker_data/nginx-proxy-manager-letsencrypt:/etc/letsencrypt
+
+volumes:
+  nginxproxymanager:
+    external: true

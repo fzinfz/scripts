@@ -16,6 +16,7 @@ volumes:
 
 
 # README
-# 9443: The default HTTPS port used to access the Portainer web UI securely (URL: https://<your-ip>:9443).
-# 9000: The legacy HTTP port used to access the Portainer web UI without SSL.
-# 8000: A TCP tunnel server port required only if you use Portainer Edge compute features to manage remote Edge agents.
+# 9443: HTTPS
+# 8000: TCP tunnel server port -  Portainer Edge compute features to manage remote Edge agents.
+# 9000: HTTP
+# after install: docker restart portainer & visit :9000
