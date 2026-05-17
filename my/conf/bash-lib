@@ -1,0 +1,46 @@
+. ../../linux/init.sh
+
+function remove_not_existing_path(){
+    grep -nE '^\. ' "$1" | sort -t: -k1 -nr | while IFS= read -r line; do
+        line_num=$(echo "$line" | cut -d':' -f1)
+        exe_path=$(echo "$line" | sed -E 's/^[0-9]+:\. //')
+        # strip surrounding quotes if any
+        exe_path=$(echo "$exe_path" | sed -e 's/^["'"'"']//' -e 's/["'"'"']$//')
+        if [ -e "$exe_path" ]; then
+            continue
+        fi
+        echo "deleting line $line_num of $1"
+        sed -i "${line_num}d" "$1"
+    done
+}
+
+function add_source_file(){
+    for f in $1_*; do
+        # Handle case where no files match the glob
+        [[ -e "$f" ]] || continue
+
+        source_line=". $PWD/$f"
+
+        if ! grep -qF "$source_line" ~/.$1 2>/dev/null; then
+            echo "Adding to ~/.$1: $f"
+            echo "$source_line" >> ~/.$1
+        else
+            echo "Already in ~/.$1: $f"
+        fi
+    done
+}
+
+# Uncomment lines in ~/.bashrc
+function enable_ls_color(){
+    grep -E 'color|LS_OPTIONS' ~/.bashrc 2>/dev/null | grep -E '# export|eval|alias' | while IFS= read -r line; do
+        [[ -n "$line" ]] || continue
+        if grep -qxF "$line" ~/.bashrc 2>/dev/null; then
+            uncommented="${line#"# "}"
+            if ! grep -qxF "$uncommented" ~/.bashrc 2>/dev/null; then
+                escaped=$(printf '%s\n' "$line" | sed 's:[][\/.^$*]:\\&:g')
+                sed -i "0,/^${escaped}$/s//${uncommented}/" ~/.bashrc
+                echo "Uncommented in ~/.bashrc: $uncommented"
+            fi
+        fi
+    done
+}

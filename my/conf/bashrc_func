@@ -1,0 +1,7 @@
+# TODO: not all .sh only functions
+# if [ -d /data/scripts/lib ]; then
+# 	cd /data/scripts/lib && for f in *.sh; do echo $f; . $f; done
+# fi
+
+alias cdl="cd /data/scripts/linux/"
+

@@ -1,0 +1,14 @@
+PATH_list="
+/data/scripts/my
+/data/scripts/web
+/data/scripts/linux
+"
+
+while IFS= read -r p; do
+    [ -z "$p" ] && continue
+    case ":${PATH}:" in
+        *":$p:"*) ;;
+        *) export PATH="$p:$PATH" ;;
+    esac
+done <<< "$PATH_list"
+

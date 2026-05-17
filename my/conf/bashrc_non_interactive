@@ -1,0 +1,2 @@
+# If the session is not interactive, stop executing immediately!
+[[ $- != *i* ]] && return

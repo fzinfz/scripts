@@ -1,10 +1,9 @@
 . ../linux/init.sh
 . ../lib/file.sh
 
-echo_title $SHELL | grep bash
-[ $? -eq 0 ] && if_replace_file ./conf/bash_profile.sh ~/.bash_profile
-run "grep color ~/.bashrc"
-cmd vim && if_replace_file ./conf/vimrc ~/.vimrc
+echo_title SHELL=$SHELL
+
+cmd vi && if_replace_file ./conf/vimrc ~/.vimrc
 
 echo_title 'setup timezone'
 timedatectl set-ntp true
@@ -18,11 +17,9 @@ run git config user.name fzinfz
 run git config user.email $(grep email ../.git/config | cut -d= -f2)
 
 echo_title 'chmod'
-for d in apps_docker cloud linux my nw web; do 
+for d in apps_docker cloud linux lib my nw web; do 
     run "chmod +x ../$d/*.sh"
 done
-
-run "chmod -x ../lib/*.sh"
 
 echo_title 'create links for /data'
 for p in /data_*; do
@@ -37,5 +34,7 @@ for p in /data_*; do
         fi
     done
 done
+
+cd conf && run ./bash-init.sh
 
 run . ~/.bash_profile
