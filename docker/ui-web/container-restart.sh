@@ -1,8 +1,8 @@
 n=container-restart
 docker stop $n 2>/dev/null; docker rm $n 2>/dev/null
 
-#GREP_E_STRING="^hy"
-GREP_vE_STRING="portainer"
+GREP_E_STRING="^hy"
+# GREP_vE_STRING="portainer"
 TIMEZONE="Asia/Shanghai"
 
 docker run -d \
