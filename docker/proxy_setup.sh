@@ -4,11 +4,11 @@
 
 set -euo pipefail
 
-PROXY_JSON="/tmp/proxy.json"
+PROXY_CONF="/tmp/proxychains4.conf"
 
-if [[ -f "${PROXY_JSON}" ]]; then
-    HTTP_PROXY=$(grep '"http_proxy"' "${PROXY_JSON}" | sed -n 's/.*"http_proxy"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
-    SOCKS_PROXY=$(grep '"socks_proxy"' "${PROXY_JSON}" | sed -n 's/.*"socks_proxy"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
+if [[ -f "${PROXY_CONF}" ]]; then
+    HTTP_PROXY=$(awk '/^[[:space:]]*http[[:space:]]+/{print "http://"$2":"$3}' "${PROXY_CONF}" | head -n1)
+    SOCKS_PROXY=$(awk '/^[[:space:]]*socks5[[:space:]]+/{print "socks5://"$2":"$3}' "${PROXY_CONF}" | head -n1)
 fi
 
 HTTP_PROXY=${HTTP_PROXY:-"http://127.0.0.1:6081"}

@@ -2,8 +2,7 @@
 #set -euo pipefail
 
 . ../linux/init.sh
-echo_tip "Detecte hysteria2 proxy from Docker container -> /tmp/proxy.json"
-echo_tip "try proxychains for tmp use"
+echo_tip "Detecte hysteria2 proxy from Docker container -> /tmp/proxychains4.conf"
 
 # Select a running Docker container
 mapfile -t containers < <(docker ps --format '{{.Names}}')
@@ -47,12 +46,29 @@ echo "Container: $docker_container"
 echo "HTTP  proxy: ${http_proxy:-<not found>}"
 echo "SOCKS proxy: ${socks_proxy:-<not found>}"
 
-# Save to JSON
-cat > /tmp/proxy.json <<EOF
-{
-  "container": "$docker_container",
-  "http_proxy": "${http_proxy:-}",
-  "socks_proxy": "${socks_proxy:-}"
-}
+# Parse IP and port for proxychains format
+http_ip=$(echo "${http_addr:-}" | cut -d':' -f1)
+http_port=$(echo "${http_addr:-}" | cut -d':' -f2)
+socks_ip=$(echo "${socks_addr:-}" | cut -d':' -f1)
+socks_port=$(echo "${socks_addr:-}" | cut -d':' -f2)
+
+# Save to proxychains4 format
+cat > /tmp/proxychains4.conf <<EOF
+strict_chain
+proxy_dns
+remote_dns_subnet 224
+tcp_read_time_out 15000
+tcp_connect_time_out 8000
+
+[ProxyList]
 EOF
-echo "Saved to /tmp/proxy.json"
+
+if [[ -n "${socks_ip:-}" && -n "${socks_port:-}" ]]; then
+    echo "socks5  $socks_ip  $socks_port" >> /tmp/proxychains4.conf
+fi
+
+if [[ -n "${http_ip:-}" && -n "${http_port:-}" ]]; then
+    echo "http    $http_ip  $http_port" >> /tmp/proxychains4.conf
+fi
+
+echo "Saved to /tmp/proxychains4.conf"

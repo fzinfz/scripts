@@ -2,7 +2,7 @@
 set -euo pipefail
 
 . ../linux/init.sh
-echo_tip "Loading proxy from /tmp/proxy.json and setting git proxy"
+echo_tip "Loading proxy from /tmp/proxychains4.conf and setting git proxy"
 
 # Show current git proxy config first
 echo "Current git proxy config:"
@@ -11,19 +11,14 @@ git config --global --get https.proxy 2>/dev/null || true
 git config --global --get socks.proxy 2>/dev/null || true
 echo "---"
 
-if [[ ! -f /tmp/proxy.json ]]; then
-    echo "Error: /tmp/proxy.json not found. Run proxy_detect.sh first." >&2
+if [[ ! -f /tmp/proxychains4.conf ]]; then
+    echo "Error: /tmp/proxychains4.conf not found. Run proxy_detect.sh first." >&2
     exit 1
 fi
 
-# Parse JSON with jq or sed fallback
-if command -v jq &>/dev/null; then
-    http_proxy=$(jq -r '.http_proxy // empty' /tmp/proxy.json)
-    socks_proxy=$(jq -r '.socks_proxy // empty' /tmp/proxy.json)
-else
-    http_proxy=$(grep '"http_proxy"' /tmp/proxy.json | sed -E 's/.*"http_proxy"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')
-    socks_proxy=$(grep '"socks_proxy"' /tmp/proxy.json | sed -E 's/.*"socks_proxy"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')
-fi
+# Parse proxychains4.conf format
+http_proxy=$(awk '/^[[:space:]]*http[[:space:]]+/{print "http://"$2":"$3}' /tmp/proxychains4.conf | head -n1)
+socks_proxy=$(awk '/^[[:space:]]*socks5[[:space:]]+/{print "socks5://"$2":"$3}' /tmp/proxychains4.conf | head -n1)
 
 echo "HTTP  proxy from file: ${http_proxy:-<not found>}"
 echo "SOCKS proxy from file: ${socks_proxy:-<not found>}"
