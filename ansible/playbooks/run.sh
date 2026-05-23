@@ -1,6 +1,6 @@
 dir_inv="/data/conf/ansible/inv"
 
-export ANSIBLE_STDOUT_CALLBACK=yaml
+export ANSIBLE_RESULT_FORMAT=yaml
 
 # Scan *.yaml files in current directory
 mapfile -t playbooks < <(ls -1 *.yaml 2>/dev/null)
@@ -25,6 +25,7 @@ fi
 
 selected="${playbooks[$((choice - 1))]}"
 base="${selected%.yaml}"
+base="${base%%-*}"
 path_inv="${dir_inv}/${base}.ini"
 
 log_folder=/tmp/ansible

@@ -1,13 +1,9 @@
----
-- name: Check OpenWrt version of routers
-  hosts: routers
+- name: Show wireless SSID
+  hosts: wireless
   gather_facts: false
   tasks:
-    - name: Retrieve OpenWrt system board info
-      ansible.builtin.raw: >
-        ubus call system board 2>/dev/null ||
-        cat /etc/openwrt_release 2>/dev/null ||
-        cat /etc/os-release
+    - name: Run wireless_show_ssid.sh
+      ansible.builtin.script: ../../openwrt/uci/wireless_show_ssid.sh # run.sh will convert to raw
       changed_when: false
       register: result
 
@@ -18,6 +14,4 @@
     - name: Display output
       ansible.builtin.debug:
         var: result
-
-   
 

@@ -1,14 +1,12 @@
----
-- name: Check OpenWrt version of routers
+- name: check nf
   hosts: routers
   gather_facts: false
   tasks:
-    - name: Retrieve OpenWrt system board info
+    - name: Run nf_conntrack check script
       ansible.builtin.raw: >
-        ubus call system board 2>/dev/null ||
-        cat /etc/openwrt_release 2>/dev/null ||
-        cat /etc/os-release
+        curl -sS http://192.168.88.72:8100/scripts/openwrt/nf_check.sh | sh -s -- --color off
       changed_when: false
+      ignore_errors: true
       register: result
 
     - name: Clean output
@@ -18,6 +16,3 @@
     - name: Display output
       ansible.builtin.debug:
         var: result
-
-   
-
