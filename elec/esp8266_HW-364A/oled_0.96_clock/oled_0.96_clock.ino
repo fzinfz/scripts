@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <U8g2lib.h>
 #include <time.h>
+#include <string.h>
 #include "cred.h"  // #define WIFI_SSID and WIFI_PASSWORD
 
 #define OLED_RESET     U8X8_PIN_NONE // Reset pin (not used)
@@ -22,11 +23,37 @@ void drawOled(const char *line1, const char *line2) {
   u8g2.setFont(u8g2_font_ncenB10_tr);
   if (line1) u8g2.drawStr(0, 15, line1);
 
-  // Time line - large font, centered horizontally
-  u8g2.setFont(u8g2_font_inr16_mf); 
   if (line2) {
-    int x = (128 - u8g2.getStrWidth(line2)) / 2;
-    u8g2.drawStr(x, 50, line2);
+    size_t len = strlen(line2);
+    // Render time with large HH:MM and small :SS
+    if (len == 8 && line2[2] == ':' && line2[5] == ':') {
+      char hhmm[6];
+      char ss[4];
+      strncpy(hhmm, line2, 5);
+      hhmm[5] = '\0';
+      strncpy(ss, line2 + 5, 3);
+      ss[3] = '\0';
+
+      const int timeBaseY = 55; // below 3/4 of 64px screen
+
+      u8g2.setFont(u8g2_font_inr19_mf);
+      int hhmmWidth = u8g2.getStrWidth(hhmm);
+      u8g2.setFont(u8g2_font_ncenB10_tr);
+      // 用固定占位符计算秒数宽度，避免秒数变化导致 line2 整体水平偏移
+      int ssWidth = u8g2.getStrWidth(":00");
+      int x = (128 - (hhmmWidth + ssWidth)) / 2;
+
+      u8g2.setFont(u8g2_font_inr19_mf);
+      u8g2.drawStr(x, timeBaseY, hhmm);
+      x += hhmmWidth;
+      u8g2.setFont(u8g2_font_ncenB10_tr);
+      u8g2.drawStr(x, timeBaseY, ss);
+    } else {
+      // Status/other message - small font, centered, below 3/4 height
+      u8g2.setFont(u8g2_font_ncenB10_tr);
+      int x = (128 - u8g2.getStrWidth(line2)) / 2;
+      u8g2.drawStr(x, 55, line2);
+    }
   }
 
   u8g2.sendBuffer();
